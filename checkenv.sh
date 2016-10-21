@@ -35,11 +35,11 @@ else
   environment=bad
 fi
 
-LAMBDATERM_VERSION="$(opam info ansiterminal -f installed-version 2>&1)"
-if [[ "$LAMBDATERM_VERSION" =~ "0.7" && "$LAMBDATERM_VERSION" =~ "4.03.0" ]]; then
-  echo "Lambda Term version 0.7 is active.  Good."
+LAMBDATERM_VERSION="$(opam info lambda-term -f installed-version 2>&1)"
+if [[ "$LAMBDATERM_VERSION" =~ "1.10.1" && "$LAMBDATERM_VERSION" =~ "4.03.0" ]]; then
+  echo "Lambda Term version 1.10.1 is active.  Good."
 else 
-  echo "Lambda Term version 0.7 is NOT active.  This is bad."
+  echo "Lambda Term version 1.10.1 is NOT active.  This is bad."
   environment=bad
 fi
 
