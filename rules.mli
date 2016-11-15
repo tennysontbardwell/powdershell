@@ -11,4 +11,4 @@ type elem_rules_t = {inter : (name_t * interaction_t) list; movement : move_opti
 type rules_t = (name_t * elem_rules_t) list
 
 (*[get_rules] returns the current rules of the game.*)
-val get_rules : unit -> rules
+val get_rules : unit -> rules_t

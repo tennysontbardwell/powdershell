@@ -6,7 +6,9 @@
   
   type particle_t = {name: name_t; color : color_t}   
   
-  type grid_t = (location_t * particle) Hashtbl.t 
+  type grid_t
+
+  type t
 
   (* [indices_of_particle] returns a list of locations where this particle type
   * is found *)

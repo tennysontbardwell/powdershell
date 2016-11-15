@@ -8,7 +8,7 @@ type file_path_t = string
 val read_state : file_path_t -> Model.t
 
 (* [read_rules] read a json file and output *)
-val read_rules : file_path_t -> Rules.rules
+val read_rules : file_path_t -> Rules.rules_t
 
 (* [write_state] takes a state and outputs a filepath that has stored that 
  * current state *)

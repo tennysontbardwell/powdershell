@@ -1,0 +1,14 @@
+S clock.ml
+S clock.mli
+S gui.ml
+S gui.mli
+S updater.ml
+S updater.mli
+S main.ml
+S main.mli
+
+B _build/
+
+PKG oUnit
+PKG yojson
+
