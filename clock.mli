@@ -1,5 +1,9 @@
 type clock
 
+(* [new_clk] is a blank clock with no target set (and so the next frame is *)
+(* immediate) and a default fps of 60 *)
+val new_clk : clock
+
 (* [set_fps fps clk] sets the [fps] of [clk] *)
 val set_fps : float -> clock -> clock
 

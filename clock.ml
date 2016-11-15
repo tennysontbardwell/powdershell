@@ -1,5 +1,7 @@
 type clock = unit
 
+let new_clk = failwith "unimplemented"
+
 let set_fps = failwith "unimplemented"
 
 let get_fps = failwith "unimplemented"
