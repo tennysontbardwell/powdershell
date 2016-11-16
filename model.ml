@@ -20,11 +20,11 @@ type input_t =
   ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
 
 
-let indices_of_particle = failwith "unimplemented"
-let particle_at_index = failwith "unimplemented"
-let to_list = failwith "unimplemented"
-let set_pixel = failwith "unimplemented"
-let get_grid_size = failwith "unimplemented"
-let change_grid_size = failwith "unimplemented"
-let empty_grid = failwith "unimplemented"
+let indices_of_particle _ = failwith "unimplemented"
+let particle_at_index _ = failwith "unimplemented"
+let to_list _ = failwith "unimplemented"
+let set_pixel _ = failwith "unimplemented"
+let get_grid_size _ = failwith "unimplemented"
+let change_grid_size _ = failwith "unimplemented"
+let empty_grid _ = failwith "unimplemented"
 

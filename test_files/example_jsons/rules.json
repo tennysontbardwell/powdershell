@@ -1,0 +1,52 @@
+{
+    "fps": 60,
+    "elements": [
+        {
+            "name": "sand",
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 1
+        },
+        {
+            "name": "water",
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
+            "density": 1
+        },
+        {
+            "name": "ice",
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "ice",
+                    "probability": 0.8
+                }
+            ],
+            "movements": [],
+            "density": 1
+        }
+    ]
+}

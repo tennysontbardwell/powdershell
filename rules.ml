@@ -16,5 +16,5 @@ type elem_rules_t =
 type rules_t = (name_t * elem_rules_t) list
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
-val validate : rules_t -> bool
+let validate _ = failwith "unimplemented"
 

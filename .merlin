@@ -7,6 +7,9 @@ S updater.mli
 S main.ml
 S main.mli
 
+S test.ml
+S filemanager_tests.ml
+
 B _build/
 
 PKG oUnit
