@@ -16,10 +16,10 @@ type input_t =
 
 (* [indices_of_particle] returns a list of locations where this particle type
 * is found *)
-val indices_of_particle : particle_t -> location_t list
+val indices_of_particle : grid_t -> particle_t -> location_t list
 
 (* [particle_at_index] returns type of particle found at this index *)
-val particle_at_index : location_t -> particle_t 
+val particle_at_index : grid_t -> location_t -> particle_t option
 
 (* [to_list] returns a list representation of the 
  * display held in the hashtable of pixel locations. Format will be each that 
