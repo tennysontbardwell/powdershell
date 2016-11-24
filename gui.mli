@@ -1,15 +1,12 @@
 open Model
 
 type gui_t = LTerm_widget.t
-(* 
-class gui_ob e = object
-    val draw_matrix : Model.grid_t -> unit
-end *)
 
 class gui_ob : (unit -> 'a) -> object 
   inherit LTerm_widget.frame
   method get_input : LTerm_event.t option
   method draw_to_screen : grid_t -> unit
+  method create_matrix : int -> int -> unit
 end
 
 (* val new_gui : (unit -> 'a) -> gui_ob *)

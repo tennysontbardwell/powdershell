@@ -3,6 +3,7 @@ open Gui
 open Lwt
 (* open Updater *)
 open Model
+open LTerm_geom
 (* open Rules *)
 (* 
 type game_t = {
@@ -12,7 +13,8 @@ type game_t = {
   rules: rules_t;
 } *)
 
-type c = {row: int; col: int}
+(* type c = {row: int; col: int} *)
+(* type s = {rows: int; cols: int} *)
 
 (* (* let execute clk state *)
 let rec execute game =
@@ -31,28 +33,28 @@ let run rules grid =
 let handle_input matrix inp = 
  match inp with 
   | Some (LTerm_event.Mouse {row = r; col = c}) ->
-  (* print_endline "mouse";  *)
-    matrix.(r).(c) <- 1
-  | None -> ()
-  (* | Some x -> x |> LTerm_event.to_string |> print_endline *)
+    matrix.(r).(c) <- matrix.(r).(c) + 1
   | _ -> ()
 
 let execute = 
-  let (matrix:grid_t) = (Array.make_matrix 100 100 0) in
   let do_run, push_layer, pop_layer, exit_ =
       LTerm_widget.prepare_simple_run () in
   let gui_ob = new Gui.gui_ob exit_ in
-  
+  let size = ref {rows = 100; cols = 100} in
   Lazy.force LTerm.stdout 
   >>= fun term ->
-  LTerm.enable_mouse term
+   (size := LTerm.size term;
+  LTerm.enable_mouse term)
   >>= fun () ->
   LTerm.enter_raw_mode term;
-
-    ignore (Lwt_engine.on_timer 0.05 true
-              (fun e -> gui_ob#get_input |> handle_input matrix;
-                (gui_ob#draw_to_screen matrix )));
-    do_run gui_ob
+  let (matrix:grid_t) = (Array.make_matrix !size.rows !size.cols 0) in
+  gui_ob#create_matrix !size.rows !size.cols;
+  
+  ignore (Lwt_engine.on_timer 0.05 true
+      (fun e -> gui_ob#get_input |> handle_input matrix;
+      (gui_ob#draw_to_screen matrix )
+  ));
+  do_run gui_ob
 
 let run = Lwt_main.run execute
 

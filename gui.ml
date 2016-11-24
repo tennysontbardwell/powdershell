@@ -14,6 +14,9 @@ class gui_ob exit_ =
     (* val mutable coords = {row = 0; col = 0} *)
     val mutable current_event = None
 
+    method create_matrix r c =
+    matrix <- Array.make_matrix r c 0;
+
     method draw_to_screen m = 
     matrix <- m;
     self#queue_draw
@@ -27,14 +30,13 @@ class gui_ob exit_ =
                           row2 *)
       LTerm_draw.clear ctx;
       super#draw ctx focused_widget;
-      for x = 0 to 99 do
-          for y = 0 to 99 do 
-            LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some false; 
-            reverse = None; foreground = Some lyellow; background = None}) 
-            (if matrix.(x).(y) = 0 then "" else "z")
-          done
-      done;
+      Array.iteri (fun x row -> Array.iteri (
+      fun y cell -> 
+        LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
+        bold = None; underline = None; blink = Some false; 
+        reverse = None; foreground = Some lyellow; background = None}) 
+        (if cell = 0 then "" else (string_of_int cell))
+      ) row) matrix;
 
       if toggle then 
         (LTerm_draw.draw_string ctx 0 0 ~style:LTerm_style.({
