@@ -13,7 +13,7 @@ type location_t = int * int
 
 type particle_t = {name: name_t; color : color_t}   
 
-type grid_t
+type grid_t = int array array
 
 (* the type of an input *)
 type input_t =
