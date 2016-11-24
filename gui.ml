@@ -30,24 +30,18 @@ class gui_ob exit_ =
       super#draw ctx focused_widget;
       for x = 0 to 99 do
           for y = 0 to 99 do 
-            LTerm_draw.draw_string ctx x y ~style:LTerm_style.({bold = None;
-                                                    underline = None;
-                                                    blink = Some false;
-                                                    reverse = None;
-                                                    foreground = Some lyellow;
-                                                    background = None}) (if matrix.(x).(y) = 0 then "a" else "z")
+            LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
+            reverse = None; foreground = Some lyellow; background = None}) 
+            (if matrix.(x).(y) = 0 then "" else "z")
           done
       done;
 
-
-
-      if toggle then (LTerm_draw.draw_string ctx 5 5 ~style:LTerm_style.({bold = None;
-                                                          underline = None;
-                                                          blink = Some true;
-                                                          reverse = None;
-                                                          foreground = Some lyellow;
-                                                          background = None}) "toggle"; toggle <- false
-      )    else toggle <- true
+      if toggle then 
+        (LTerm_draw.draw_string ctx 0 0 ~style:LTerm_style.({
+        bold = None; underline = None; blink = Some true; reverse = None;
+        foreground = Some lyellow; background = None}) "T"; toggle <- false)
+      else toggle <- true
 
     method get_input = let p = current_event in current_event <- None; p
 
@@ -60,7 +54,7 @@ class gui_ob exit_ =
             exit_ ();
             true
           | e ->
-            e |> LTerm_event.to_string |> print_endline;
+            (* e |> LTerm_event.to_string |> print_endline; *)
             current_event <- Some (e);
             true
           | _ -> current_event <- None; false)
