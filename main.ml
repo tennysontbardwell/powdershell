@@ -1,5 +1,6 @@
 (* open Clock *)
 open Gui
+open Lwt
 (* open Updater *)
 open Model
 (* open Rules *)
@@ -30,10 +31,10 @@ let run rules grid =
 let handle_input matrix inp = 
  match inp with 
   | Some (LTerm_event.Mouse {row = r; col = c}) ->
-  print_endline "mouse"; 
+  (* print_endline "mouse";  *)
     matrix.(r).(c) <- 1
   | None -> ()
-  | x -> print_endline "loop"
+  (* | Some x -> x |> LTerm_event.to_string |> print_endline *)
   | _ -> ()
 
 let execute = 
@@ -41,6 +42,11 @@ let execute =
   let do_run, push_layer, pop_layer, exit_ =
       LTerm_widget.prepare_simple_run () in
   let gui_ob = new Gui.gui_ob exit_ in
+  
+  Lazy.force LTerm.stdout >>= fun term ->
+  LTerm.enable_mouse term
+  >>= fun () ->
+  LTerm.enter_raw_mode term;
 
     ignore (Lwt_engine.on_timer 0.05 true
               (fun e -> gui_ob#get_input |> handle_input matrix;

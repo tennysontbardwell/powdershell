@@ -59,8 +59,9 @@ class gui_ob exit_ =
             when ch = of_char 'q' ->
             exit_ ();
             true
-          | LTerm_event.Key e ->
-            current_event <- Some (LTerm_event.Key e);
+          | e ->
+            e |> LTerm_event.to_string |> print_endline;
+            current_event <- Some (e);
             true
           | _ -> current_event <- None; false)
   end
