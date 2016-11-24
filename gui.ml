@@ -10,7 +10,6 @@ class gui_ob exit_ =
     inherit LTerm_widget.frame as super
  
     val mutable toggle = false
-    val mutable previous_location = None
     val mutable matrix = Array.make_matrix 100 100 0
     (* val mutable coords = {row = 0; col = 0} *)
     val mutable current_event = None
@@ -45,6 +44,8 @@ class gui_ob exit_ =
 
     method get_input = let p = current_event in current_event <- None; p
 
+    method can_focus = true
+
     initializer
       self#on_event 
         (function
@@ -58,6 +59,7 @@ class gui_ob exit_ =
             current_event <- Some (e);
             true
           | _ -> current_event <- None; false)
+
   end
 
 (* let new_gui exit = new gui_ob exit *)

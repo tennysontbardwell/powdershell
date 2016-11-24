@@ -43,7 +43,8 @@ let execute =
       LTerm_widget.prepare_simple_run () in
   let gui_ob = new Gui.gui_ob exit_ in
   
-  Lazy.force LTerm.stdout >>= fun term ->
+  Lazy.force LTerm.stdout 
+  >>= fun term ->
   LTerm.enable_mouse term
   >>= fun () ->
   LTerm.enter_raw_mode term;
