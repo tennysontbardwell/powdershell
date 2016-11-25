@@ -29,7 +29,7 @@ val to_list : grid_t -> particle_t list list
 
 (* [set_pixel] takes in the the current grid, location and desired particle at
  * that location and outputs the new grid *)
-val set_pixel : location_t -> particle_t -> grid_t -> grid_t 
+val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
 
 (* [get_grid_size] takes in the hashtable representing the grid and outputs
  * a tuple of (width, height) *)
