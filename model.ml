@@ -13,18 +13,92 @@ type location_t = int * int
 
 type particle_t = {name: name_t; color : color_t}   
 
-type grid_t
+type grid_dimensions = { mutable row: int; mutable col: int}
 
 (* the type of an input *)
 type input_t =
   ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
 
 
-let indices_of_particle _ = failwith "unimplemented"
-let particle_at_index _ = failwith "unimplemented"
-let to_list _ = failwith "unimplemented"
-let set_pixel _ = failwith "unimplemented"
-let get_grid_size _ = failwith "unimplemented"
-let change_grid_size _ = failwith "unimplemented"
-let empty_grid _ = failwith "unimplemented"
+module type Model = sig
+  	type grid_t
+  	val indices_of_particle : grid_t -> particle_t -> location_t list
+    val particle_at_index : grid_t -> location_t -> particle_t option
+    val empty_grid : int * int -> grid_t	 
+    val to_list : grid_t -> particle_t list list 
+  	val get_grid_size : grid_t -> int * int
+    val change_grid_size : int * int -> grid_t -> grid_t 
+  	val set_pixel : location_t -> particle_t -> grid_t -> grid_t 
+    val empty_grid : int * int -> grid_t
+end
 
+(* module HashModule: Model = struct
+  	type grid_t = ('_a,'_b) Hashtbl.t 
+  	let dim = {	
+				row = 0; 
+				col = 0;
+		  }
+	(* [empty_grid] creates the grid of the desired size assuming the 0th 
+	row is counted in rows.
+ 	* Precondition: rows > 0, cols > 0
+ 	* Postcondition: grid of size rows*cols w*)	
+	let empty_grid rows cols= dim.row <- rows; dim.col <- cols; 
+		Hashtbl.create (rows*cols)
+	(* [get_grid_size] takes in the grid and outputs
+ 	* a tuple of (width, height) *)
+	let get_grid_size grid = (dim.row, dim.col) 
+  	let indices_of_particle particle grid = Hasttbl.find_all grid particle  
+end *)
+
+
+module ArrayModule: Model = struct
+  	type grid_t = (location_t*particle_t) array array 
+    
+    let col_counter = ref (-1)
+    let next_val =
+      fun () ->
+      col_counter := (!col_counter) + 1;
+      !col_counter
+
+    let row_counter = ref (-1)
+    let next_row =
+      fun () ->
+      row_counter := (!row_counter) + 1;
+      !row_counter
+
+    let simple_row rown coln = col_counter := (-1); Array.map 
+    (fun x -> ((rown, next_val ()), {name = ""; color = ""})) (Array.make coln 0)
+
+    let empty_grid (rows, cols) = row_counter := (-1);
+  		Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0)
+
+    let indices_of_particle grid particle = 
+      Array.fold_left (fun acc r -> 
+        (Array.fold_left(fun acc_2 c -> 
+          if ((snd c) = particle) then (fst c)::acc_2 else acc_2) acc r )) [] grid
+
+    let particle_at_index grid location = 
+      let result = snd (Array.get (Array.get grid (fst location)) (snd location)) in
+      match result with
+      | {name = ""; color = ""} -> None
+      | _ -> Some result
+    
+    let to_list grid = 
+       Array.fold_left (fun acc r -> 
+        (Array.fold_left(fun acc_2 c -> (snd c)::acc_2) [] r )::acc ) [] grid
+
+    let set_pixel location particle grid = 
+      Array.set (Array.get grid (fst location))  (snd location) (location,particle)
+
+    let get_grid_size grid = (Array.length grid, Array.length (Array.get grid 0)) 
+
+    val change_grid_size : int * int -> grid_t -> grid_t 
+
+    let change_grid_size (r,c) grid = failwith "unimplemented"
+      (* let (old_row,old_col) = get_grid_size grid in 
+      match (old_row > r, old_col > c) with
+      | (true, true) -> Array.map (fun x -> (Array.map (fun y -> Array.get())(Array.make c)) (Array.make r) 
+      | (false, true) ->
+      | (true, false) ->
+      | (false, false) - >*)
+end
