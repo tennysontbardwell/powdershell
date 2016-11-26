@@ -1,17 +1,16 @@
 (* open Clock *)
 open Gui
 open Lwt
-(* open Updater *)
+open Updater
 open Model
 open LTerm_geom
 (* open Rules *)
-(* 
+ 
 type game_t = {
-  clk : clock;
   gui : gui_t;
   grid : grid_t;
   rules: rules_t;
-} *)
+} 
 
 (* type c = {row: int; col: int} *)
 (* type s = {rows: int; cols: int} *)
@@ -29,12 +28,6 @@ let rec execute game =
 let run rules grid =
   let game = {clk=new_clk; gui=new_gui; grid=grid; rules=rules} in
   execute game *)
-
-let handle_input matrix inp = 
- match inp with 
-  | (ElemAdd {loc = (r, c)})::t ->
-    matrix.(r).(c) <- matrix.(r).(c) + 1
-  | _ -> ()
 
 let execute = 
   let do_run, push_layer, pop_layer, exit_ =

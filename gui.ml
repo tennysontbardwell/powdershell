@@ -12,10 +12,10 @@ class gui_ob exit_ =
     inherit LTerm_widget.frame as super
  
     val mutable toggle = false
-    val mutable matrix = Array.make_matrix 100 100 0
+    val mutable matrix = Array.make_matrix 1000 1000 None
     (* val mutable coords = {row = 0; col = 0} *)
     val mutable current_event = None
-    val mutable size = {rows = 100; cols = 100}
+    val mutable size = {rows = 1000; cols = 1000}
 
     method create_matrix r c =
     matrix <- Array.make_matrix r c 0;
@@ -36,11 +36,12 @@ class gui_ob exit_ =
       LTerm_draw.clear ctx;
       super#draw ctx focused_widget;
       Array.iteri (fun x row -> Array.iteri (
-      fun y cell -> 
-        LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
-        bold = None; underline = None; blink = Some false; 
-        reverse = None; foreground = Some lyellow; background = None}) 
-        (if cell = 0 then "" else (string_of_int cell))
+      fun y cell -> match cell with
+        | None -> ()
+        | Some {name = n; color = c} ->
+            LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
+            reverse = None; foreground = Some lyellow; background = None}) n
       ) row) matrix;
 
       if toggle then 

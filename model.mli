@@ -16,10 +16,10 @@ type input_t =
 
 (* [indices_of_particle] returns a list of locations where this particle type
 * is found *)
-val indices_of_particle : particle_t -> location_t list
+val indices_of_particle : grid_t -> particle_t -> location_t list
 
 (* [particle_at_index] returns type of particle found at this index *)
-val particle_at_index : location_t -> particle_t 
+val particle_at_index : grid_t -> location_t -> particle_t option
 
 (* [to_list] returns a list representation of the 
  * display held in the hashtable of pixel locations. Format will be each that 
@@ -29,7 +29,7 @@ val to_list : grid_t -> particle_t list list
 
 (* [set_pixel] takes in the the current grid, location and desired particle at
  * that location and outputs the new grid *)
-val set_pixel : location_t -> particle_t -> grid_t -> grid_t 
+val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
 
 (* [get_grid_size] takes in the hashtable representing the grid and outputs
  * a tuple of (width, height) *)
