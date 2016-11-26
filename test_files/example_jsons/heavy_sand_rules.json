@@ -1,0 +1,15 @@
+{
+    "fps": 60,
+    "elements": [
+        {
+            "name": "heavy_sand",
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 1
+        }
+}
