@@ -69,30 +69,33 @@ module ArrayModule: Model = struct
     let simple_row rown coln = col_counter := (-1); Array.map 
     (fun x -> ((rown, next_val ()), {name = ""; color = ""})) (Array.make coln 0)
 
-    let empty_grid (rows, cols) = row_counter := (-1);
+    let empty_grid (rows, cols) : grid_t= row_counter := (-1);
   		Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0)
 
-    let indices_of_particle grid particle = 
+    let indices_of_particle (grid:grid_t) (particle: particle_t) : location_t list = 
       Array.fold_left (fun acc r -> 
         (Array.fold_left(fun acc_2 c -> 
           if ((snd c) = particle) then (fst c)::acc_2 else acc_2) acc r )) [] grid
 
-    let particle_at_index grid location = 
+    let particle_at_index (grid:grid_t) (location:location_t) : particle_t option = 
       let result = snd (Array.get (Array.get grid (fst location)) (snd location)) in
       match result with
       | {name = ""; color = ""} -> None
       | _ -> Some result
     
-    let to_list grid = 
+    let to_list (grid:grid_t) : particle_t list list = 
        Array.fold_left (fun acc r -> 
         (Array.fold_left(fun acc_2 c -> (snd c)::acc_2) [] r )::acc ) [] grid
 
-    let set_pixel location particle grid = 
-      Array.set (Array.get grid (fst location))  (snd location) (location,particle)
+    let set_pixel (location:location_t) (particle_opt:particle_t option) (grid:grid_t)
+     : grid_t = let particle = match particle_opt with
+      | None -> {name = ""; color = ""}
+      | Some p -> p
+    in Array.set (Array.get grid (fst location))  (snd location) (location,particle);
+      grid
 
-    let get_grid_size grid = (Array.length grid, Array.length (Array.get grid 0)) 
-
-    val change_grid_size : int * int -> grid_t -> grid_t 
+    let get_grid_size (grid:grid_t) : int*int = 
+    (Array.length grid, Array.length (Array.get grid 0)) 
 
     let change_grid_size (r,c) grid = failwith "unimplemented"
       (* let (old_row,old_col) = get_grid_size grid in 

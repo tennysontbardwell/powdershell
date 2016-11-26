@@ -41,6 +41,7 @@ let read_rules path =
   let elements = j |> member "elements" |> to_list in
   elements |> List.map parse_elm
 
-let read_state _ = failwith "unimplemented"
+(*write state which is type array array to json list list*)
+let read_state j :  = failwith "unimplemented" 
 let write_state _ = failwith "unimplemented"
 
