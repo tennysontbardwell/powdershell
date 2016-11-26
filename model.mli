@@ -8,7 +8,7 @@ type location_t = int * int
 
 type particle_t = {name: name_t; color : color_t}   
 
-type grid_t
+(* type grid_t *)
 
 (* the type of an input *)
 type input_t =
@@ -16,7 +16,7 @@ type input_t =
 
 (* [indices_of_particle] returns a list of locations where this particle type
 * is found *)
-val indices_of_particle : grid_t -> particle_t -> location_t list
+(* val indices_of_particle : grid_t -> particle_t -> location_t list
 
 (* [particle_at_index] returns type of particle found at this index *)
 val particle_at_index : grid_t -> location_t -> particle_t option
@@ -27,8 +27,8 @@ val particle_at_index : grid_t -> location_t -> particle_t option
  * list of particle lists to represent the entire grid. *)
 val to_list : grid_t -> particle_t list list 
 
-(* [set_pixel] takes in the the current grid, location and desired particle at
- * that location and outputs the new grid *)
+[set_pixel] takes in the the current grid, location and desired particle at
+ * that location and outputs the new grid
 val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
 
 (* [get_grid_size] takes in the hashtable representing the grid and outputs
@@ -44,5 +44,20 @@ val change_grid_size : int * int -> grid_t -> grid_t
  * and returns a hashtable representing that grid. *)
 val empty_grid : int * int -> grid_t
 
+ *)
+
+module type Model = sig
+    type grid_t
+    val indices_of_particle : grid_t -> particle_t -> location_t list
+    val particle_at_index : grid_t -> location_t -> particle_t option
+    val empty_grid : int * int -> grid_t     
+    val to_list : grid_t -> particle_t list list 
+    val get_grid_size : grid_t -> int * int
+    val change_grid_size : int * int -> grid_t -> grid_t 
+    val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
+    val empty_grid : int * int -> grid_t
+end
+
+module ArrayModel : Model
 
 

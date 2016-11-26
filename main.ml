@@ -1,17 +1,21 @@
-open Clock
+(* open Clock *)
 open Gui
+open Lwt
 open Updater
 open Model
+open LTerm_geom
 open Rules
-
+ 
 type game_t = {
-  clk : clock;
-  gui : gui_t;
-  grid : grid_t;
+  gui : gui_ob;
+  grid : ArrayModel.grid_t;
   rules: rules_t;
-}
+} 
 
-(* let execute clk state *)
+(* type c = {row: int; col: int} *)
+(* type s = {rows: int; cols: int} *)
+
+(* (* let execute clk state *)
 let rec execute game =
   let clk' = starting_frame game.clk in
   let inputs = get_inputs game.gui in
@@ -23,5 +27,24 @@ let rec execute game =
 
 let run rules grid =
   let game = {clk=new_clk; gui=new_gui; grid=grid; rules=rules} in
-  execute game
+  execute game *)
 
+let execute game _ = 
+    (* this is the pipeline where the shit happens *)
+      let inp = game.gui |> get_inputs in receive_input inp game.grid |> next_step game.rules;
+      (draw_to_screen game.grid game.gui)
+
+
+let run rules grid = Lwt_main.run (
+  let do_run, push_layer, pop_layer, exit_ =
+        LTerm_widget.prepare_simple_run () in
+    let gui_ob = new Gui.gui_ob exit_ in
+    let (rows, cols) = get_window_size gui_ob in
+    let g = ArrayModel.empty_grid (rows, cols) in
+    let clockspeed = 0.05 in
+    (* print_int rows; *)
+    let game = {gui = gui_ob; grid = g; rules = rules} in
+    Lwt_engine.on_timer clockspeed true (execute game);
+    do_run gui_ob )
+
+let () = run [] (ArrayModel.empty_grid (100, 100))
