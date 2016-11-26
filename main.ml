@@ -34,10 +34,11 @@ let execute =
       LTerm_widget.prepare_simple_run () in
   let gui_ob = new Gui.gui_ob exit_ in
   let (rows, cols) = get_window_size gui_ob in
-  let (matrix:grid_t) = (Array.make_matrix rows cols 0) in
-  print_int rows;
+  let (matrix:grid_t) = (Array.make_matrix rows cols None) in
+  (* print_int rows; *)
   ignore (Lwt_engine.on_timer 0.05 true
-      (fun e -> gui_ob |> get_inputs |> handle_input matrix;
+    (* this is the pipeline where the shit happens *)
+      (fun e -> let inp = gui_ob |> get_inputs in receive_input inp matrix |> next_step game.rules;
       (draw_to_screen matrix gui_ob)
   ));
   do_run gui_ob
