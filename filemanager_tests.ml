@@ -6,8 +6,6 @@ let ex_jsons = concat (concat current_dir_name "test_files") "example_jsons"
 
 let load_tests = [
   "load example" >::
-    (fun _ -> concat ex_jsons "rules.json" |> read_rules |> ignore);
-  "load heavy_sand" >::
-    (fun _ -> concat ex_jsons "heavy_sand.json" |> read_rules |> ignore);
+    (fun _ -> concat ex_jsons "rules.json" |> read_rules |> ignore)
 ]
 
