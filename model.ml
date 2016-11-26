@@ -28,7 +28,7 @@ module type Model = sig
     val to_list : grid_t -> particle_t list list 
   	val get_grid_size : grid_t -> int * int
     val change_grid_size : int * int -> grid_t -> grid_t 
-  	val set_pixel : location_t -> particle_t -> grid_t -> grid_t 
+  	val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
 end
 
@@ -51,7 +51,7 @@ end
 end *)
 
 
-module ArrayModule: Model = struct
+module ArrayModel: Model = struct
   	type grid_t = (location_t*particle_t) array array 
     
     let col_counter = ref (-1)

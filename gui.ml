@@ -12,13 +12,13 @@ class gui_ob exit_ =
     inherit LTerm_widget.frame as super
  
     val mutable toggle = false
-    val mutable matrix = Array.make_matrix 1000 1000 None
+    val mutable matrix = ArrayModel.empty_grid (1000, 1000)
     (* val mutable coords = {row = 0; col = 0} *)
     val mutable current_event = None
     val mutable size = {rows = 1000; cols = 1000}
 
     method create_matrix r c =
-    matrix <- Array.make_matrix r c 0;
+    matrix <- ArrayModel.empty_grid (r, c)
 
     method draw_to_screen m = 
     matrix <- m;
@@ -35,14 +35,18 @@ class gui_ob exit_ =
                           row2 *)
       LTerm_draw.clear ctx;
       super#draw ctx focused_widget;
-      Array.iteri (fun x row -> Array.iteri (
-      fun y cell -> match cell with
-        | None -> ()
-        | Some {name = n; color = c} ->
-            LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some false; 
-            reverse = None; foreground = Some lyellow; background = None}) n
-      ) row) matrix;
+
+      let (rows, cols) = ArrayModel.get_grid_size matrix in
+      for x = 0 to rows do 
+        for y = 0 to cols do
+            match ArrayModel.particle_at_index matrix (x, y) with
+            | None -> ()
+            | Some {name = n; color = c} ->
+                LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
+                bold = None; underline = None; blink = Some false; 
+                reverse = None; foreground = Some lyellow; background = None}) n
+        done
+      done;
 
       if toggle then 
         (LTerm_draw.draw_string ctx 0 0 ~style:LTerm_style.({
@@ -63,7 +67,8 @@ class gui_ob exit_ =
         Lazy.force LTerm.stdout 
         >>= (fun term -> 
             (size <- LTerm.size term;
-             self#create_matrix size.rows size.cols;
+             (* self#create_matrix size.rows size.cols; *)
+             self#create_matrix 1000 1000;
              (* print_int (size.rows); *)
              LTerm.enable_mouse term)
             >>= (fun () -> begin  LTerm.enter_raw_mode term end));

@@ -27,7 +27,7 @@ let rec range i j = if i > j then [] else i :: (range (i+1) j)
 let deoptionalize l = 
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
-let receive_input = failwith "unimplemented"
+let receive_input i g = g
 
 let transform start dir = (fst start + (fst dir), snd start + (snd dir))
 
@@ -39,7 +39,7 @@ let get_movements elm_rules loc name = elm_rules.movements
   |> List.fold_left (@) []
 
 let move_options rules grid (x,y) =
-  let particle = match particle_at_index grid (x,y) with
+  let particle = match ArrayModel.particle_at_index grid (x,y) with
   | Some x -> x
   | None -> failwith "Tennyson fucked up" in
   let elm_rules = List.assoc particle.name rules in
@@ -48,7 +48,7 @@ let move_options rules grid (x,y) =
   let get_interaction elm =
     List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
     |> (fun x -> match x with | h::t -> Some h | [] -> None) in
-  let get_space_interaction (x,y) = particle_at_index grid (x,y)
+  let get_space_interaction (x,y) = ArrayModel.particle_at_index grid (x,y)
     >>= (fun x -> x.name |> get_interaction)
     >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
   let interactions = neighbors
@@ -68,24 +68,24 @@ let apply_moves grid moves =
   let apply grid move = begin
     match move with
     | Move_exc (name, start, final, _) -> begin
-      match (particle_at_index grid start, particle_at_index grid final) with
+      match (ArrayModel.particle_at_index grid start, ArrayModel.particle_at_index grid final) with
       | (Some {name=p_name; color=color}, None) when p_name=name ->
         grid
-        |> set_pixel start None
-        |> set_pixel final (Some {name=name; color=color})
+        |> ArrayModel.set_pixel start None
+        |> ArrayModel.set_pixel final (Some {name=name; color=color})
       | _ -> grid
     end
     | Change_exc (location, inital, final, _) -> begin
-      match particle_at_index grid location with
+      match ArrayModel.particle_at_index grid location with
       | Some {name=p_name; color=_} when p_name=inital ->
-        grid |> set_pixel location (Some {name=final; color="FUCK"})
+        grid |> ArrayModel.set_pixel location (Some {name=final; color="FUCK"})
       | _ -> grid
     end
   end in
   List.fold_left apply grid moves
 
 let next_step rules grid =
-  let x_max,y_max = get_grid_size grid in
+  let x_max,y_max = ArrayModel.get_grid_size grid in
   let x_range = range 0 (x_max - 1) in
   let y_range = range 0 (y_max - 1) in
   let xy_range =

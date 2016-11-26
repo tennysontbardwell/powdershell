@@ -5,7 +5,7 @@ type gui_t = LTerm_widget.t
 class gui_ob : (unit -> 'a) -> object 
   inherit LTerm_widget.frame
   method get_input : input_t list
-  method draw_to_screen : grid_t -> unit
+  method draw_to_screen : ArrayModel.grid_t -> unit
   method create_matrix : int -> int -> unit
   method get_size : int * int
   method setup : unit
@@ -22,5 +22,5 @@ val get_inputs : gui_ob -> input_t list
 val get_window_size : gui_ob -> int * int
 
 (* [draw_to_screen] takes in a grid_t and draws every element to the screen *)
-val draw_to_screen : grid_t -> gui_ob -> unit
+val draw_to_screen : ArrayModel.grid_t -> gui_ob -> unit
 

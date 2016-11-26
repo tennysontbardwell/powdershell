@@ -4,11 +4,11 @@ open Lwt
 open Updater
 open Model
 open LTerm_geom
-(* open Rules *)
+open Rules
  
 type game_t = {
-  gui : gui_t;
-  grid : grid_t;
+  gui : gui_ob;
+  grid : ArrayModel.grid_t;
   rules: rules_t;
 } 
 
@@ -29,20 +29,22 @@ let run rules grid =
   let game = {clk=new_clk; gui=new_gui; grid=grid; rules=rules} in
   execute game *)
 
-let execute = 
-  let do_run, push_layer, pop_layer, exit_ =
-      LTerm_widget.prepare_simple_run () in
-  let gui_ob = new Gui.gui_ob exit_ in
-  let (rows, cols) = get_window_size gui_ob in
-  let (matrix:grid_t) = (Array.make_matrix rows cols None) in
-  (* print_int rows; *)
-  ignore (Lwt_engine.on_timer 0.05 true
+let execute game _ = 
     (* this is the pipeline where the shit happens *)
-      (fun e -> let inp = gui_ob |> get_inputs in receive_input inp matrix |> next_step game.rules;
-      (draw_to_screen matrix gui_ob)
-  ));
-  do_run gui_ob
+      let inp = game.gui |> get_inputs in receive_input inp game.grid |> next_step game.rules;
+      (draw_to_screen game.grid game.gui)
 
-let run = Lwt_main.run execute
 
-let () = run
+let run rules grid = Lwt_main.run (
+  let do_run, push_layer, pop_layer, exit_ =
+        LTerm_widget.prepare_simple_run () in
+    let gui_ob = new Gui.gui_ob exit_ in
+    let (rows, cols) = get_window_size gui_ob in
+    let g = ArrayModel.empty_grid (rows, cols) in
+    let clockspeed = 0.05 in
+    (* print_int rows; *)
+    let game = {gui = gui_ob; grid = g; rules = rules} in
+    Lwt_engine.on_timer clockspeed true (execute game);
+    do_run gui_ob )
+
+let () = run [] (ArrayModel.empty_grid (100, 100))
