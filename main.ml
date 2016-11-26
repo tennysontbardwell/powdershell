@@ -32,7 +32,7 @@ let run rules grid =
 
 let handle_input matrix inp = 
  match inp with 
-  | Some (LTerm_event.Mouse {row = r; col = c}) ->
+  | (ElemAdd {loc = (r, c)})::t ->
     matrix.(r).(c) <- matrix.(r).(c) + 1
   | _ -> ()
 

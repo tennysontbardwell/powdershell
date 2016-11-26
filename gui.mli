@@ -4,7 +4,7 @@ type gui_t = LTerm_widget.t
 
 class gui_ob : (unit -> 'a) -> object 
   inherit LTerm_widget.frame
-  method get_input : LTerm_event.t option
+  method get_input : input_t list
   method draw_to_screen : grid_t -> unit
   method create_matrix : int -> int -> unit
   method get_size : int * int
@@ -16,7 +16,7 @@ end
 
 (* [get_inputs] is the current input to the screen *)
 (* val get_inputs : gui_ob -> input_t option *)
-val get_inputs : gui_ob -> LTerm_event.t option
+val get_inputs : gui_ob -> input_t list
 
 (* [get_window_size] is the size of the console *)
 val get_window_size : gui_ob -> int * int

@@ -3,6 +3,7 @@ open LTerm_key
 open LTerm_geom
 open LTerm_widget
 open Lwt
+open Model
 
 type gui_t = LTerm_widget.t
 
@@ -45,10 +46,13 @@ class gui_ob exit_ =
       if toggle then 
         (LTerm_draw.draw_string ctx 0 0 ~style:LTerm_style.({
         bold = None; underline = None; blink = Some true; reverse = None;
-        foreground = Some lyellow; background = None}) "T"; toggle <- false)
+        foreground = Some lyellow; background = None}) "clock"; toggle <- false)
       else toggle <- true
 
-    method get_input = let p = current_event in current_event <- None; p
+    method get_input = match current_event with 
+    | Some (LTerm_event.Mouse {row = r; col = c}) -> 
+        current_event <- None; [(ElemAdd { elem = "sand"; loc = (r,c)})]
+    | _ -> []
 
     method can_focus = true
 
@@ -65,7 +69,7 @@ class gui_ob exit_ =
         
         (* print_int (Array.length matrix); *)
         (* print_int (size.rows); *)
-        self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows - 2; col2 = size.cols - 2};
+        (* self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows - 2; col2 = size.cols - 2}; *)
         ()
 
     method exit_term = 
@@ -84,7 +88,6 @@ class gui_ob exit_ =
             true
           | e ->
             (* e |> LTerm_event.to_string |> print_endline; *)
-            (* print_int size.cols; *)
             current_event <- Some (e);
             true
           | _ -> current_event <- None; false)
