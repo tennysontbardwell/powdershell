@@ -7,16 +7,20 @@ class gui_ob : (unit -> 'a) -> object
   method get_input : LTerm_event.t option
   method draw_to_screen : grid_t -> unit
   method create_matrix : int -> int -> unit
+  method get_size : int * int
+  method setup : unit
+  method exit_term : unit
 end
 
 (* val new_gui : (unit -> 'a) -> gui_ob *)
 
 (* [get_inputs] is the current input to the screen *)
 (* val get_inputs : gui_ob -> input_t option *)
+val get_inputs : gui_ob -> LTerm_event.t option
 
 (* [get_window_size] is the size of the console *)
-(* val get_window_size : int * int *)
+val get_window_size : gui_ob -> int * int
 
 (* [draw_to_screen] takes in a grid_t and draws every element to the screen *)
-(* val draw_to_screen : grid_t -> gui_ob -> unit *)
+val draw_to_screen : grid_t -> gui_ob -> unit
 

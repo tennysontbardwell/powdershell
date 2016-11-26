@@ -40,19 +40,12 @@ let execute =
   let do_run, push_layer, pop_layer, exit_ =
       LTerm_widget.prepare_simple_run () in
   let gui_ob = new Gui.gui_ob exit_ in
-  let size = ref {rows = 100; cols = 100} in
-  Lazy.force LTerm.stdout 
-  >>= fun term ->
-   (size := LTerm.size term;
-  LTerm.enable_mouse term)
-  >>= fun () ->
-  LTerm.enter_raw_mode term;
-  let (matrix:grid_t) = (Array.make_matrix !size.rows !size.cols 0) in
-  gui_ob#create_matrix !size.rows !size.cols;
-  
+  let (rows, cols) = get_window_size gui_ob in
+  let (matrix:grid_t) = (Array.make_matrix rows cols 0) in
+  print_int rows;
   ignore (Lwt_engine.on_timer 0.05 true
-      (fun e -> gui_ob#get_input |> handle_input matrix;
-      (gui_ob#draw_to_screen matrix )
+      (fun e -> gui_ob |> get_inputs |> handle_input matrix;
+      (draw_to_screen matrix gui_ob)
   ));
   do_run gui_ob
 
