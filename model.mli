@@ -44,5 +44,3 @@ val change_grid_size : int * int -> grid_t -> grid_t
  * and returns a hashtable representing that grid. *)
 val empty_grid : int * int -> grid_t
 
-
-

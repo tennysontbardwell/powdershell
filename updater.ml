@@ -27,7 +27,14 @@ let rec range i j = if i > j then [] else i :: (range (i+1) j)
 let deoptionalize l = 
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
-let receive_input = failwith "unimplemented"
+let receive_input inputs grid =
+  let apply grid input = match input with
+  | ElemAdd {elem=name; loc=loc} ->
+      grid |> set_pixel loc (Some {name=name; color="FUCK"})
+  | Reset -> empty_grid (get_grid_size grid)
+  | Quit -> failwith "internal error 42085"
+  | Save -> failwith "internal error 09258" in
+  List.fold_left apply inputs grid
 
 let transform start dir = (fst start + (fst dir), snd start + (snd dir))
 
