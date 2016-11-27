@@ -31,20 +31,21 @@ let run rules grid =
 
 let execute game _ = 
     (* this is the pipeline where the shit happens *)
-      let inp = game.gui |> get_inputs in receive_input inp game.grid |> next_step game.rules;
+      let inp = game.gui |> get_inputs in receive_input inp game.grid (* |> next_step game.rules *);
       (draw_to_screen game.grid game.gui)
 
 
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
+    Lazy.force LTerm.stdout >>= (fun term -> 
+    let size = LTerm.size term in
     let gui_ob = new Gui.gui_ob exit_ in
-    let (rows, cols) = get_window_size gui_ob in
-    let g = ArrayModel.empty_grid (rows, cols) in
+    gui_ob#create_matrix (size.rows - 2) (size.cols - 5);
+    let g = ArrayModel.empty_grid (size.rows - 2, size.cols - 5) in
     let clockspeed = 0.05 in
-    (* print_int rows; *)
     let game = {gui = gui_ob; grid = g; rules = rules} in
     Lwt_engine.on_timer clockspeed true (execute game);
-    do_run gui_ob )
+    do_run gui_ob ))
 
-let () = run [] (ArrayModel.empty_grid (100, 100))
+let () = run [] (ArrayModel.empty_grid (1000, 1000))

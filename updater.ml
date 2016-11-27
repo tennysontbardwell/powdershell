@@ -41,7 +41,7 @@ let get_movements elm_rules loc name = elm_rules.movements
 let move_options rules grid (x,y) =
   let particle = match ArrayModel.particle_at_index grid (x,y) with
   | Some x -> x
-  | None -> failwith "Tennyson fucked up" in
+  | None -> {name = ""; color = ""} in(* failwith "Tennyson fucked up" in *)
   let elm_rules = List.assoc particle.name rules in
   let neighbors =
     [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1] in

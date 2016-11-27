@@ -78,10 +78,11 @@ module ArrayModel: Model = struct
           if ((snd c) = particle) then (fst c)::acc_2 else acc_2) acc r )) [] grid
 
     let particle_at_index (grid:grid_t) (location:location_t) : particle_t option = 
-      let result = snd (Array.get (Array.get grid (fst location)) (snd location)) in
-      match result with
-      | {name = ""; color = ""} -> None
-      | _ -> Some result
+    try (
+          let result = snd (Array.get (Array.get grid (fst location)) (snd location))  in
+          match result with
+          | {name = ""; color = ""} -> None
+          | _ -> Some result ) with e -> None (* SITAR ADDED THIS AS A HOTFIX - ACTUALLY FIX THIS *)
     
     let to_list (grid:grid_t) : particle_t list list = 
        Array.fold_left (fun acc r -> 

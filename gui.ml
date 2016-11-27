@@ -4,6 +4,7 @@ open LTerm_geom
 open LTerm_widget
 open Lwt
 open Model
+open ArrayModel
 
 type gui_t = LTerm_widget.t
 
@@ -12,13 +13,17 @@ class gui_ob exit_ =
     inherit LTerm_widget.frame as super
  
     val mutable toggle = false
-    val mutable matrix = ArrayModel.empty_grid (1000, 1000)
-    (* val mutable coords = {row = 0; col = 0} *)
-    val mutable current_event = None
+    val mutable matrix = ArrayModel.empty_grid (1, 1)
+    val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
+    val mutable curr_element = "sand"
+    val mutable element_list = ["sand"; "water"; "ice"; "vine"; "lava"]
+    val mutable actions_list = [("reset", Reset); ("save", Save); ("quit", Quit)]
+    val mutable space = 2
 
     method create_matrix r c =
-    matrix <- ArrayModel.empty_grid (r, c)
+    matrix <- ArrayModel.empty_grid (r, c);
+    (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
     method draw_to_screen m = 
     matrix <- m;
@@ -34,9 +39,11 @@ class gui_ob exit_ =
                       col1    col2
                           row2 *)
       LTerm_draw.clear ctx;
-      super#draw ctx focused_widget;
-
       let (rows, cols) = ArrayModel.get_grid_size matrix in
+      (* super#draw ctx focused_widget; *)
+      (* print_int rows; print_string ","; print_int cols; print_endline ""; *)
+    LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows; col2 = cols} LTerm_draw.Light;
+
       for x = 0 to rows do 
         for y = 0 to cols do
             match ArrayModel.particle_at_index matrix (x, y) with
@@ -47,17 +54,21 @@ class gui_ob exit_ =
                 reverse = None; foreground = Some lyellow; background = None}) n
         done
       done;
-
+      List.fold_left (fun a x -> 
+        (* let color = if a = curr_element then Some lyellow else Some lwhite in *)
+        LTerm_draw.draw_string ctx a cols ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some true; 
+            reverse = None; foreground = Some lwhite; background = 
+            (if x = curr_element then Some lyellow else None)}) x; 
+        a + space
+      ) 10 element_list;
       if toggle then 
-        (LTerm_draw.draw_string ctx 0 0 ~style:LTerm_style.({
+        (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
         bold = None; underline = None; blink = Some true; reverse = None;
-        foreground = Some lyellow; background = None}) "clock"; toggle <- false)
+        foreground = Some lgreen; background = None}) "clock"; toggle <- false)
       else toggle <- true
 
-    method get_input = match current_event with 
-    | Some (LTerm_event.Mouse {row = r; col = c}) -> 
-        current_event <- None; [(ElemAdd { elem = "sand"; loc = (r,c)})]
-    | _ -> []
+    method get_input = current_event
 
     method can_focus = true
 
@@ -68,7 +79,7 @@ class gui_ob exit_ =
         >>= (fun term -> 
             (size <- LTerm.size term;
              (* self#create_matrix size.rows size.cols; *)
-             self#create_matrix 1000 1000;
+             (* self#create_matrix 1000 1000 ;*)
              (* print_int (size.rows); *)
              LTerm.enable_mouse term)
             >>= (fun () -> begin  LTerm.enter_raw_mode term end));
@@ -77,6 +88,16 @@ class gui_ob exit_ =
         (* print_int (size.rows); *)
         (* self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows - 2; col2 = size.cols - 2}; *)
         ()
+
+    method handle_buttons r c =
+        let (rows, cols) = ArrayModel.get_grid_size matrix in
+        if r > rows then
+        ()
+        else
+        let counter = ref (10 - space) in
+        let assoc_list = (List.map (fun n -> (counter := !counter + space; (!counter, n))) element_list) in
+        if List.mem_assoc r assoc_list then (curr_element <- List.assoc r assoc_list) else ()
+        (* (print_int r; print_string ","; print_int c; print_endline "") *)
 
     method exit_term = 
         Lazy.force LTerm.stdout 
@@ -92,11 +113,14 @@ class gui_ob exit_ =
             when ch = of_char 'q' ->
             self#exit_term;
             true
-          | e ->
+          | LTerm_event.Mouse {row = r; col = c} -> 
             (* e |> LTerm_event.to_string |> print_endline; *)
-            current_event <- Some (e);
+            let (rowsize, colsize) = get_grid_size matrix in
+            if r < rowsize && c < colsize then
+            current_event <- (ElemAdd {elem = curr_element; loc = (r,c)})::current_event
+            else self#handle_buttons r c;
             true
-          | _ -> current_event <- None; false)
+          | _ -> false)
 
   end
 

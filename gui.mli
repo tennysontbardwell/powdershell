@@ -10,6 +10,7 @@ class gui_ob : (unit -> 'a) -> object
   method get_size : int * int
   method setup : unit
   method exit_term : unit
+  method handle_buttons : int -> int -> unit
 end
 
 (* val new_gui : (unit -> 'a) -> gui_ob *)
