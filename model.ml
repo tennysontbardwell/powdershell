@@ -30,6 +30,10 @@ module type Model = sig
     val change_grid_size : int * int -> grid_t -> grid_t 
   	val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
+    val particle_to_string : particle_t option -> string
+    val to_string : grid_t -> string
+    val create_grid : (location_t * particle_t) array array -> grid_t
+    val unwrap_grid : grid_t -> (location_t * particle_t) array array
 end
 
 (* module HashModule: Model = struct
@@ -98,6 +102,10 @@ module ArrayModel: Model = struct
     let get_grid_size (grid:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 
 
+    let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
+
+    let unwrap_grid (grid: grid_t) : (location_t*particle_t) array array = grid
+
     let change_grid_size (r,c) grid = failwith "unimplemented"
       (* let (old_row,old_col) = get_grid_size grid in 
       match (old_row > r, old_col > c) with
@@ -105,4 +113,17 @@ module ArrayModel: Model = struct
       | (false, true) ->
       | (true, false) ->
       | (false, false) - >*)
+
+    let particle_to_string = function
+    | Some _ -> "*"
+    | None -> "_"
+
+    let to_string grid =
+      let (max_x,max_y) = get_grid_size grid in
+      Helpers.range 0 (max_x - 1) |> List.map
+        (fun x -> Helpers.range 0 (max_y -1) |> List.map
+          (fun y -> particle_to_string (particle_at_index grid (x,y)))
+        )
+      |> Helpers.transpose |> List.map (String.concat "") |>  String.concat "\n"
+      
 end

@@ -1,3 +1,19 @@
 #directory "_build";;
+
 #require "lambda-term";;
-#require "gui"
+#require "yojson";;
+
+#load "_build/helpers.cmo";;
+#load "_build/model.cmo";;
+#load "_build/updater.cmo";;
+#load "_build/rules.cmo";;
+#load "_build/filemanager.cmo";;
+
+open Filename;;
+open Helpers;;
+open Model.ArrayModel;;
+open Rules;;
+open Updater;;
+open Filemanager;;
+
+let ex_jsons = concat (concat current_dir_name "test_files") "example_jsons"
