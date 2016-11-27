@@ -14,8 +14,8 @@ let updater_tests = [
       let g = empty_grid (3,3)
         |> set_pixel (1,1) (Some {name="heavy_sand"; color="red"})
         |> next_step r in
-      assert_equal (particle_at_index g (1,1)) None;
-      assert_equal (particle_at_index g (1,2))
+      assert_equal ~printer:particle_to_string (particle_at_index g (1,1)) None;
+      assert_equal ~printer:particle_to_string (particle_at_index g (1,2))
         (Some {name="heavy_sand"; color="red"}))
 ]
 

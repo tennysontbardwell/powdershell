@@ -6,7 +6,7 @@
             "interactions": [],
             "movements": [
                 {
-                    "directions": [[0,-1]],
+                    "directions": [[0,1]],
                     "probability": 1.0
                 }
             ],

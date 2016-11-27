@@ -1,36 +1,28 @@
-open Model
 open Rules
-
-(* https://www.cs.cornell.edu/Courses/cs3110/2016fa/l/23-monads/rec.html *)
-module Maybe = struct
-  type 'a t = 'a option
-  let return x = Some x 
-  let bind m f = 
-    match m with 
-      | Some x -> f x 
-      | None -> None
-  let (>>=) = bind 
-end
-
-open Maybe
+open Model
+open Helpers
+open Helpers.Maybe
 
 let assoc_opt a b = try List.assoc a b |> return with | Not_found -> None
 
+(* represents a single movement of a particle which could be applied in a
+ * single step, assuming all of the conditions for each are meet (in actuality
+ * they must be checked right before the move is applied *)
 type move_t =
   | Move_exc of name_t * location_t * location_t * probability_t
   | Change_exc of location_t * name_t * name_t * probability_t
 
-(* https://stackoverflow.com/questions/243864/what-is-the-ocaml-idiom-equivalent-to-pythons-range-function *)
-let rec range i j = if i > j then [] else i :: (range (i+1) j)
-
 (* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
+(* This converts an a' option list to a' list, removing the nones *)
 let deoptionalize l = 
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
 let receive_input i g = g
 
+(* this is [start] after moving 1 in direction [dir] *)
 let transform start dir = (fst start + (fst dir), snd start + (snd dir))
 
+(* this is all the leagal [Move_exc]s for a particular location on any grid *)
 let get_movements elm_rules loc name = elm_rules.movements
   |> List.map (fun (directions, probability) ->
     directions
@@ -38,25 +30,27 @@ let get_movements elm_rules loc name = elm_rules.movements
       Move_exc (name, loc, (transform loc dir), probability)))
   |> List.fold_left (@) []
 
+(* this is a list of [move_t]s for a particular location on the grid *)
 let move_options rules grid (x,y) =
-  let particle = match ArrayModel.particle_at_index grid (x,y) with
-  | Some x -> x
-  | None -> failwith "Tennyson fucked up" in
-  let elm_rules = List.assoc particle.name rules in
-  let neighbors =
-    [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1] in
-  let get_interaction elm =
-    List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
-    |> (fun x -> match x with | h::t -> Some h | [] -> None) in
-  let get_space_interaction (x,y) = ArrayModel.particle_at_index grid (x,y)
-    >>= (fun x -> x.name |> get_interaction)
-    >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
-  let interactions = neighbors
-    |> List.map return
-    |> List.map (fun x -> bind x get_space_interaction)
-    |> deoptionalize in
-  let moves = get_movements elm_rules (x,y) particle.name in
-  interactions @ moves
+  match ArrayModel.particle_at_index grid (x,y) with
+  | Some particle -> begin
+    let elm_rules = List.assoc particle.name rules in
+    let neighbors =
+      [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1] in
+    let get_interaction elm =
+      List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
+      |> (fun x -> match x with | h::t -> Some h | [] -> None) in
+    let get_space_interaction (x,y) = ArrayModel.particle_at_index grid (x,y)
+      >>= (fun x -> x.name |> get_interaction)
+      >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
+    let interactions = neighbors
+      |> List.map return
+      |> List.map (fun x -> bind x get_space_interaction)
+      |> deoptionalize in
+    let moves = get_movements elm_rules (x,y) particle.name in
+    interactions @ moves
+  end
+  | None -> []
 
 let filter_moves (moves : move_t list) : move_t list =
   let prob_filter item p = if Random.float 0. < p then Some item else None in
