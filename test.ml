@@ -4,7 +4,7 @@ open Updater_tests
 
 let tests = "test suite" >::: ( []
   @ load_tests
-  (* @ updater_tests *)
+  @ updater_tests
 )
 
 let () = (fun _ -> Filename.concat ex_jsons "rules.json" |> Filemanager.read_rules |> ignore) ()

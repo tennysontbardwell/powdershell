@@ -14,4 +14,5 @@ B _build/
 
 PKG oUnit
 PKG yojson
+PKG Lwt
 

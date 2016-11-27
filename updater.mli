@@ -1,6 +1,5 @@
 open Model
 open Rules
-open Gui
 
 (*[recieve_input] takes in the input and the current grid and outputs the new
  * grid.*)
