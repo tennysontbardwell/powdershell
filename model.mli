@@ -56,6 +56,8 @@ module type Model = sig
     val change_grid_size : int * int -> grid_t -> grid_t 
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
+    val create_grid : (location_t*particle_t) array array -> grid_t
+    val unwrap_grid : grid_t -> (location_t*particle_t) array array
 end
 
 module ArrayModel : Model

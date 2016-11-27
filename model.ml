@@ -30,6 +30,8 @@ module type Model = sig
     val change_grid_size : int * int -> grid_t -> grid_t 
   	val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
+    val create_grid : (location_t * particle_t) array array -> grid_t
+    val unwrap_grid : grid_t -> (location_t * particle_t) array array
 end
 
 (* module HashModule: Model = struct
@@ -96,6 +98,10 @@ module ArrayModel: Model = struct
 
     let get_grid_size (grid:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 
+
+    let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
+
+    let unwrap_grid (grid: grid_t) : (location_t*particle_t) array array = grid
 
     let change_grid_size (r,c) grid = failwith "unimplemented"
       (* let (old_row,old_col) = get_grid_size grid in 
