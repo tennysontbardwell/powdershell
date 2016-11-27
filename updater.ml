@@ -40,9 +40,12 @@ let move_options rules grid (x,y) =
     let get_interaction elm =
       List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
       |> (fun x -> match x with | h::t -> Some h | [] -> None) in
-    let get_space_interaction (x,y) = ArrayModel.particle_at_index grid (x,y)
-      >>= (fun x -> x.name |> get_interaction)
-      >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
+    let get_space_interaction (x,y) =
+      try
+        ArrayModel.particle_at_index grid (x,y)
+        >>= (fun x -> x.name |> get_interaction)
+        >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return)
+      with Invalid_argument _ -> None in
     let interactions = neighbors
       |> List.map return
       |> List.map (fun x -> bind x get_space_interaction)
@@ -62,12 +65,15 @@ let apply_moves grid moves =
   let apply grid move = begin
     match move with
     | Move_exc (name, start, final, _) -> begin
-      match (ArrayModel.particle_at_index grid start, ArrayModel.particle_at_index grid final) with
-      | (Some {name=p_name; color=color}, None) when p_name=name ->
-        grid
-        |> ArrayModel.set_pixel start None
-        |> ArrayModel.set_pixel final (Some {name=name; color=color})
-      | _ -> grid
+      try
+        match (ArrayModel.particle_at_index grid start,
+                ArrayModel.particle_at_index grid final) with
+        | (Some {name=p_name; color=color}, None) when p_name=name ->
+          grid
+          |> ArrayModel.set_pixel start None
+          |> ArrayModel.set_pixel final (Some {name=name; color=color})
+        | _ -> grid
+      with Invalid_argument _ -> grid
     end
     | Change_exc (location, inital, final, _) -> begin
       match ArrayModel.particle_at_index grid location with
