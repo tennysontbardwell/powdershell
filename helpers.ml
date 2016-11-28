@@ -41,3 +41,32 @@ let shuffle_array a =
   Array.iteri (fun i _ -> swap a i (Random.int (i+1))) a; a
 
 let shuffle l = l |> Array.of_list |> shuffle_array |> Array.to_list
+
+module IntIntHash =
+  struct
+    type t = int * int
+    let equal i j = i=j
+    let hash (a,b) = (a*1001+b) land max_int
+  end
+
+module IntIntHashtbl = Hashtbl.Make(IntIntHash)
+
+module IntIntOrdered = struct
+  type t = int * int
+  let hash (x,y) = x*100001 + y
+  let compare a b = Pervasives.compare (hash a) (hash b)
+end
+
+module IntIntSet = Set.Make(IntIntOrdered)
+
+module IntOrdered = struct
+  type t = int
+  let compare = Pervasives.compare
+end
+
+module IntSet = Set.Make(IntOrdered)
+
+let remove_dup (x : IntIntOrdered.t list) : IntIntOrdered.t list = x
+  |> List.fold_left (fun acc x -> IntIntSet.add x acc) IntIntSet.empty
+  |> IntIntSet.elements
+

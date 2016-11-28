@@ -5,6 +5,11 @@ open Helpers.Maybe
 
 let assoc_opt a b = try List.assoc a b |> return with | Not_found -> None
 
+let neighbors x y =
+  [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1]
+
+let neighbors' x y = (x,y) :: neighbors x y
+
 (* represents a single movement of a particle which could be applied in a
  * single step, assuming all of the conditions for each are meet (in actuality
  * they must be checked right before the move is applied *)
@@ -20,7 +25,11 @@ let deoptionalize l =
 let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
 | ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc
   (Some {name=i.elem; display=("a", (100, 100, 100))}) g |> ignore;
-  receive_input t g
+  let x,y = i.loc in
+  let g' = neighbors' x y @ (ArrayModel.get_to_update g)
+  |> ArrayModel.set_to_update g in
+  receive_input t g'
+| [] -> ArrayModel.get_to_update g |> remove_dup |> ArrayModel.set_to_update g
 | _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)
@@ -52,8 +61,6 @@ let get_movements elm_rules loc name grid = elm_rules.movements
 
 (* this is all legal [Change_exc]s for a particular location on any grid *)
 let get_changes elm_rules (x,y) name grid =
-  let neighbors =
-    [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1] in
   (* TODO this doesn't allow multiple changes or something *)
   let get_interaction elm =
     List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
@@ -62,7 +69,7 @@ let get_changes elm_rules (x,y) name grid =
     ArrayModel.particle_at_index grid (x,y)
     >>= (fun x -> x.name |> get_interaction)
     >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
-  let interactions = neighbors
+  let interactions = neighbors x y
     |> List.map return
     |> List.map (fun x -> bind x get_space_interaction)
     |> deoptionalize in
@@ -108,15 +115,20 @@ let apply grid move =
 let apply_moves grid moves =
   moves |> shuffle |> List.fold_left apply grid
 
+let get_new_update_list moves : location_t list =
+  let f = (fun move -> match move with
+    | Move_exc (_,(x1,y1),(x2,y2),_) -> (neighbors' x1 y1) @ (neighbors' x2 y2)
+    | Change_exc ((x1,y1),_,_,_) -> (neighbors' x1 y1)
+  ) in
+  moves |> List.map f |> List.fold_left (@) []
+    |> remove_dup
+
 let next_step rules grid =
-  let x_max,y_max = ArrayModel.get_grid_size grid in
-  let x_range = range 0 (x_max - 1) in
-  let y_range = range 0 (y_max - 1) in
-  let xy_range =
-    let f y = List.fold_left (fun acc x -> (x,y) :: acc) [] x_range in
-    List.fold_left (fun acc y -> f y @ acc) [] y_range in
-  let moves =
-    List.fold_left (fun acc i -> move_options rules grid i @ acc) [] xy_range 
-    |> filter_moves in
-  apply_moves grid moves
+  let to_update = ArrayModel.get_to_update grid in
+  let possible_moves =
+    List.fold_left (fun acc i -> move_options rules grid i @ acc) [] to_update
+  in
+  let choosen_moves = possible_moves |> filter_moves in
+  let grid' = apply_moves grid choosen_moves in
+  ArrayModel.set_to_update grid' (get_new_update_list choosen_moves)
 

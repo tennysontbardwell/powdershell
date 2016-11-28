@@ -23,15 +23,6 @@ type grid_dimensions = { mutable row: int; mutable col: int}
 type input_t =
   ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
 
-module IntIntHash =
-  struct
-    type t = int * int
-    let equal i j = i=j
-    let hash (a,b) = (a*1001+b) land max_int
-  end
-
-module IntIntHashtbl = Hashtbl.Make(IntIntHash)
-
 module type Model = sig
     type grid_t
     val indices_of_particle : grid_t -> particle_t -> location_t list
