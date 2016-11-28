@@ -18,7 +18,7 @@ let deoptionalize l =
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
 let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
-| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc (Some {name=i.elem; color="red"}) g; receive_input t g
+| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc (Some {name=i.elem; display=("a", (100, 100, 100))}) g; receive_input t g
 | _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)
@@ -70,17 +70,17 @@ let apply_moves grid moves =
       if ArrayModel.in_grid grid final then
         match (ArrayModel.particle_at_index grid start,
                 ArrayModel.particle_at_index grid final) with
-        | (Some {name=p_name; color=color}, None) when p_name=name ->
+        | (Some {name=p_name; display=display}, None) when p_name=name ->
           grid
           |> ArrayModel.set_pixel start None
-          |> ArrayModel.set_pixel final (Some {name=name; color=color})
+          |> ArrayModel.set_pixel final (Some {name=name; display=display})
         | _ -> grid
       else grid
     end
     | Change_exc (location, inital, final, _) -> begin
       match ArrayModel.particle_at_index grid location with
-      | Some {name=p_name; color=_} when p_name=inital ->
-        grid |> ArrayModel.set_pixel location (Some {name=final; color="FUCK"})
+      | Some {name=p_name; display=_} when p_name=inital ->
+        grid |> ArrayModel.set_pixel location (Some {name=final; display=("a", (100, 100, 100))})
       | _ -> grid
     end
   end in

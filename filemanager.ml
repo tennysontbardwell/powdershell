@@ -63,15 +63,18 @@ let handle_str (j: Yojson.Basic.json list) = match j with
   | _ -> failwith "error"
 
 (*[handle_loc] helper function for reading a list from a json file*)
-let handle_lst (j: (color_t * Yojson.Basic.json) list) = match j with
+let handle_lst (j: (color_t * Yojson.Basic.json) list) = (* match j with
   | [("loc", `List loc_lst); ("name", `List name_lst); ("color", `List color_lst)] -> 
     (handle_loc loc_lst, {name = (handle_str name_lst); color = (handle_str color_lst)})
-  | _ -> failwith "bad json list"
+  | _ -> failwith "bad json list" *) []
+  (* TODO: QUINN FIX THIS SITAR IS DUMB *)
 
 (*[rd_col] helper function for read_state to take in a json column and parse it*)
-let rd_col (j:Yojson.Basic.json list) : (location_t*particle_t) list = 
+let rd_col (j:Yojson.Basic.json list) : (location_t*particle_t) list = (* 
   let json_list = (j |> filter_assoc) in 
-  List.fold_left (fun acc x -> acc@[handle_lst x]) [] json_list
+  List.fold_left (fun acc x -> acc@[handle_lst x]) [] json_list *)
+[]
+  (* TODO: QUINN FIX THIS SITAR IS DUMB *)
 
 (*[read_state] reads a json file from a path and outputs a grid*)
 let read_state (path:file_path_t) : ArrayModel.grid_t = 
@@ -83,14 +86,16 @@ let read_state (path:file_path_t) : ArrayModel.grid_t =
       Array.append acc_row [|(Array.of_list row)|] ) [||] json_lst_arr |> ArrayModel.create_grid
 
 (*[wr_row] converts a row of the grid into json*)
-let wr_row (arr:((int*int)* particle_t) array) : Yojson.Basic.json = 
+let wr_row (arr:((int*int)* particle_t) array) : Yojson.Basic.json = (* 
   `Assoc [("row", `List ((Array.fold_left 
     (fun acc x -> match x with
       | ((int_1, int_2), particle) -> acc@[(`Assoc
             [("loc", `List [`Int int_1; `Int int_2]); 
              ("name", `List [`String particle.name]);
              ("color", `List [`String particle.color])]
-      )]) [] arr) @ [`Null]))]
+      )]) [] arr) @ [`Null]))] *) `List  []
+  (* TODO: QUINN FIX THIS SITAR IS DUMB *)
+
 
 (*[write_state] writes a grid into a file and places file at "grid.json"*)
 let write_state (grid:ArrayModel.grid_t) : file_path_t = 

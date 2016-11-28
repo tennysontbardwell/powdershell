@@ -6,6 +6,7 @@ open LTerm_style
 open Lwt
 open Model
 open ArrayModel
+open Rules
 
 type gui_t = LTerm_widget.t
 
@@ -23,11 +24,14 @@ class gui_ob exit_ =
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
+    val mutable rules = []
     val offset = 1
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
+
+    method load_rules r = rules <- r
 
     method draw_to_screen m = 
     matrix <- m;
@@ -40,18 +44,26 @@ class gui_ob exit_ =
       let (cols, rows) = ArrayModel.get_grid_size matrix in
       (* print_int rows; print_string ","; print_int cols; print_endline ""; *)
       LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows + 2; col2 = cols + 2} LTerm_draw.Light;
-
+      let constrain a l h = if a < l then l else if a > h then h else a in
       for x = 0 to cols do 
         for y = 0 to rows do
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
-            | Some {name = n; color = c} ->
+            | Some {name = n; display = c} ->
+                let details = List.assoc n rules in
+                let (rawr, rawg, rawb) = details.color in
+                let shim = details.shimmer in 
+                let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
+                 (constrain ((Random.int (shim + 1)) + rawr + (shim/2)) 0 255,
+                  constrain ((Random.int shim) + rawg + (shim/2)) 0 255, 
+                  constrain ((Random.int (shim - 1)) + rawb + (shim/2)) 0 255) in
                 LTerm_draw.draw_string ctx (y + offset) (x + offset) ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
-                reverse = None; foreground = Some (rgb ((Random.int 20) + 235) ((Random.int 40) + 155) 5); background = None}) 
-                (String.sub n 0 1)
+                reverse = None; foreground = Some (rgb r g b); background = None}) 
+                (details.display)
         done
       done;
+
       List.fold_left (fun a x -> 
         (* let color = if a = curr_element then Some lyellow else Some lwhite in *)
         LTerm_draw.draw_string ctx a (cols + 2) ~style:LTerm_style.({

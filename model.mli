@@ -2,11 +2,11 @@ open Rules
 
 type name_t = string
 
-type color_t = string
+type color_t = int*int*int
 
 type location_t = int * int
 
-type particle_t = {name: name_t; color : color_t}   
+type particle_t = {name: name_t; display : string * color_t}    
 
 (* type grid_t *)
 

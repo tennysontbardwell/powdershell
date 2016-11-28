@@ -44,6 +44,7 @@ let run rules grid = Lwt_main.run (
     let size = {cols=(if raw_size.cols > 218 then 218 else raw_size.cols);
                 rows=(if raw_size.rows > 218 then 218 else raw_size.rows)} in
     let gui_ob = new Gui.gui_ob exit_ in
+    gui_ob#load_rules rules;
     gui_ob#create_matrix (size.cols - 7) (size.rows - 3);
     let g = ArrayModel.empty_grid (size.cols - 7, size.rows - 3) in
     let clockspeed = 0.05 in

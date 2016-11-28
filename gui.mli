@@ -9,6 +9,7 @@ class gui_ob : (unit -> 'a) -> object
   method create_matrix : int -> int -> unit
   method get_size : int * int
   method setup : unit
+  method load_rules : Rules.rules_t -> unit
   method exit_term : unit
   method handle_buttons : int -> int -> unit
 end
