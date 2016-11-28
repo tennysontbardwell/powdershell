@@ -48,7 +48,7 @@ class gui_ob exit_ =
         for y = 0 to rows do
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
-            | Some {name = n; display = c} ->
+            | Some {name = n} ->
                 let details = List.assoc n rules in
                 let (rawr, rawg, rawb) = details.color in
                 let shim = details.shimmer in 

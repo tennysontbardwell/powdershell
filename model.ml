@@ -13,9 +13,7 @@ type color_t = int*int*int
 
 type location_t = int * int
 
-(* type particle_t = {name: name_t; color : color_t}    *)
-
-type particle_t = {name: name_t; display : string * color_t}   
+type particle_t = {name: name_t}   
 
 type grid_dimensions = { mutable row: int; mutable col: int}
 
@@ -58,7 +56,7 @@ module ArrayModel: Model = struct
 
     let simple_row (rown:int) (coln:int) : ((int * int) * particle_t) array = 
       col_counter := (-1); Array.map (fun x -> 
-      ((rown, next_val ()), {name = ""; display = ("", (0,0,0))})) (Array.make coln 0)
+      ((rown, next_val ()), {name = ""})) (Array.make coln 0)
 
     let empty_grid ((rows, cols):int*int) : grid_t= row_counter := (-1);
       Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0)
@@ -71,7 +69,7 @@ module ArrayModel: Model = struct
     let particle_at_index (grid:grid_t) (location:location_t) : particle_t option = 
       try ( let result = snd (Array.get (Array.get grid (fst location)) (snd location))  in
           match result with
-          | {name = ""; display = ("", (0,0,0))} -> None
+          | {name = ""} -> None
           | _ -> Some result )
       with e -> None
 
@@ -81,7 +79,7 @@ module ArrayModel: Model = struct
 
     let set_pixel (location:location_t) (particle_opt:particle_t option) (grid:grid_t)
      : grid_t = let particle = match particle_opt with
-      | None -> {name = ""; display = ("", (0,0,0))}
+      | None -> {name = ""}
       | Some p -> p
       in Array.set (Array.get grid (fst location))  (snd location) (location,particle);
       grid
