@@ -29,7 +29,7 @@ class gui_ob exit_ =
     matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
-    method load_rules r = rules <- r; element_list <- List.map (fun (x, _) -> x) rules
+    method load_rules r = rules <- r; element_list <- "erase"::(List.map (fun (x, _) -> x) rules)
 
     method draw_to_screen m = 
     matrix <- m;

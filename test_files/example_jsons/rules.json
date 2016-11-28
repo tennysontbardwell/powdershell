@@ -4,7 +4,7 @@
         {
             "name": "sand",
             "color": { "r": 250, "g": 180, "b": 0 },
-            "display": "s",
+            "display": "ϴ",
             "lifespan": -1,
             "shimmer" : 2,
             "interactions": [],
@@ -23,7 +23,7 @@
         {
             "name": "water",
             "color": { "r": 30, "g": 100, "b": 225 },
-            "display": "w",
+            "display": "₪",
             "lifespan": -1,
             "shimmer" : 20,
             "interactions": [],
@@ -57,6 +57,37 @@
                     "probability": 0.1
                 }
             ],
+            "movements": [],
+            "density": 1
+        },
+        {
+            "name": "stone",
+            "color": { "r": 100, "g": 100, "b": 100 },
+            "display": "◆",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "",
+                    "to": "water",
+                    "probability": 0.1
+                }],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 1
+        },
+        {
+            "name": "wall",
+            "color": { "r": 70, "g": 80, "b": 70 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "interactions": [],
             "movements": [],
             "density": 1
         }
