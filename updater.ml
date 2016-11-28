@@ -17,10 +17,18 @@ type move_t =
 let deoptionalize l = 
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
+let reset_model g = let (c, r) = ArrayModel.get_grid_size g in
+for x = 0 to c - 1 do
+  for y = 0 to r - 1 do
+    ArrayModel.set_pixel (x,y) None g
+  done
+done
+
 let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
-| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc
-  (Some {name=i.elem; display=("a", (100, 100, 100))}) g |> ignore;
-  receive_input t g
+| Reset::t -> ArrayModel.deep_copy (ArrayModel.empty_grid (ArrayModel.get_grid_size g)) g; receive_input t g
+| Save::t -> ignore (Filemanager.write_state g); receive_input t g
+| Load::t -> ArrayModel.deep_copy (Filemanager.read_state "grid.json") g; receive_input t g
+| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc (if i.elem = "erase" then None else Some {name=i.elem}) g; receive_input t g
 | _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)
@@ -31,15 +39,14 @@ let can_apply_move grid move = match move with
   if ArrayModel.in_grid grid final then
     match (ArrayModel.particle_at_index grid start,
             ArrayModel.particle_at_index grid final) with
-    | (Some {name=p_name; display=display}, None) when p_name=name -> true
+    | (Some {name=p_name}, None) when p_name=name -> true
     | _ -> false
   else false
 | Change_exc (location, inital, final, _) ->
   match ArrayModel.particle_at_index grid location with
-  | Some {name=p_name; display=_} when p_name=inital ->
+  | Some {name=p_name} when p_name=inital ->
       true
   | _ -> false
-
 
 (* this is all the leagal [Move_exc]s for a particular location on any grid *)
 let get_movements elm_rules loc name grid = elm_rules.movements
@@ -81,7 +88,7 @@ let move_options rules grid (x,y) =
   | None -> []
 
 let filter_moves (moves : move_t list) : move_t list =
-  let prob_filter item p = if Random.float 0. < p then Some item else None in
+  let prob_filter item p = if Random.float 1. < p then Some item else None in
   let filter (item : move_t) : move_t option = match item with
     | Move_exc (_,_,_,p) | Change_exc (_,_,_,p) -> prob_filter item p in
   moves |> List.map filter |> deoptionalize
@@ -91,16 +98,16 @@ let apply grid move =
     match move with
     | Move_exc (name, start, final, _) -> begin
       match ArrayModel.particle_at_index grid start with
-      | Some {name=p_name; display=display} ->
+      | Some {name=p_name} ->
         grid
         |> ArrayModel.set_pixel start None
-        |> ArrayModel.set_pixel final (Some {name=name; display=display})
+        |> ArrayModel.set_pixel final (Some {name=name})
       | _ -> failwith "Internal Error 20394"
     end
     | Change_exc (location, inital, final, _) -> begin
       match ArrayModel.particle_at_index grid location with
-      | Some {name=p_name; display=_} when p_name=inital ->
-        grid |> ArrayModel.set_pixel location (Some {name=final; display=("a", (100, 100, 100))})
+      | Some {name=p_name} when p_name=inital ->
+        grid |> ArrayModel.set_pixel location (Some {name=final})
       | _ -> failwith "Internal Error 4093108"
     end
   else grid

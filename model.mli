@@ -6,13 +6,14 @@ type color_t = int*int*int
 
 type location_t = int * int
 
-type particle_t = {name: name_t; display : string * color_t}    
+type particle_t = {name: name_t}    
 
 (* type grid_t *)
 
 (* the type of an input *)
 type input_t =
-  ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
+  ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save | Load
+  
 
 (* [indices_of_particle] returns a list of locations where this particle type
 * is found *)
@@ -61,6 +62,7 @@ module type Model = sig
     val create_grid : (location_t*particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t*particle_t) array array
     val in_grid : grid_t -> location_t -> bool
+        val deep_copy : grid_t -> grid_t -> unit
 end
 
 module ArrayModel : Model

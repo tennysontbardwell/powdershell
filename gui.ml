@@ -14,30 +14,31 @@ class gui_ob exit_ =
   object(self)
     inherit LTerm_widget.frame as super
  
-    val mutable toggle = false
     val mutable matrix = ArrayModel.empty_grid (1, 1)
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
-    val mutable radius = 1
-    val mutable element_list = ["sand"; "water"; "ice"]
+    val mutable radius = 3
+    val mutable element_list = []
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
     val mutable rules = []
-    val offset = 1
+    val mutable paused = false
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
-    method load_rules r = rules <- r
+    method load_rules r = rules <- r; element_list <- "erase"::(List.map (fun (x, _) -> x) rules)
 
     method draw_to_screen m = 
     matrix <- m;
     self#queue_draw
 
     method set_allocation x = super#set_allocation x
+
+    method is_paused = paused
 
     method draw ctx focused_widget =
       LTerm_draw.clear ctx;
@@ -49,15 +50,16 @@ class gui_ob exit_ =
         for y = 0 to rows do
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
-            | Some {name = n; display = c} ->
+            | Some {name = n} ->
                 let details = List.assoc n rules in
                 let (rawr, rawg, rawb) = details.color in
                 let shim = details.shimmer in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
-                 (constrain ((Random.int (shim + 1)) + rawr + (shim/2)) 0 255,
-                  constrain ((Random.int shim) + rawg + (shim/2)) 0 255, 
-                  constrain ((Random.int (shim - 1)) + rawb + (shim/2)) 0 255) in
-                LTerm_draw.draw_string ctx (y + offset) (x + offset) ~style:LTerm_style.({
+                 (constrain ((Random.int (shim)) + rawr - (shim/2)) 0 255,
+                  constrain ((Random.int shim) + rawg - (shim/2)) 0 255, 
+                  constrain ((Random.int (shim)) + rawb - (shim/2)) 0 255) in
+                 (* print_int r; print_int g; print_int b; print_endline ""; *)
+                LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
                 reverse = None; foreground = Some (rgb r g b); background = None}) 
                 (details.display)
@@ -75,36 +77,30 @@ class gui_ob exit_ =
 
       let control_string = List.fold_left (fun a (x, _) -> a ^ x ^ "   ") ""
        actions_list in        
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 3 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 3 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) control_string; 
         
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 48 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 48 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (string_of_int radius); 
 
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 78 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 78 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (debug); 
-       
 
-      if toggle then 
-        (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
-        bold = None; underline = None; blink = Some false; reverse = None;
-        foreground = Some lgreen; background = None}) "clock"; toggle <- false)
-      else toggle <- true
 
     method get_input = let p = current_event in current_event <- []; p
 
     method can_focus = true
 
-    method get_size = (size.rows, size.cols)
+    method get_size = ArrayModel.get_grid_size matrix
 
     method setup = 
     actions_list <- [("quit", fun _ -> self#exit_term);
                         ("reset", fun _ -> current_event <- Reset::current_event);
                         ("save", fun _ -> current_event <- Save::current_event); 
-                        ("load", fun _ -> ()); 
+                        ("load", fun _ -> current_event <- Load::current_event); 
                         ("line", fun _ -> ());
                         ("radius: - +", fun x -> 
                             if (x = 4 && radius < 9) then radius <- radius + 1 else if (x = 6 && radius > 1) then radius <- radius - 1 else ())];
@@ -178,10 +174,17 @@ class gui_ob exit_ =
 
   end
 
-(* let new_gui exit = new gui_ob exit *)
+let setup_gui rules term gui =
+    gui#load_rules rules;
+    let raw_size = LTerm.size term in
+    let size = {cols=(if raw_size.cols > 218 then 218 else raw_size.cols);
+                rows=(if raw_size.rows > 218 then 218 else raw_size.rows)} in
+    gui#create_matrix (size.cols - 7) (size.rows - 3); ()
 
 let get_window_size gui = gui#get_size
 
 let get_inputs gui = gui#get_input
 
 let draw_to_screen c gui = gui#draw_to_screen c
+
+let is_paused gui = gui#is_paused
