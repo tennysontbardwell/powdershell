@@ -36,6 +36,7 @@ let parse_elm j : (name_t * elem_rules_t) =
     }
   )
 
+(* TODO: finish *)
 let read_rules path =
   let j = Yojson.Basic.from_file path in
   (* let fps = j |> member "fps" |> to_int in *)

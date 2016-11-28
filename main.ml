@@ -5,7 +5,8 @@ open Updater
 open Model
 open LTerm_geom
 open Rules
- 
+open Filemanager
+
 type game_t = {
   gui : gui_ob;
   grid : ArrayModel.grid_t;
@@ -38,13 +39,14 @@ let execute game _ =
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
+    Lazy.force LTerm.stdout >>= (fun term -> 
+    let size = LTerm.size term in
     let gui_ob = new Gui.gui_ob exit_ in
-    let (rows, cols) = get_window_size gui_ob in
-    let g = ArrayModel.empty_grid (rows, cols) in
+    gui_ob#create_matrix (size.cols - 5) (size.rows - 1);
+    let g = ArrayModel.empty_grid (size.cols - 5, size.rows - 1) in
     let clockspeed = 0.05 in
-    (* print_int rows; *)
     let game = {gui = gui_ob; grid = g; rules = rules} in
     Lwt_engine.on_timer clockspeed true (execute game);
-    do_run gui_ob )
+    do_run gui_ob ))
 
-let () = run [] (ArrayModel.empty_grid (100, 100))
+let () = run (read_rules "test_files/example_jsons/rules.json") (ArrayModel.empty_grid (1000, 1000))

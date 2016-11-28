@@ -17,4 +17,3 @@ open Updater;;
 open Filemanager;;
 
 let ex_jsons = concat (concat current_dir_name "test_files") "example_jsons"
-
