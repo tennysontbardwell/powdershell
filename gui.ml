@@ -14,7 +14,6 @@ class gui_ob exit_ =
   object(self)
     inherit LTerm_widget.frame as super
  
-    val mutable toggle = false
     val mutable matrix = ArrayModel.empty_grid (1, 1)
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
@@ -30,7 +29,7 @@ class gui_ob exit_ =
     matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
-    method load_rules r = rules <- r
+    method load_rules r = rules <- r; element_list <- List.map (fun (x, _) -> x) rules
 
     method draw_to_screen m = 
     matrix <- m;
@@ -86,13 +85,7 @@ class gui_ob exit_ =
        LTerm_draw.draw_string ctx (rows + 2) 78 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (debug); 
-       
 
-      if toggle then 
-        (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
-        bold = None; underline = None; blink = Some false; reverse = None;
-        foreground = Some lgreen; background = None}) "clock"; toggle <- false)
-      else toggle <- true
 
     method get_input = let p = current_event in current_event <- []; p
 

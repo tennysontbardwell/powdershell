@@ -6,7 +6,7 @@
             "color": { "r": 250, "g": 180, "b": 0 },
             "display": "s",
             "lifespan": -1,
-            "shimmer" : 20,
+            "shimmer" : 2,
             "interactions": [],
             "movements": [
                 {
@@ -22,10 +22,10 @@
         },
         {
             "name": "water",
-            "color": { "r": 20, "g": 50, "b": 215 },
+            "color": { "r": 30, "g": 100, "b": 225 },
             "display": "w",
             "lifespan": -1,
-            "shimmer" : 0,
+            "shimmer" : 20,
             "interactions": [],
             "movements": [
                 {
@@ -45,16 +45,16 @@
         },
         {
             "name": "ice",
-            "color": { "r": 250, "g": 250, "b": 250 },
-            "display": "i",
+            "color": { "r": 180, "g": 190, "b": 210 },
+            "display": "¤",
             "lifespan": -1,
-            "shimmer" : 20,
+            "shimmer" : 2,
             "interactions": [
                 {
                     "type": "change",
                     "from": "water",
                     "to": "ice",
-                    "probability": 0.8
+                    "probability": 0.1
                 }
             ],
             "movements": [],
