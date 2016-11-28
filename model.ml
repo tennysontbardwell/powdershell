@@ -44,7 +44,7 @@ end
 
 module ArrayModel: Model = struct
     type grid_t =
-      (location_t*particle_t) array array * (location_t list)
+      (location_t*particle_t) array array * ((location_t list) ref)
     
     let col_counter = ref (-1)
     let next_val =
@@ -65,7 +65,7 @@ module ArrayModel: Model = struct
     let empty_grid ((rows, cols):int*int) : grid_t= row_counter := (-1);
       (
         Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0),
-        []
+        ref []
       )
 
     let indices_of_particle (grid,_:grid_t) (particle: particle_t) : location_t list = 
@@ -95,13 +95,13 @@ module ArrayModel: Model = struct
     (Array.length grid, Array.length (Array.get grid 0)) 
 
     let create_grid (grid: (location_t*particle_t) array array) : grid_t =
-      let sx,sy = get_grid_size (grid,[]) in
+      let sx,sy = get_grid_size (grid, ref []) in
       let all_x = Helpers.range 0 (sx-1) in
       let all_y = Helpers.range 0 (sy-1) in
       let lst = all_x
       |> List.map (fun x -> all_y |> List.map (fun y -> (x,y)))
       |> List.fold_left (@) [] in
-      (grid, lst)
+      (grid, ref lst)
 
     let unwrap_grid (grid,_: grid_t) : (location_t*particle_t) array array = grid
 
@@ -129,7 +129,7 @@ module ArrayModel: Model = struct
       let (sx,sy) = get_grid_size grid in
       (x < sx) && (y < sy) && (y >= 0) && (x >= 0)
 
-    let get_to_update (_,lst) = lst
-    let set_to_update (grid,_) lst = grid,lst
+    let get_to_update (_,lst) = !lst
+    let set_to_update g lst = (snd g) := lst; g
       
 end
