@@ -50,7 +50,7 @@ let read_rules path =
   let j = Yojson.Basic.from_file path in
   (* let fps = j |> member "fps" |> to_int in *)
   let elements = j |> member "elements" |> to_list in
-  elements |> List.map parse_elm
+  elements |> List.map parse_elm |> gen_rules
 
 (*[handle_loc] helper function for reading location from a json file*)
 let handle_loc (j: Yojson.Basic.json list) = match j with

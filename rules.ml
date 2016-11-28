@@ -18,7 +18,15 @@ type elem_rules_t =
     density : int
   }
 
-type rules_t = (name_t * elem_rules_t) list
+type rules_t = (name_t, elem_rules_t) Hashtbl.t
+
+let gen_rules r_lst = 
+    let ht = Hashtbl.create 40 in 
+    let add_to_ht (a, b) = Hashtbl.add ht a b in
+    List.iter add_to_ht r_lst; ht
+
+let lookup_rule = Hashtbl.find
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
 let validate _ = failwith "unimplemented"
+

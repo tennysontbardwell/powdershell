@@ -18,7 +18,11 @@ type elem_rules_t =
     density : int
   }
 
-type rules_t = (name_t * elem_rules_t) list
+type rules_t = (name_t, elem_rules_t) Hashtbl.t
+
+val gen_rules : (name_t * elem_rules_t) list -> rules_t
+
+val lookup_rule : rules_t -> string -> elem_rules_t
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
 val validate : rules_t -> bool

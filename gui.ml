@@ -23,14 +23,14 @@ class gui_ob exit_ =
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
-    val mutable rules = []
+    val mutable rules = gen_rules []
     val mutable paused = false
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
-    method load_rules r = rules <- r; element_list <- "erase"::(List.map (fun (x, _) -> x) rules)
+    method load_rules r = rules <- r; element_list <- "erase"::(Hashtbl.fold (fun x _ a -> x::a) rules [])
 
     method draw_to_screen m = 
     matrix <- m;
@@ -51,7 +51,7 @@ class gui_ob exit_ =
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
             | Some {name = n} ->
-                let details = List.assoc n rules in
+                let details = lookup_rule rules n in
                 let (rawr, rawg, rawb) = details.color in
                 let shim = details.shimmer in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else

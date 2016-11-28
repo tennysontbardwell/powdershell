@@ -4,7 +4,7 @@
         {
             "name": "sand",
             "color": { "r": 250, "g": 180, "b": 0 },
-            "display": "ϴ",
+            "display": "⣿",
             "lifespan": -1,
             "shimmer" : 2,
             "interactions": [],
@@ -46,7 +46,7 @@
         {
             "name": "ice",
             "color": { "r": 180, "g": 190, "b": 210 },
-            "display": "¤",
+            "display": "∎",
             "lifespan": -1,
             "shimmer" : 2,
             "interactions": [
@@ -69,9 +69,9 @@
             "interactions": [
                 {
                     "type": "change",
-                    "from": "",
+                    "from": "stone",
                     "to": "water",
-                    "probability": 0.1
+                    "probability": 0.01
                 }],
             "movements": [
                 {

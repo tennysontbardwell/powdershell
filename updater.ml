@@ -80,7 +80,7 @@ let get_changes elm_rules (x,y) name grid =
 let move_options rules grid (x,y) =
   match ArrayModel.particle_at_index grid (x,y) with
   | Some particle -> begin
-    let elm_rules = List.assoc particle.name rules in
+    let elm_rules = lookup_rule rules particle.name in
     let interactions = get_changes elm_rules (x,y) particle.name grid in
     let moves = get_movements elm_rules (x,y) particle.name grid in
     interactions @ moves
