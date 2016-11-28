@@ -17,7 +17,6 @@ let execute game _ =
       let inp = game.gui |> get_inputs in receive_input inp game.grid |> next_step game.rules;
       (draw_to_screen game.grid game.gui)
 
-
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in

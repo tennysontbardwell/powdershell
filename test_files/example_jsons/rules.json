@@ -86,7 +86,7 @@
             "color": { "r": 70, "g": 80, "b": 70 },
             "display": "█",
             "lifespan": -1,
-            "shimmer" : 2,
+            "shimmer" : 10,
             "interactions": [],
             "movements": [],
             "density": 1

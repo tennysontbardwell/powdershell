@@ -12,6 +12,7 @@ class gui_ob : (unit -> 'a) -> object
   method load_rules : Rules.rules_t -> unit
   method exit_term : unit
   method handle_buttons : int -> int -> unit
+  method is_paused : bool
 end
 
 val setup_gui : Rules.rules_t ->  LTerm.t -> gui_ob -> unit

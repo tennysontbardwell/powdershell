@@ -24,6 +24,7 @@ class gui_ob exit_ =
     val mutable space = 2
     val mutable debug = ""
     val mutable rules = []
+    val mutable paused = false
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
@@ -36,6 +37,8 @@ class gui_ob exit_ =
     self#queue_draw
 
     method set_allocation x = super#set_allocation x
+
+    method is_paused = paused
 
     method draw ctx focused_widget =
       LTerm_draw.clear ctx;
@@ -183,3 +186,5 @@ let get_window_size gui = gui#get_size
 let get_inputs gui = gui#get_input
 
 let draw_to_screen c gui = gui#draw_to_screen c
+
+let is_paused gui = gui#is_paused

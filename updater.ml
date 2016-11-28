@@ -68,7 +68,7 @@ let move_options rules grid (x,y) =
   | None -> []
 
 let filter_moves (moves : move_t list) : move_t list =
-  let prob_filter item p = if Random.float 0. < p then Some item else None in
+  let prob_filter item p = if Random.float 1. < p then Some item else None in
   let filter (item : move_t) : move_t option = match item with
     | Move_exc (_,_,_,p) | Change_exc (_,_,_,p) -> prob_filter item p in
   moves |> List.map filter |> deoptionalize
