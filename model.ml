@@ -11,7 +11,7 @@ type color_t = string
 
 type location_t = int * int
 
-type particle_t = {name: name_t; color : color_t}   
+type particle_t = {name: name_t; color: color_t}
 
 type grid_dimensions = { mutable row: int; mutable col: int}
 

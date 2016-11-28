@@ -20,11 +20,12 @@ class gui_ob exit_ =
     val mutable curr_element = "sand"
     val mutable radius = 1
     val mutable element_list = ["sand"; "water"; "ice"]
-    val mutable actions_list = [("quit", Quit); ("reset", Reset); ("save", Save); ("load", Reset); ("line", Reset)]
+    val mutable actions_list = []
     val mutable space = 2
+    val mutable debug = ""
 
-    method create_matrix r c =
-    matrix <- ArrayModel.empty_grid (r, c);
+    method create_matrix c r =
+    matrix <- ArrayModel.empty_grid (c, r);
     (* self#set_allocation {row1 = 0; col1 = 0; row2 = r; col2 = c}; *)
 
     method draw_to_screen m = 
@@ -64,6 +65,15 @@ class gui_ob exit_ =
        LTerm_draw.draw_string ctx rows 3 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some true; 
             reverse = None; foreground = Some lwhite; background = None}) control_string; 
+        
+       LTerm_draw.draw_string ctx rows 48 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some true; 
+            reverse = None; foreground = Some lwhite; background = None}) (string_of_int radius); 
+
+       LTerm_draw.draw_string ctx rows 78 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some true; 
+            reverse = None; foreground = Some lwhite; background = None}) (debug); 
+       
 
       if toggle then 
         (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
@@ -78,6 +88,13 @@ class gui_ob exit_ =
     method get_size = (size.rows, size.cols)
 
     method setup = 
+    actions_list <- [("quit", fun _ -> self#exit_term);
+                        ("reset", fun _ -> current_event <- Reset::current_event);
+                        ("save", fun _ -> current_event <- Save::current_event); 
+                        ("load", fun _ -> ()); 
+                        ("line", fun _ -> ());
+                        ("radius: - +", fun x -> 
+                            if (x = 4 && radius < 9) then radius <- radius + 1 else if (x = 6 && radius > 1) then radius <- radius - 1 else ())];
         Lazy.force LTerm.stdout 
         >>= (fun term -> 
             (size <- LTerm.size term;
@@ -88,11 +105,9 @@ class gui_ob exit_ =
             >>= (fun () -> begin  LTerm.enter_raw_mode term end));
         
         (* print_int (Array.length matrix); *)
-        (* print_int (size.rows); *)
-        (* self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows - 2; col2 = size.cols - 2}; *)
+        print_int (size.cols);
+        self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows; col2 = size.cols};
         ()
-
-
 
     method handle_buttons r c =
         let (cols, rows) = ArrayModel.get_grid_size matrix in
@@ -101,9 +116,7 @@ class gui_ob exit_ =
         let rec control_handle = function
         | (h, d)::t -> (counter := (!counter + String.length h + 3); 
             if (c < !counter) then
-                if h = "quit" then 
-                self#exit_term else 
-                current_event <- d::current_event
+                d (!counter - c)
             else control_handle t)
         | _ -> () in
         control_handle actions_list
@@ -118,6 +131,19 @@ class gui_ob exit_ =
         >>= (fun term -> LTerm.disable_mouse term); 
         exit_ (); ()
 
+    method private add_elem x y = 
+        let dista (ax,ay) (bx,by) = sqrt((ax -. bx)**2. +. (ay -. by)**2.) in
+        let (colsize, rowsize) = get_grid_size matrix in
+        let r = radius in
+        for i = x - r to x + r do
+            for j = y - r to y + r do
+                if(i >= 0 && j >= 0 && i < colsize && j < rowsize 
+                    && (dista (float i, float j) (float x, float y) < (float r) )) then
+                current_event <- (ElemAdd {elem = curr_element; loc = (i,j)})::current_event
+                else ()
+            done
+        done
+
     initializer
       self#setup;
       self#on_event 
@@ -128,10 +154,11 @@ class gui_ob exit_ =
             self#exit_term;
             true
           | LTerm_event.Mouse {row = r; col = c} -> 
-            (* e |> LTerm_event.to_string |> print_endline; *)
+            (* debug <- ("c:" ^ (string_of_int c) ^ " r:" ^ (string_of_int r)); *)
             let (colsize, rowsize) = get_grid_size matrix in
+            (* debug <- ("c:" ^ (string_of_int c) ^ " r:" ^ (string_of_int r) ^ " cols: " ^ (string_of_int colsize) ^ " rows: " ^ (string_of_int rowsize)); *)
             if r < rowsize && c < colsize then
-            current_event <- (ElemAdd {elem = curr_element; loc = (c,r)})::current_event
+            self#add_elem c r
             else self#handle_buttons r c;
             true
           | _ -> false)
