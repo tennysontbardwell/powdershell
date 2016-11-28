@@ -123,10 +123,10 @@ let updater_tests = [
       let r = concat ex_jsons "rules.json" |> read_rules in
       let w = (Some {name="water"; color="blue"}) in
       let g = empty_grid (4,4)
-        |> set_pixel (0,0) w
-        |> set_pixel (0,1) w
-        |> set_pixel (0,2) w
-        |> set_pixel (0,3) w
+        |> set_pixel (0,0) (Some {name="water"; color="blue"})
+        |> set_pixel (0,1) (Some {name="water"; color="blue"})
+        |> set_pixel (0,2) (Some {name="water"; color="blue"})
+        |> set_pixel (0,3) (Some {name="water"; color="blue"})
         |> foldi 50 (next_step r) in
       let expected = empty_grid (4,4)
         |> set_pixel (0,3) w

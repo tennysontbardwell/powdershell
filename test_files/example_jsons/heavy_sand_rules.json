@@ -2,33 +2,11 @@
     "fps": 60,
     "elements": [
         {
-            "name": "sand",
+            "name": "heavy_sand",
             "interactions": [],
             "movements": [
                 {
                     "directions": [[0,1]],
-                    "probability": 1.0
-                }
-            ],
-            "density": 1
-        },
-        {
-            "name": "water",
-            "interactions": [],
-            "movements": [
-                {
-                    "directions": [[0,1]],
-                    "probability": 1.0
-                }
-            ],
-            "density": 1
-        },
-        {
-            "name": "ice",
-            "interactions": [],
-            "movements": [
-                {
-                    "directions": [[0,0]],
                     "probability": 1.0
                 }
             ],

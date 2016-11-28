@@ -34,6 +34,7 @@ module type Model = sig
     val to_string : grid_t -> string
     val create_grid : (location_t * particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t * particle_t) array array
+    val in_grid : grid_t -> location_t -> bool
 end
 
 (* module HashModule: Model = struct
@@ -125,5 +126,9 @@ module ArrayModel: Model = struct
           (fun y -> particle_to_string (particle_at_index grid (x,y)))
         )
       |> Helpers.transpose |> List.map (String.concat "") |>  String.concat "\n"
+
+    let in_grid grid (x,y) =
+      let (sx,sy) = get_grid_size grid in
+      (x < sx) && (y < sy) && (y >= 0) && (x >= 0)
       
 end
