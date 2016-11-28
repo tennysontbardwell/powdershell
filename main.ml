@@ -40,10 +40,12 @@ let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
     Lazy.force LTerm.stdout >>= (fun term -> 
-    let size = LTerm.size term in
+    let raw_size = LTerm.size term in
+    let size = {cols=(if raw_size.cols > 218 then 218 else raw_size.cols);
+                rows=(if raw_size.rows > 218 then 218 else raw_size.rows)} in
     let gui_ob = new Gui.gui_ob exit_ in
-    gui_ob#create_matrix (size.cols - 5) (size.rows - 1);
-    let g = ArrayModel.empty_grid (size.cols - 5, size.rows - 1) in
+    gui_ob#create_matrix (size.cols - 7) (size.rows - 3);
+    let g = ArrayModel.empty_grid (size.cols - 7, size.rows - 3) in
     let clockspeed = 0.05 in
     let game = {gui = gui_ob; grid = g; rules = rules} in
     Lwt_engine.on_timer clockspeed true (execute game);

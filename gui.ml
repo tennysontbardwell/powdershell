@@ -23,6 +23,7 @@ class gui_ob exit_ =
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
+    val offset = 1
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
@@ -38,14 +39,14 @@ class gui_ob exit_ =
       LTerm_draw.clear ctx;
       let (cols, rows) = ArrayModel.get_grid_size matrix in
       (* print_int rows; print_string ","; print_int cols; print_endline ""; *)
-      LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows; col2 = cols} LTerm_draw.Light;
+      LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows + 2; col2 = cols + 2} LTerm_draw.Light;
 
       for x = 0 to cols do 
         for y = 0 to rows do
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
             | Some {name = n; color = c} ->
-                LTerm_draw.draw_string ctx y x ~style:LTerm_style.({
+                LTerm_draw.draw_string ctx (y + offset) (x + offset) ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
                 reverse = None; foreground = Some (rgb ((Random.int 20) + 235) ((Random.int 40) + 155) 5); background = None}) 
                 (String.sub n 0 1)
@@ -53,8 +54,8 @@ class gui_ob exit_ =
       done;
       List.fold_left (fun a x -> 
         (* let color = if a = curr_element then Some lyellow else Some lwhite in *)
-        LTerm_draw.draw_string ctx a cols ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some true; 
+        LTerm_draw.draw_string ctx a (cols + 2) ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = 
             (if x = curr_element then Some lyellow else None)}) x; 
         a + space
@@ -62,22 +63,22 @@ class gui_ob exit_ =
 
       let control_string = List.fold_left (fun a (x, _) -> a ^ x ^ "   ") ""
        actions_list in        
-       LTerm_draw.draw_string ctx rows 3 ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some true; 
+       LTerm_draw.draw_string ctx (rows + (offset * 2)) 3 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) control_string; 
         
-       LTerm_draw.draw_string ctx rows 48 ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some true; 
+       LTerm_draw.draw_string ctx (rows + (offset * 2)) 48 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (string_of_int radius); 
 
-       LTerm_draw.draw_string ctx rows 78 ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some true; 
+       LTerm_draw.draw_string ctx (rows + (offset * 2)) 78 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (debug); 
        
 
       if toggle then 
         (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
-        bold = None; underline = None; blink = Some true; reverse = None;
+        bold = None; underline = None; blink = Some false; reverse = None;
         foreground = Some lgreen; background = None}) "clock"; toggle <- false)
       else toggle <- true
 
@@ -105,13 +106,13 @@ class gui_ob exit_ =
             >>= (fun () -> begin  LTerm.enter_raw_mode term end));
         
         (* print_int (Array.length matrix); *)
-        print_int (size.cols);
+        (* print_int (size.cols); *)
         self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows; col2 = size.cols};
         ()
 
     method handle_buttons r c =
         let (cols, rows) = ArrayModel.get_grid_size matrix in
-        if r >= rows then
+        if r >= rows + 2 then
         let counter = ref (3) in
         let rec control_handle = function
         | (h, d)::t -> (counter := (!counter + String.length h + 3); 
@@ -137,8 +138,8 @@ class gui_ob exit_ =
         let r = radius in
         for i = x - r to x + r do
             for j = y - r to y + r do
-                if(i >= 0 && j >= 0 && i < colsize && j < rowsize 
-                    && (dista (float i, float j) (float x, float y) < (float r) )) then
+                if(i >= 0 && j >= 0 && i < colsize && j < rowsize
+                    && ((dista (float i, float j) (float x, float y) +. 0.1 )< (float r) )) then
                 current_event <- (ElemAdd {elem = curr_element; loc = (i,j)})::current_event
                 else ()
             done
@@ -157,8 +158,8 @@ class gui_ob exit_ =
             (* debug <- ("c:" ^ (string_of_int c) ^ " r:" ^ (string_of_int r)); *)
             let (colsize, rowsize) = get_grid_size matrix in
             (* debug <- ("c:" ^ (string_of_int c) ^ " r:" ^ (string_of_int r) ^ " cols: " ^ (string_of_int colsize) ^ " rows: " ^ (string_of_int rowsize)); *)
-            if r < rowsize && c < colsize then
-            self#add_elem c r
+            if r < rowsize + 2 && c < colsize + 2 then
+            self#add_elem (c - 1) (r - 1)
             else self#handle_buttons r c;
             true
           | _ -> false)
