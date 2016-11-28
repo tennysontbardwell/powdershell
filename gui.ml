@@ -19,13 +19,12 @@ class gui_ob exit_ =
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
-    val mutable radius = 1
+    val mutable radius = 3
     val mutable element_list = ["sand"; "water"; "ice"]
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
     val mutable rules = []
-    val offset = 1
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
@@ -54,10 +53,11 @@ class gui_ob exit_ =
                 let (rawr, rawg, rawb) = details.color in
                 let shim = details.shimmer in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
-                 (constrain ((Random.int (shim + 1)) + rawr + (shim/2)) 0 255,
-                  constrain ((Random.int shim) + rawg + (shim/2)) 0 255, 
-                  constrain ((Random.int (shim - 1)) + rawb + (shim/2)) 0 255) in
-                LTerm_draw.draw_string ctx (y + offset) (x + offset) ~style:LTerm_style.({
+                 (constrain ((Random.int (shim)) + rawr - (shim/2)) 0 255,
+                  constrain ((Random.int shim) + rawg - (shim/2)) 0 255, 
+                  constrain ((Random.int (shim)) + rawb - (shim/2)) 0 255) in
+                 (* print_int r; print_int g; print_int b; print_endline ""; *)
+                LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
                 reverse = None; foreground = Some (rgb r g b); background = None}) 
                 (details.display)
@@ -75,15 +75,15 @@ class gui_ob exit_ =
 
       let control_string = List.fold_left (fun a (x, _) -> a ^ x ^ "   ") ""
        actions_list in        
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 3 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 3 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) control_string; 
         
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 48 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 48 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (string_of_int radius); 
 
-       LTerm_draw.draw_string ctx (rows + (offset * 2)) 78 ~style:LTerm_style.({
+       LTerm_draw.draw_string ctx (rows + 2) 78 ~style:LTerm_style.({
             bold = None; underline = None; blink = Some false; 
             reverse = None; foreground = Some lwhite; background = None}) (debug); 
        
