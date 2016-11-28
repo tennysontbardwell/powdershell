@@ -19,3 +19,7 @@ let rec transpose list = match list with
 | []   :: xss    -> transpose xss
 | (x::xs) :: xss ->
     (x :: List.map List.hd xss) :: transpose (xs :: List.map List.tl xss)
+
+(* applies f to x a total of i times. i >= 0 *)
+let rec foldi i f x = if i==0 then x else foldi (i-1) f (f x)
+
