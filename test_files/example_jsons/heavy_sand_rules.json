@@ -3,10 +3,6 @@
     "elements": [
         {
             "name": "heavy_sand",
-            "color": { "r": 250, "g": 180, "b": 0 },
-            "display": "s",
-            "lifespan": -1,
-            "shimmer" : 0,
             "interactions": [],
             "movements": [
                 {

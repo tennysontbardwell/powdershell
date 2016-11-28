@@ -25,19 +25,10 @@ let parse_move j : move_option_t =
     |> List.map (List.map to_int) |> List.map to_tuple in
   (dirs, prob)
 
-let parse_color j = (
-  j |> member "r" |> to_int,
-  j |> member "g" |> to_int,
-  j |> member "b" |> to_int)
-
 let parse_elm j : (name_t * elem_rules_t) = 
   (
     j |> member "name" |> to_string,
     {
-      color = j |> member "color" |> parse_color;
-      display = j |> member "display" |> to_string;
-      lifespan = j |> member "lifespan" |> to_int;
-      shimmer = j |> member "shimmer" |> to_int;
       interactions = j |> member "interactions" |> to_list |>
         List.map parse_inter;
       movements = j |> member "movements" |> to_list |> List.map parse_move;

@@ -8,11 +8,6 @@ type interaction_t = Change of name_t * name_t * probability_t
 
 type elem_rules_t =
   {
-    (* red green blue *)
-    color : int * int * int;
-    lifespan : int;
-    display : string;
-    shimmer : int;
     interactions : interaction_t list;
     movements : move_option_t list;
     density : int
