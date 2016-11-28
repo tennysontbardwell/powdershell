@@ -91,7 +91,7 @@ class gui_ob exit_ =
 
     method can_focus = true
 
-    method get_size = (size.rows, size.cols)
+    method get_size = ArrayModel.get_grid_size matrix
 
     method setup = 
     actions_list <- [("quit", fun _ -> self#exit_term);
@@ -171,7 +171,12 @@ class gui_ob exit_ =
 
   end
 
-(* let new_gui exit = new gui_ob exit *)
+let setup_gui rules term gui =
+    gui#load_rules rules;
+    let raw_size = LTerm.size term in
+    let size = {cols=(if raw_size.cols > 218 then 218 else raw_size.cols);
+                rows=(if raw_size.rows > 218 then 218 else raw_size.rows)} in
+    gui#create_matrix (size.cols - 7) (size.rows - 3); ()
 
 let get_window_size gui = gui#get_size
 

@@ -14,7 +14,7 @@ class gui_ob : (unit -> 'a) -> object
   method handle_buttons : int -> int -> unit
 end
 
-(* val new_gui : (unit -> 'a) -> gui_ob *)
+val setup_gui : Rules.rules_t ->  LTerm.t -> gui_ob -> unit
 
 (* [get_inputs] is the current input to the screen *)
 (* val get_inputs : gui_ob -> input_t option *)

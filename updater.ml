@@ -34,7 +34,7 @@ let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEA
 (* this is [start] after moving 1 in direction [dir] *)
 let transform start dir = (fst start + (fst dir), snd start + (snd dir))
 
-(* this is all the leagal [Move_exc]s for a particular location on any grid *)
+(* this is all the legal [Move_exc]s for a particular location on any grid *)
 let get_movements elm_rules loc name = elm_rules.movements
   |> List.map (fun (directions, probability) ->
     directions
