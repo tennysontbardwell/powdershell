@@ -19,7 +19,7 @@ class gui_ob exit_ =
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
     val mutable radius = 3
-    val mutable element_list = ["sand"; "water"; "ice"]
+    val mutable element_list = []
     val mutable actions_list = []
     val mutable space = 2
     val mutable debug = ""
@@ -97,7 +97,7 @@ class gui_ob exit_ =
     actions_list <- [("quit", fun _ -> self#exit_term);
                         ("reset", fun _ -> current_event <- Reset::current_event);
                         ("save", fun _ -> current_event <- Save::current_event); 
-                        ("load", fun _ -> ()); 
+                        ("load", fun _ -> current_event <- Load::current_event); 
                         ("line", fun _ -> ());
                         ("radius: - +", fun x -> 
                             if (x = 4 && radius < 9) then radius <- radius + 1 else if (x = 6 && radius > 1) then radius <- radius - 1 else ())];

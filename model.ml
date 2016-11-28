@@ -19,7 +19,7 @@ type grid_dimensions = { mutable row: int; mutable col: int}
 
 (* the type of an input *)
 type input_t =
-  ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
+  ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save | Load
 
 
 module type Model = sig
@@ -37,6 +37,7 @@ module type Model = sig
     val create_grid : (location_t * particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t * particle_t) array array
     val in_grid : grid_t -> location_t -> bool
+    val deep_copy : grid_t -> grid_t -> unit
 end
 
 module ArrayModel: Model = struct
@@ -86,6 +87,14 @@ module ArrayModel: Model = struct
 
     let get_grid_size (grid:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 
+
+    let deep_copy (from_g:grid_t) (to_g:grid_t) = 
+    let (c, r) = get_grid_size to_g in
+    for x = 0 to c - 1 do
+      for y = 0 to r - 1 do
+        set_pixel (x,y) (particle_at_index from_g (x, y)) to_g
+      done
+    done; ()
 
     let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
 
