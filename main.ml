@@ -5,7 +5,8 @@ open Updater
 open Model
 open LTerm_geom
 open Rules
- 
+open Filemanager
+
 type game_t = {
   gui : gui_ob;
   grid : ArrayModel.grid_t;
@@ -31,7 +32,7 @@ let run rules grid =
 
 let execute game _ = 
     (* this is the pipeline where the shit happens *)
-      let inp = game.gui |> get_inputs in receive_input inp game.grid (* |> next_step game.rules *);
+      let inp = game.gui |> get_inputs in receive_input inp game.grid |> next_step game.rules;
       (draw_to_screen game.grid game.gui)
 
 
@@ -41,11 +42,11 @@ let run rules grid = Lwt_main.run (
     Lazy.force LTerm.stdout >>= (fun term -> 
     let size = LTerm.size term in
     let gui_ob = new Gui.gui_ob exit_ in
-    gui_ob#create_matrix (size.rows - 1) (size.cols - 5);
-    let g = ArrayModel.empty_grid (size.rows - 1, size.cols - 5) in
+    gui_ob#create_matrix (size.cols - 5) (size.rows - 1);
+    let g = ArrayModel.empty_grid (size.cols - 5, size.rows - 1) in
     let clockspeed = 0.05 in
     let game = {gui = gui_ob; grid = g; rules = rules} in
     Lwt_engine.on_timer clockspeed true (execute game);
     do_run gui_ob ))
 
-let () = run [] (ArrayModel.empty_grid (1000, 1000))
+let () = run (read_rules "test_files/example_jsons/heavy_sand_rules.json") (ArrayModel.empty_grid (1000, 1000))

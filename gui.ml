@@ -17,7 +17,7 @@ class gui_ob exit_ =
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
-    val mutable element_list = ["sand"; "water"; "ice"; "vine"; "lava"]
+    val mutable element_list = ["sand"; "water"; "ice"]
     val mutable actions_list = [("reset", Reset); ("save", Save); ("load", Reset); ("quit", Quit)]
     val mutable space = 2
 
@@ -39,19 +39,20 @@ class gui_ob exit_ =
                       col1    col2
                           row2 *)
       LTerm_draw.clear ctx;
-      let (rows, cols) = ArrayModel.get_grid_size matrix in
+      let (cols, rows) = ArrayModel.get_grid_size matrix in
       (* super#draw ctx focused_widget; *)
       (* print_int rows; print_string ","; print_int cols; print_endline ""; *)
     LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows; col2 = cols} LTerm_draw.Light;
 
-      for x = 0 to rows do 
-        for y = 0 to cols do
+      for x = 0 to cols do 
+        for y = 0 to rows do
             match ArrayModel.particle_at_index matrix (x, y) with
             | None -> ()
             | Some {name = n; color = c} ->
-                LTerm_draw.draw_string ctx x y ~style:LTerm_style.({
+                LTerm_draw.draw_string ctx y x ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
-                reverse = None; foreground = Some lyellow; background = None}) n
+                reverse = None; foreground = Some lyellow; background = None}) 
+                (String.sub n 0 1)
         done
       done;
       List.fold_left (fun a x -> 
@@ -75,7 +76,7 @@ class gui_ob exit_ =
         foreground = Some lgreen; background = None}) "clock"; toggle <- false)
       else toggle <- true
 
-    method get_input = current_event
+    method get_input = let p = current_event in current_event <- []; p
 
     method can_focus = true
 
@@ -99,7 +100,7 @@ class gui_ob exit_ =
 
 
     method handle_buttons r c =
-        let (rows, cols) = ArrayModel.get_grid_size matrix in
+        let (cols, rows) = ArrayModel.get_grid_size matrix in
         if r >= rows then
         let counter = ref (3) in
         let rec control_handle = function
@@ -133,9 +134,9 @@ class gui_ob exit_ =
             true
           | LTerm_event.Mouse {row = r; col = c} -> 
             (* e |> LTerm_event.to_string |> print_endline; *)
-            let (rowsize, colsize) = get_grid_size matrix in
+            let (colsize, rowsize) = get_grid_size matrix in
             if r < rowsize && c < colsize then
-            current_event <- (ElemAdd {elem = curr_element; loc = (r,c)})::current_event
+            current_event <- (ElemAdd {elem = curr_element; loc = (c,r)})::current_event
             else self#handle_buttons r c;
             true
           | _ -> false)

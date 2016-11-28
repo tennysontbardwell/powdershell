@@ -17,7 +17,9 @@ type move_t =
 let deoptionalize l = 
     List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
 
-let receive_input i g = g
+let receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
+| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc (Some {name=i.elem; color="red"}) g
+| _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)
 let transform start dir = (fst start + (fst dir), snd start + (snd dir))
