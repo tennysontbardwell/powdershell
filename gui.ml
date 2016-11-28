@@ -18,7 +18,7 @@ class gui_ob exit_ =
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
     val mutable element_list = ["sand"; "water"; "ice"; "vine"; "lava"]
-    val mutable actions_list = [("reset", Reset); ("save", Save); ("quit", Quit)]
+    val mutable actions_list = [("reset", Reset); ("save", Save); ("load", Reset); ("quit", Quit)]
     val mutable space = 2
 
     method create_matrix r c =
@@ -62,6 +62,13 @@ class gui_ob exit_ =
             (if x = curr_element then Some lyellow else None)}) x; 
         a + space
       ) 10 element_list;
+
+      let control_string = List.fold_left (fun a (x, _) -> a ^ x ^ "   ") ""
+       actions_list in        
+       LTerm_draw.draw_string ctx rows 3 ~style:LTerm_style.({
+            bold = None; underline = None; blink = Some true; 
+            reverse = None; foreground = Some lwhite; background = None}) control_string; 
+
       if toggle then 
         (LTerm_draw.draw_string ctx 0 cols ~style:LTerm_style.({
         bold = None; underline = None; blink = Some true; reverse = None;
@@ -89,10 +96,21 @@ class gui_ob exit_ =
         (* self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows - 2; col2 = size.cols - 2}; *)
         ()
 
+
+
     method handle_buttons r c =
         let (rows, cols) = ArrayModel.get_grid_size matrix in
-        if r > rows then
-        ()
+        if r >= rows then
+        let counter = ref (3) in
+        let rec control_handle = function
+        | (h, d)::t -> (counter := (!counter + String.length h + 3); 
+            if (c < !counter) then
+                if h = "quit" then 
+                self#exit_term else 
+                current_event <- d::current_event
+            else control_handle t)
+        | _ -> () in
+        control_handle actions_list
         else
         let counter = ref (10 - space) in
         let assoc_list = (List.map (fun n -> (counter := !counter + space; (!counter, n))) element_list) in

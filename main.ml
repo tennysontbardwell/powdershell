@@ -41,8 +41,8 @@ let run rules grid = Lwt_main.run (
     Lazy.force LTerm.stdout >>= (fun term -> 
     let size = LTerm.size term in
     let gui_ob = new Gui.gui_ob exit_ in
-    gui_ob#create_matrix (size.rows - 2) (size.cols - 5);
-    let g = ArrayModel.empty_grid (size.rows - 2, size.cols - 5) in
+    gui_ob#create_matrix (size.rows - 1) (size.cols - 5);
+    let g = ArrayModel.empty_grid (size.rows - 1, size.cols - 5) in
     let clockspeed = 0.05 in
     let game = {gui = gui_ob; grid = g; rules = rules} in
     Lwt_engine.on_timer clockspeed true (execute game);
