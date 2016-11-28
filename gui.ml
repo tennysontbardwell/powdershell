@@ -139,7 +139,7 @@ class gui_ob exit_ =
         for i = x - r to x + r do
             for j = y - r to y + r do
                 if(i >= 0 && j >= 0 && i < colsize && j < rowsize
-                    && (dista (float i, float j) (float x, float y) < (float r) )) then
+                    && ((dista (float i, float j) (float x, float y) +. 0.1 )< (float r) )) then
                 current_event <- (ElemAdd {elem = curr_element; loc = (i,j)})::current_event
                 else ()
             done
