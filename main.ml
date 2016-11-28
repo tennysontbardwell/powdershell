@@ -49,4 +49,4 @@ let run rules grid = Lwt_main.run (
     Lwt_engine.on_timer clockspeed true (execute game);
     do_run gui_ob ))
 
-let () = run (read_rules "test_files/example_jsons/heavy_sand_rules.json") (ArrayModel.empty_grid (1000, 1000))
+let () = run (read_rules "test_files/example_jsons/rules.json") (ArrayModel.empty_grid (1000, 1000))

@@ -2,6 +2,7 @@ open CamomileLibrary.UChar
 open LTerm_key
 open LTerm_geom
 open LTerm_widget
+open LTerm_style
 open Lwt
 open Model
 open ArrayModel
@@ -17,8 +18,9 @@ class gui_ob exit_ =
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
+    val mutable radius = 1
     val mutable element_list = ["sand"; "water"; "ice"]
-    val mutable actions_list = [("reset", Reset); ("save", Save); ("load", Reset); ("quit", Quit)]
+    val mutable actions_list = [("quit", Quit); ("reset", Reset); ("save", Save); ("load", Reset); ("line", Reset)]
     val mutable space = 2
 
     method create_matrix r c =
@@ -32,17 +34,10 @@ class gui_ob exit_ =
     method set_allocation x = super#set_allocation x
 
     method draw ctx focused_widget =
-      (* Calling super just for that frame wrapping, aka the |_| *)
-      (* Make sure that row1 is smaller than row2
-         and that col1 is smaller than col2, it goes:
-                          row1
-                      col1    col2
-                          row2 *)
       LTerm_draw.clear ctx;
       let (cols, rows) = ArrayModel.get_grid_size matrix in
-      (* super#draw ctx focused_widget; *)
       (* print_int rows; print_string ","; print_int cols; print_endline ""; *)
-    LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows; col2 = cols} LTerm_draw.Light;
+      LTerm_draw.draw_frame ctx {row1 = 0; col1 = 0; row2 = rows; col2 = cols} LTerm_draw.Light;
 
       for x = 0 to cols do 
         for y = 0 to rows do
@@ -51,7 +46,7 @@ class gui_ob exit_ =
             | Some {name = n; color = c} ->
                 LTerm_draw.draw_string ctx y x ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
-                reverse = None; foreground = Some lyellow; background = None}) 
+                reverse = None; foreground = Some (rgb ((Random.int 20) + 235) ((Random.int 40) + 155) 5); background = None}) 
                 (String.sub n 0 1)
         done
       done;
