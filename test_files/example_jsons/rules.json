@@ -18,14 +18,14 @@
                     "probability": 1.0
                 }
             ],
-            "density": 1
+            "density": 6
         },
         {
             "name": "water",
-            "color": { "r": 30, "g": 100, "b": 225 },
+            "color": { "r": 20, "g": 90, "b": 225 },
             "display": "₪",
             "lifespan": -1,
-            "shimmer" : 20,
+            "shimmer" : 26,
             "interactions": [],
             "movements": [
                 {
@@ -41,7 +41,7 @@
                     "probability": 0.4
                 }
             ],
-            "density": 1
+            "density": 3
         },
         {
             "name": "ice",
@@ -54,11 +54,11 @@
                     "type": "change",
                     "from": "water",
                     "to": "ice",
-                    "probability": 0.1
+                    "probability": 0.05
                 }
             ],
             "movements": [],
-            "density": 1
+            "density": 4
         },
         {
             "name": "stone",
@@ -79,17 +79,17 @@
                     "probability": 1.0
                 }
             ],
-            "density": 1
+            "density": 8
         },
         {
             "name": "wall",
-            "color": { "r": 70, "g": 80, "b": 70 },
+            "color": { "r": 70, "g": 70, "b": 70 },
             "display": "█",
             "lifespan": -1,
-            "shimmer" : 10,
+            "shimmer" : 9,
             "interactions": [],
             "movements": [],
-            "density": 1
+            "density": 100
         }
     ]
 }
