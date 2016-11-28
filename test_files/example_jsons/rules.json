@@ -3,6 +3,10 @@
     "elements": [
         {
             "name": "sand",
+            "color": { "r": 250, "g": 180, "b": 0 },
+            "display": "s",
+            "lifespan": -1,
+            "shimmer" : 0,
             "interactions": [],
             "movements": [
                 {
@@ -18,13 +22,11 @@
         },
         {
             "name": "water",
+            "color": { "r": 0, "g": 0, "b": 250 },
+            "display": "w",
+            "lifespan": -1,
+            "shimmer" : 0,
             "interactions": [],
-            // "color": {
-            //     "r": 0,
-            //     "g": 0,
-            //     "b": 250
-            // },
-            // "display": "w",
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -43,6 +45,10 @@
         },
         {
             "name": "ice",
+            "color": { "r": 250, "g": 250, "b": 250 },
+            "display": "i",
+            "lifespan": -1,
+            "shimmer" : 0,
             "interactions": [
                 {
                     "type": "change",

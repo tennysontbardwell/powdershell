@@ -8,6 +8,11 @@ type interaction_t = Change of name_t * name_t * probability_t
 
 type elem_rules_t =
   {
+    (* red green blue *)
+    color : int * int * int;
+    lifespan : int;
+    display : string;
+    shimmer : int;
     interactions : interaction_t list;
     movements : move_option_t list;
     density : int
@@ -17,4 +22,3 @@ type rules_t = (name_t * elem_rules_t) list
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
 val validate : rules_t -> bool
-

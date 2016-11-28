@@ -106,7 +106,7 @@ class gui_ob exit_ =
             >>= (fun () -> begin  LTerm.enter_raw_mode term end));
         
         (* print_int (Array.length matrix); *)
-        print_int (size.cols);
+        (* print_int (size.cols); *)
         self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows; col2 = size.cols};
         ()
 
