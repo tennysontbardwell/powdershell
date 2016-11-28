@@ -23,6 +23,14 @@ type grid_dimensions = { mutable row: int; mutable col: int}
 type input_t =
   ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save
 
+module IntIntHash =
+  struct
+    type t = int * int
+    let equal i j = i=j
+    let hash (a,b) = (a*1001+b) land max_int
+  end
+
+module IntIntHashtbl = Hashtbl.Make(IntIntHash)
 
 module type Model = sig
     type grid_t
@@ -39,10 +47,13 @@ module type Model = sig
     val create_grid : (location_t * particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t * particle_t) array array
     val in_grid : grid_t -> location_t -> bool
+    val get_to_update : grid_t -> location_t list
+    val set_to_update : grid_t -> location_t list -> grid_t
 end
 
 module ArrayModel: Model = struct
-    type grid_t = (location_t*particle_t) array array 
+    type grid_t =
+      (location_t*particle_t) array array * (location_t list)
     
     let col_counter = ref (-1)
     let next_val =
@@ -61,21 +72,24 @@ module ArrayModel: Model = struct
       ((rown, next_val ()), {name = ""; display = ("", (0,0,0))})) (Array.make coln 0)
 
     let empty_grid ((rows, cols):int*int) : grid_t= row_counter := (-1);
-      Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0)
+      (
+        Array.map (fun r -> simple_row (next_row ()) cols) (Array.make rows 0),
+        []
+      )
 
-    let indices_of_particle (grid:grid_t) (particle: particle_t) : location_t list = 
+    let indices_of_particle (grid,_:grid_t) (particle: particle_t) : location_t list = 
       Array.fold_left (fun acc r -> 
         (Array.fold_left(fun acc_2 c -> 
           if ((snd c) = particle) then (fst c)::acc_2 else acc_2) acc r )) [] grid
 
-    let particle_at_index (grid:grid_t) (location:location_t) : particle_t option = 
+    let particle_at_index (grid,_:grid_t) (location:location_t) : particle_t option = 
       try ( let result = snd (Array.get (Array.get grid (fst location)) (snd location))  in
           match result with
           | {name = ""; display = ("", (0,0,0))} -> None
           | _ -> Some result )
       with e -> None
 
-    let to_list (grid:grid_t) : particle_t list list = 
+    let to_list (grid,_:grid_t) : particle_t list list = 
        Array.fold_left (fun acc r -> 
         (Array.fold_left(fun acc_2 c -> (snd c)::acc_2) [] r )::acc ) [] grid
 
@@ -83,15 +97,22 @@ module ArrayModel: Model = struct
      : grid_t = let particle = match particle_opt with
       | None -> {name = ""; display = ("", (0,0,0))}
       | Some p -> p
-      in Array.set (Array.get grid (fst location))  (snd location) (location,particle);
+      in Array.set (Array.get (fst grid) (fst location))  (snd location) (location,particle);
       grid
 
-    let get_grid_size (grid:grid_t) : int*int = 
+    let get_grid_size (grid,_:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 
 
-    let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
+    let create_grid (grid: (location_t*particle_t) array array) : grid_t =
+      let sx,sy = get_grid_size (grid,[]) in
+      let all_x = Helpers.range 0 (sx-1) in
+      let all_y = Helpers.range 0 (sy-1) in
+      let lst = all_x
+      |> List.map (fun x -> all_y |> List.map (fun y -> (x,y)))
+      |> List.fold_left (@) [] in
+      (grid, lst)
 
-    let unwrap_grid (grid: grid_t) : (location_t*particle_t) array array = grid
+    let unwrap_grid (grid,_: grid_t) : (location_t*particle_t) array array = grid
 
     let change_grid_size (r,c) grid = failwith "unimplemented"
       (* let (old_row,old_col) = get_grid_size grid in 
@@ -116,5 +137,8 @@ module ArrayModel: Model = struct
     let in_grid grid (x,y) =
       let (sx,sy) = get_grid_size grid in
       (x < sx) && (y < sy) && (y >= 0) && (x >= 0)
+
+    let get_to_update (_,lst) = lst
+    let set_to_update (grid,_) lst = grid,lst
       
 end
