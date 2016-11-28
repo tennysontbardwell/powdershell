@@ -60,6 +60,7 @@ module type Model = sig
     val to_string : grid_t -> string
     val create_grid : (location_t*particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t*particle_t) array array
+    val in_grid : grid_t -> location_t -> bool
 end
 
 module ArrayModel : Model

@@ -67,7 +67,7 @@ let apply_moves grid moves =
   let apply grid move = begin
     match move with
     | Move_exc (name, start, final, _) -> begin
-      try
+      if ArrayModel.in_grid grid final then
         match (ArrayModel.particle_at_index grid start,
                 ArrayModel.particle_at_index grid final) with
         | (Some {name=p_name; color=color}, None) when p_name=name ->
@@ -75,7 +75,7 @@ let apply_moves grid moves =
           |> ArrayModel.set_pixel start None
           |> ArrayModel.set_pixel final (Some {name=name; color=color})
         | _ -> grid
-      with Invalid_argument _ -> grid
+      else grid
     end
     | Change_exc (location, inital, final, _) -> begin
       match ArrayModel.particle_at_index grid location with
