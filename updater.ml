@@ -15,7 +15,7 @@ type move_t =
 (* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
 (* This converts an a' option list to a' list, removing the nones *)
 let deoptionalize l = 
-    List.concat  @@ List.map (function | None -> [] | Some x -> [x]) l
+    List.concat @@ List.map (function | None -> [] | Some x -> [x]) l
 
 let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
 | Reset::t -> ArrayModel.deep_copy (ArrayModel.empty_grid (ArrayModel.get_grid_size g)) g; receive_input t g
