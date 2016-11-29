@@ -90,6 +90,42 @@
             "interactions": [],
             "movements": [],
             "density": 100
+        },
+        {
+            "name": "lava",
+            "color": { "r": 200, "g": 90, "b": 25 },
+            "display": "₪",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stone",
+                    "to": "lava",
+                    "probability": 0.01
+                },
+                {
+                    "type": "change",
+                    "from": "ice",
+                    "to": "water",
+                    "probability": 0.1
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.4
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
+            "density": 8
         }
     ]
 }

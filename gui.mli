@@ -27,3 +27,5 @@ val get_window_size : gui_ob -> int * int
 (* [draw_to_screen] takes in a grid_t and draws every element to the screen *)
 val draw_to_screen : ArrayModel.grid_t -> gui_ob -> unit
 
+val is_paused : gui_ob -> bool
+

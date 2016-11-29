@@ -14,9 +14,12 @@ type game_t = {
 } 
 
 let execute game _ = 
-      let inp = game.gui |> get_inputs in 
-      receive_input inp game.grid |> next_step game.rules;
-      draw_to_screen game.grid game.gui
+      let inp = game.gui |> get_inputs in
+      let grid = receive_input inp game.grid in
+      (if not (is_paused game.gui) then
+        ignore (next_step game.rules grid) 
+      else ());
+       draw_to_screen game.grid game.gui
 
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =

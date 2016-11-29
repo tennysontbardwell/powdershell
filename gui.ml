@@ -25,6 +25,7 @@ class gui_ob exit_ =
     val mutable debug = ""
     val mutable rules = gen_rules []
     val mutable paused = false
+    val mutable pp_button = ("", fun _ -> ())
 
     method create_matrix c r =
     matrix <- ArrayModel.empty_grid (c, r);
@@ -55,9 +56,9 @@ class gui_ob exit_ =
                 let (rawr, rawg, rawb) = details.color in
                 let shim = details.shimmer in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
-                 (constrain ((Random.int (shim)) + rawr - (shim/2)) 0 255,
+                 (constrain ((Random.int shim) + rawr - (shim/2)) 0 255,
                   constrain ((Random.int shim) + rawg - (shim/2)) 0 255, 
-                  constrain ((Random.int (shim)) + rawb - (shim/2)) 0 255) in
+                  constrain ((Random.int shim) + rawb - (shim/2)) 0 255) in
                  (* print_int r; print_int g; print_int b; print_endline ""; *)
                 LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
                 bold = None; underline = None; blink = Some false; 
@@ -97,26 +98,37 @@ class gui_ob exit_ =
     method get_size = ArrayModel.get_grid_size matrix
 
     method setup = 
-    actions_list <- [("quit", fun _ -> self#exit_term);
-                        ("reset", fun _ -> current_event <- Reset::current_event);
-                        ("save", fun _ -> current_event <- Save::current_event); 
-                        ("load", fun _ -> current_event <- Load::current_event); 
-                        ("line", fun _ -> ());
-                        ("radius: - +", fun x -> 
-                            if (x = 4 && radius < 9) then radius <- radius + 1 else if (x = 6 && radius > 1) then radius <- radius - 1 else ())];
-        Lazy.force LTerm.stdout 
-        >>= (fun term -> 
-            (size <- LTerm.size term;
-             (* self#create_matrix size.rows size.cols; *)
-             (* self#create_matrix 1000 1000 ;*)
-             (* print_int (size.rows); *)
-             LTerm.enable_mouse term)
-            >>= (fun () -> begin  LTerm.enter_raw_mode term end));
-        
-        (* print_int (Array.length matrix); *)
-        (* print_int (size.cols); *)
-        self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows; col2 = size.cols};
-        ()
+    let actions = [
+      ("quit", fun _ -> self#exit_term);
+      ("reset", fun _ -> current_event <- Reset::current_event);
+      ("save", fun _ -> current_event <- Save::current_event); 
+      ("load", fun _ -> current_event <- Load::current_event); 
+      ("line", fun _ -> ());
+      ("radius: - +", fun x -> 
+        if (x = 4 && radius < 9) then
+          radius <- radius + 1
+        else if (x = 6 && radius > 1) then
+          radius <- radius - 1 else ())
+      ] in 
+      let p_to_string p = if p then "play" else "pause" in
+      pp_button <- (p_to_string paused,
+         fun _ -> paused <- not paused;
+         actions_list <- (actions @ [(p_to_string paused, snd pp_button)]));
+      actions_list <- (actions @ [pp_button]);
+
+      Lazy.force LTerm.stdout 
+      >>= (fun term -> 
+          (size <- LTerm.size term;
+           (* self#create_matrix size.rows size.cols; *)
+           (* self#create_matrix 1000 1000 ;*)
+           (* print_int (size.rows); *)
+           LTerm.enable_mouse term)
+          >>= (fun () -> begin  LTerm.enter_raw_mode term end));
+      
+      (* print_int (Array.length matrix); *)
+      (* print_int (size.cols); *)
+      self#set_allocation {row1 = 0; col1 = 0; row2 = size.rows; col2 = size.cols};
+      ()
 
     method handle_buttons r c =
         let (cols, rows) = ArrayModel.get_grid_size matrix in
@@ -157,11 +169,12 @@ class gui_ob exit_ =
       self#setup;
       self#on_event 
         (function
-          | LTerm_event.Key
-              {code = LTerm_key.Char ch}
-            when ch = of_char 'q' ->
-            self#exit_term;
-            true
+          | LTerm_event.Key {code = LTerm_key.Char ch} -> begin
+            match char_of ch with
+            | 'q' -> self#exit_term; true
+            | ' ' -> let p_to_string p = if p then "play" else "pause" in
+                     List.assoc (p_to_string paused) actions_list 1; true
+          end
           | LTerm_event.Mouse {row = r; col = c} -> 
             (* debug <- ("c:" ^ (string_of_int c) ^ " r:" ^ (string_of_int r)); *)
             let (colsize, rowsize) = get_grid_size matrix in
