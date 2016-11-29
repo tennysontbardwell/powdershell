@@ -6,6 +6,8 @@ val new_clk : clock_t
 
 val end_calc : clock_t -> clock_t
 
-val get_speed : clock_t -> float
+val get_block : clock_t -> float
 
 val set_start : clock_t -> clock_t
+
+val get_start : clock_t -> float
