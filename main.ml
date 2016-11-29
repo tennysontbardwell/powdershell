@@ -26,9 +26,6 @@ let rec execute game _ =
        draw_to_screen game.grid game.gui;
     execute {game with clock = (end_calc clk)} ()
 
-
-(* let clock game () =  (Lwt_unix.sleep clockspeed) >>= (fun () -> execute game; clock ()) *)
-
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in

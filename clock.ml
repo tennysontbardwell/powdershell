@@ -16,15 +16,19 @@ let (new_clk : clock_t) =
 let set_start clk = {clk with startt = Unix.time ()}
 
 let end_calc oclk = 
-    Queue.push oclk.speed oclk.hist;
-    if Queue.length oclk.hist > 5 then ignore (Queue.pop oclk.hist);
+    if Queue.length oclk.hist > 9 then ignore (Queue.pop oclk.hist);
     let clk = {oclk with endt = Unix.time ()} in
     let t_diff = clk.endt -. clk.startt in
+    Queue.push t_diff oclk.hist;
     if t_diff <= clk.speed && clk.speed >= 0.05 then
-        {clk with speed = (if t_diff < 0.05 then 0.05 else t_diff)}
-    else let avg_clk = (Queue.fold (fun a x -> x +. a) 0. clk.hist +. t_diff) /. 6. in
-        let hist_gt = Queue.fold (fun a x -> if x > clk.speed then a +. 1. else a)
-                      0. clk.hist in
-        {clk with speed = (clk.speed +. ((sqrt hist_gt) *. (t_diff -. clk.speed)))}
-(* (clk.speed +. ((sqrt hist_gt) *. (avg_clk -. clk.speed))) *)
+        let avg = (t_diff +. clk.speed) /. 2. in
+        {clk with speed = (if avg < 0.05 then 0.05 else avg)}
+    else 
+        let avg_clk = (Queue.fold (fun a x -> x +. a) 0. clk.hist 
+            +. t_diff) /. 11. in
+        let hist_gt = 
+            Queue.fold (fun a x -> if x > clk.speed then a +. 0.05 else a) 
+            0. clk.hist in
+        {clk with speed = (clk.speed +. (hist_gt *. (avg_clk -. clk.speed)))}
+        
 let get_speed clk = clk.speed
