@@ -34,8 +34,8 @@ class gui_ob exit_ =
     method load_rules r = rules <- r; element_list <- "erase"::(Hashtbl.fold (fun x _ a -> x::a) rules [])
 
     method draw_to_screen m = 
-    matrix <- m;
-    self#queue_draw
+      matrix <- m;
+      self#queue_draw
 
     method set_allocation x = super#set_allocation x
 
@@ -54,7 +54,7 @@ class gui_ob exit_ =
             | Some {name = n} ->
                 let details = lookup_rule rules n in
                 let (rawr, rawg, rawb) = details.color in
-                let shim = details.shimmer in 
+                let shim = 0 in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
                  (constrain ((Random.int shim) + rawr - (shim/2)) 0 255,
                   constrain ((Random.int shim) + rawg - (shim/2)) 0 255, 
