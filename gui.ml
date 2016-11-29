@@ -39,6 +39,8 @@ class gui_ob exit_ =
 
     method set_allocation x = super#set_allocation x
 
+    method set_debug s = debug <- s
+
     method is_paused = paused
 
     method draw ctx focused_widget =
