@@ -2,16 +2,18 @@ open Model
 open Rules
 open Yojson.Basic.Util
 
-
 exception Format_error of string
 type file_path_t = string
 
-let parse_inter j : interaction_t =
-  Change (
-    j |> member "from" |> to_string,
-    j |> member "to" |> to_string,
-    j |> member "probability" |> to_float
-  )
+let parse_inter j : interaction_t = 
+  match j |> member "type" |> to_string with
+  | "change" ->  Change (
+                  j |> member "from" |> to_string,
+                  j |> member "to" |> to_string,
+                  j |> member "probability" |> to_float
+                )
+  | _ -> raise
+      (Format_error "the interactions could not be parsed for an element")
 
 let parse_move j : move_option_t =
   let to_tuple lst = begin
@@ -24,6 +26,11 @@ let parse_move j : move_option_t =
   let dirs = j |> member "directions" |> to_list |> List.map to_list
     |> List.map (List.map to_int) |> List.map to_tuple in
   (dirs, prob)
+
+let parse_trans j : transform_t =
+  let to_el = j |> member "to" |> to_string in
+  let prob = j |> member "probability" |> to_float in
+  (to_el, prob)
 
 let parse_color j = (
   j |> member "r" |> to_int,
@@ -40,6 +47,8 @@ let parse_elm j : (name_t * elem_rules_t) =
       shimmer = j |> member "shimmer" |> to_int;
       interactions = j |> member "interactions" |> to_list |>
         List.map parse_inter;
+      transforms = j |> member "transforms" |> to_list |>
+        List.map parse_trans;
       movements = j |> member "movements" |> to_list |> List.map parse_move;
       density = j |> member "density" |> to_int;
     }

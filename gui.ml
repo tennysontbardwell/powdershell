@@ -56,7 +56,7 @@ class gui_ob exit_ =
             | Some {name = n} ->
                 let details = lookup_rule rules n in
                 let (rawr, rawg, rawb) = details.color in
-                let shim = 0 in 
+                let shim = details.shimmer in 
                 let (r, g, b) = if shim = 0 then (rawr, rawg, rawb) else
                  (constrain ((Random.int shim) + rawr - (shim/2)) 0 255,
                   constrain ((Random.int shim) + rawg - (shim/2)) 0 255, 

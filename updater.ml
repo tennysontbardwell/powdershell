@@ -25,7 +25,7 @@ let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEA
 | _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)
-let transform start dir = (fst start + (fst dir), snd start + (snd dir))
+let translate start dir = (fst start + (fst dir), snd start + (snd dir))
 
 let can_apply_move grid rules move = match move with
 | Move_exc (name, start, final, _) ->
@@ -48,7 +48,7 @@ let get_movements elm_rules rules loc name grid = elm_rules.movements
   |> List.map (fun (directions, probability) ->
     directions
     |> List.map (fun dir ->
-      Move_exc (name, loc, (transform loc dir), probability)))
+      Move_exc (name, loc, (translate loc dir), probability)))
   |> List.fold_left (@) []
   |> List.filter (can_apply_move grid rules)
 
@@ -71,14 +71,18 @@ let get_changes elm_rules rules (x,y) name grid =
   interactions
   |> List.filter (can_apply_move grid rules)
 
+let get_transforms elm_rules loc name =
+  List.map (fun (n, p) -> Change_exc (loc, name, n, p)) elm_rules.transforms
+
 (* this is a list of [move_t]s for a particular location on the grid *)
 let move_options rules grid (x,y) =
   match ArrayModel.particle_at_index grid (x,y) with
   | Some particle -> begin
     let elm_rules = lookup_rule rules particle.name in
     let interactions = get_changes elm_rules rules (x,y) particle.name grid in
+    let transforms = get_transforms elm_rules (x,y) particle.name in
     let moves = get_movements elm_rules rules (x,y) particle.name grid in
-    interactions @ moves
+    interactions @ transforms @ moves
   end
   | None -> []
 
