@@ -28,7 +28,14 @@
             "lifespan": -1,
             "shimmer" : 26,
             "transforms": [],
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "lava",
+                    "to": "stone",
+                    "probability": 0.01
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -54,7 +61,7 @@
             "transforms": [
                 {
                     "to": "water",
-                    "probability": 0.001
+                    "probability": 0.0001
                 }
             ],
             "interactions": [
@@ -78,10 +85,11 @@
             "interactions": [
                 {
                     "type": "change",
-                    "from": "",
-                    "to": "water",
-                    "probability": 0.01
-                }],
+                    "from": "lava",
+                    "to": "stone",
+                    "probability": 0.005
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -107,19 +115,30 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
-            "transforms": [],
+            "transforms": [
+                // {
+                //     "to": "stone",
+                //     "probability": 0.002
+                // }
+            ],
             "interactions": [
                 {
                     "type": "change",
                     "from": "stone",
                     "to": "lava",
-                    "probability": 0.01
+                    "probability": 0.0055
                 },
                 {
                     "type": "change",
                     "from": "ice",
                     "to": "water",
                     "probability": 0.1
+                },
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "steam",
+                    "probability": 0.02
                 }
             ],
             "movements": [
@@ -137,6 +156,61 @@
                 }
             ],
             "density": 8
+        },
+        {
+            "name": "steam",
+            "color": { "r": 150, "g": 150, "b": 150 },
+            "display": "#",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "transforms": [
+                {
+                    "to": "water",
+                    "probability": 0.001
+                }
+            ],
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[0,1]],
+                    "probability": 0.1
+                },
+                {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 0.4
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.2
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "plant",
+            "color": { "r": 30, "g": 200, "b": 50 },
+            "display": "ॵ",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "transforms": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "plant",
+                    "probability": 0.02
+                }
+            ],
+            "movements": [],
+            "density": 100
         }
     ]
 }

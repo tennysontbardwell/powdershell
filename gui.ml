@@ -10,6 +10,19 @@ open Rules
 
 type gui_t = LTerm_widget.t
 
+type ui_t = 
+  {
+    matrix : ArrayModel.grid_t;
+    sim_size : LTerm_geom.size; 
+    event_buffer : input_t list;
+    selected_elem : string;
+    draw_radius : int;
+    element_list : string list;
+    controls_list : string * (int -> unit) list;
+    rules_lookop : Rules.rules_t;
+    is_paused : bool;
+  }
+
 class gui_ob exit_ =
   object(self)
     inherit LTerm_widget.frame as super
@@ -18,6 +31,7 @@ class gui_ob exit_ =
     val mutable current_event = []
     val mutable size = {rows = 1000; cols = 1000}
     val mutable curr_element = "sand"
+    (* val mutable ui = {} *)
     val mutable radius = 3
     val mutable element_list = []
     val mutable actions_list = []
@@ -70,11 +84,14 @@ class gui_ob exit_ =
       done;
 
       List.fold_left (fun a x -> 
-        (* let color = if a = curr_element then Some lyellow else Some lwhite in *)
+        let color = if x = "erase" then Some lwhite else
+        let (r, g, b) = (lookup_rule rules x).color in Some (rgb r g b) in
         LTerm_draw.draw_string ctx a (cols + 2) ~style:LTerm_style.({
-            bold = None; underline = None; blink = Some false; 
-            reverse = None; foreground = Some lwhite; background = 
-            (if x = curr_element then Some lyellow else None)}) x; 
+            bold = (if x = curr_element then Some true else None);
+            underline = (if x = curr_element then Some true else None);
+            blink = Some false; 
+            reverse = None; foreground = color; background = 
+            None}) x; 
         a + space
       ) 10 element_list;
 
