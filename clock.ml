@@ -17,6 +17,8 @@ let (new_clk : clock_t) =
 
 let set_start clk = {clk with startt = Unix.gettimeofday()}
 
+let constrain a l h = if a < l then l else if a > h then h else a
+
 let end_calc oclk = 
     if Queue.length oclk.hist > 9 then ignore (Queue.pop oclk.hist);
     let clk = {oclk with endt = Unix.gettimeofday()} in
@@ -29,10 +31,10 @@ let end_calc oclk =
     if t_diff <= clk.speed && clk.speed >= 0.05 then
         let avg = (t_diff +. clk.speed) /. 2. in
         let nspeed = if avg < 0.05 then 0.05 else avg in
-        {clk with speed = nspeed; wait = (nspeed)}
+        {clk with speed = nspeed; wait = (constrain nspeed 0.05 5.)}
     else 
         let nspeed = t_diff +. (hist_gt *. (avg_clk -. clk.speed)) in
-        {clk with speed = nspeed; wait = nspeed}
+        {clk with speed = nspeed; wait = (constrain nspeed 0.05 5.)}
 
 let get_block clk = clk.wait
 
