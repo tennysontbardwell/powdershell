@@ -17,11 +17,17 @@ type move_t =
 let deoptionalize l = 
     List.concat @@ List.map (function | None -> [] | Some x -> [x]) l
 
-let rec receive_input inp g = match inp with (* SITAR WROTE THIS PLEASE FIX PLEASE *)
-| Reset::t -> ArrayModel.deep_copy (ArrayModel.empty_grid (ArrayModel.get_grid_size g)) g; receive_input t g
+let rec receive_input inp g = match inp with
+| Reset::t -> let empty = ArrayModel.empty_grid (ArrayModel.get_grid_size g) in
+    ArrayModel.deep_copy empty g; receive_input t g
 | Save::t -> ignore (Filemanager.write_state g); receive_input t g
-| Load::t -> ArrayModel.deep_copy (Filemanager.read_state "grid.json") g; receive_input t g
-| ((ElemAdd i)::t) -> ArrayModel.set_pixel i.loc (if i.elem = "erase" then None else Some {name=i.elem}) g |> ignore; receive_input t g
+| Load::t -> ArrayModel.deep_copy (Filemanager.read_state "grid.json") g; 
+    receive_input t g
+| ((ElemAdd i)::t) -> (if i.elem = "erase" then 
+    ignore (ArrayModel.set_pixel i.loc None g)
+    else let npix = Some {name=i.elem} in
+    if ArrayModel.particle_at_index g i.loc = None then
+    ArrayModel.set_pixel i.loc npix g |> ignore); receive_input t g
 | _ -> g
 
 (* this is [start] after moving 1 in direction [dir] *)

@@ -10,8 +10,6 @@ class gui_ob : (unit -> 'a) -> object
   method get_size : int * int
   method setup : unit
   method load_rules : Rules.rules_t -> unit
-  method exit_term : unit
-  method handle_buttons : int -> int -> unit
   method is_paused : bool
   method set_debug : string -> unit
 end

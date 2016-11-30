@@ -19,7 +19,7 @@
                     "probability": 1.0
                 }
             ],
-            "density": 6
+            "density": 8
         },
         {
             "name": "water",
@@ -139,6 +139,12 @@
                     "from": "water",
                     "to": "steam",
                     "probability": 0.02
+                },
+                {
+                    "type": "change",
+                    "from": "sand",
+                    "to": "wall",
+                    "probability": 0.0055
                 }
             ],
             "movements": [
@@ -210,6 +216,73 @@
                 }
             ],
             "movements": [],
+            "density": 100
+        },
+        {
+            "name": "virus",
+            "color": { "r": 150, "g": 20, "b": 150 },
+            "display": "Z",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "transforms": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "sand",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "lava",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "stone",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "wall",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "plant",
+                    "to": "virus",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "steam",
+                    "to": "virus",
+                    "probability": 0.2
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.4
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
             "density": 100
         }
     ]
