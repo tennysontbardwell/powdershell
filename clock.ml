@@ -26,7 +26,7 @@ let end_calc oclk =
     Queue.push t_diff oclk.hist;
     let avg_clk = (Queue.fold (fun a x -> x +. a) 0. clk.hist 
         +. t_diff) /. 11. in
-    let hist_gt = Queue.fold (fun a x -> if x > clk.speed then a +. 0.02 else a) 
+    let hist_gt = Queue.fold (fun a x -> if x > clk.speed then a +. 0.9 else a) 
         0. clk.hist in
     if t_diff <= clk.speed && clk.speed >= 0.05 then
         let avg = (t_diff +. clk.speed) /. 2. in
@@ -34,7 +34,7 @@ let end_calc oclk =
         let nspeed = (constrain nspeed 0.05 5.) in
         {clk with speed = nspeed; wait = (nspeed)}
     else 
-        let nspeed = t_diff +. (hist_gt *. (avg_clk -. clk.speed)) in
+        let nspeed = t_diff +. (hist_gt *. (t_diff -. clk.speed)) in
         let nspeed = (constrain nspeed 0.05 5.) in
         {clk with speed = nspeed; wait = (nspeed)}
 
