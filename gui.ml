@@ -165,7 +165,7 @@ class gui_ob exit_ = object(self)
       >>= (fun term -> LTerm.disable_mouse term); 
       exit_ (); ()
 
-  method private add_elem x y = 
+  method private add_elem x y erase = 
       let dist (ax,ay) (bx,by) = sqrt(((float ax) -. (float bx))**2. +.
           ((float ay) -. (float by))**2.) in
       let (colsize, rowsize) = get_grid_size ui.matrix in
@@ -174,8 +174,8 @@ class gui_ob exit_ = object(self)
           for j = y - r to y + r do
               if i >= 0 && j >= 0 && i < colsize && j < rowsize
                   && (dist (i, j) (x, y) +. 0.1) < (float r) then
-              ui.event_buffer <- (ElemAdd {elem = ui.selected_elem;
-                  loc = (i,j)})::(ui.event_buffer)
+              ui.event_buffer <- (ElemAdd {elem = if erase then "erase"
+                else ui.selected_elem; loc = (i,j)})::(ui.event_buffer)
               else ()
           done
       done
@@ -200,7 +200,7 @@ class gui_ob exit_ = object(self)
     | LTerm_event.Mouse {row = r; col = c; button = b} -> 
       let (colsize, rowsize) = get_grid_size ui.matrix in
       if r < rowsize + 2 && c < colsize + 2 then
-      self#add_elem (c - 1) (r - 1)
+      self#add_elem (c - 1) (r - 1) (b = Button3)
       else if b = Button1 then self#handle_buttons r c; true
     | _ -> false
 

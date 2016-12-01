@@ -12,7 +12,14 @@
             "grow": [],
             "destroy": [],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "sand",
+                    "probability": 0.05
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -45,6 +52,12 @@
                     "from": "lava",
                     "to": "stone",
                     "probability": 0.01
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "water",
+                    "probability": 0.05
                 }
             ],
             "movements": [
@@ -77,6 +90,12 @@
                     "from": "water",
                     "to": "ice",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "ice",
+                    "probability": 0.05
                 }
             ],
             "movements": [],
@@ -103,6 +122,12 @@
                     "from": "lava",
                     "to": "stone",
                     "probability": 0.005
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "stone",
+                    "probability": 0.05
                 }
             ],
             "movements": [
@@ -185,6 +210,12 @@
                     "from": "plant",
                     "to": "fire",
                     "probability": 0.5
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "lava",
+                    "probability": 0.05
                 }
             ],
             "movements": [
@@ -219,7 +250,14 @@
             "grow": [],
             "destroy": [],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "steam",
+                    "probability": 0.05
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,-1]],
@@ -266,6 +304,12 @@
                     "from": "water",
                     "to": "plant",
                     "probability": 0.02
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "plant",
+                    "probability": 0.05
                 }
             ],
             "movements": [],
@@ -330,6 +374,12 @@
                     "from": "bomb",
                     "to": "expu",
                     "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "fire",
+                    "probability": 0.3
                 }
             ],
             "movements": [
@@ -372,7 +422,14 @@
             ],
             "destroy": [],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "torch",
+                    "probability": 0.05
+                }
+            ],
             "movements": [],
             "density": 100
         },
@@ -401,7 +458,14 @@
                 { "from": "torch", "probability": 1.0 }
             ],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "bhole",
+                    "probability": 0.05
+                }
+            ],
             "movements": [],
             "density": 100
         },
@@ -418,7 +482,14 @@
             ],
             "destroy": [],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "spout",
+                    "probability": 0.05
+                }
+            ],
             "movements": [],
             "density": 100
         },
@@ -438,7 +509,14 @@
                 }
             ],
             "decay": 0.0,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "oil",
+                    "probability": 0.05
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -478,7 +556,14 @@
                 { "from": "torch", "probability": 0.03 }
             ],
             "decay": 0.001,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "acid",
+                    "probability": 0.05
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -506,7 +591,14 @@
             "grow": [],
             "destroy": [],
             "decay": 0.000,
-            "interactions": [],
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "bomb",
+                    "probability": 0.05
+                }
+            ],
             "movements": [
                 {
                     "directions": [[0,1]],
@@ -676,6 +768,32 @@
                 }
             ],
             "density": 100
+        },
+        {
+            "name": "stem",
+            "color": { "r": 170, "g": 170, "b": 170 },
+            "display": "&",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {"to": "stem", "probability": 0.002}
+            ],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
         }
     ]
 }
