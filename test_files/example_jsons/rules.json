@@ -356,6 +356,22 @@
             "interactions": [],
             "movements": [],
             "density": 100
+        },
+        {
+            "name": "spout",
+            "color": { "r": 0, "g": 0, "b": 180 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "transforms": [],
+            "grow": [
+                {"to": "water", "probability": 0.05}
+            ],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [],
+            "movements": [],
+            "density": 100
         }
     ]
 }
