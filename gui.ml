@@ -107,8 +107,8 @@ class gui_ob exit_ = object(self)
                constrain (shimmer + rawb) 0 255) in
           LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
           bold = None; underline = None; blink = Some false; 
-          reverse = None; foreground = Some (rgb r g b); background = None}) 
-          (details.display)
+          reverse = None; foreground = Some (rgb r g b); background = None})
+          details.display
       done
     done;
 

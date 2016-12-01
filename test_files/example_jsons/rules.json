@@ -130,14 +130,19 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
-            "transforms": [
+            "transforms": [],
+            "grow": [
                 // {
-                //     "to": "stone",
-                //     "probability": 0.002
+                //     "to": "fire",
+                //     "probability": 0.005
                 // }
             ],
-            "grow": [],
-            "destroy": [],
+            "destroy": [
+                {
+                    "to": "plant",
+                    "probability": 0.001
+                }
+            ],
             "decay": 0.0,
             "interactions": [
                 {
@@ -224,18 +229,19 @@
         {
             "name": "plant",
             "color": { "r": 30, "g": 200, "b": 50 },
-            "display": "ॵ",
+            "display": "☘",
+            // ॵ
             "lifespan": -1,
             "shimmer" : 0,
             "transforms": [],
             "grow": [
                 {
                     "to": "plant",
-                    "probability": 0.001
+                    "probability": 0.0003
                 }
             ],
             "destroy": [],
-            "decay": 0.0,
+            "decay": 0.0001,
             "interactions": [
                 {
                     "type": "change",
@@ -248,71 +254,83 @@
             "density": 100
         },
         {
-            "name": "virus",
-            "color": { "r": 150, "g": 20, "b": 150 },
-            "display": "☣",
+            "name": "fire",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
             "lifespan": -1,
-            "shimmer" : 0,
+            "shimmer" : 100,
             "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.4,
             "interactions": [
                 {
                     "type": "change",
+                    "from": "plant",
+                    "to": "fire",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "ice",
+                    "to": "water",
+                    "probability": 0.1
+                },
+                {
+                    "type": "change",
                     "from": "water",
-                    "to": "virus",
-                    "probability": 0.2
-                },
-                {
-                    "type": "change",
-                    "from": "sand",
-                    "to": "virus",
-                    "probability": 0.2
-                },
-                {
-                    "type": "change",
-                    "from": "lava",
-                    "to": "virus",
-                    "probability": 0.2
+                    "to": "steam",
+                    "probability": 0.001
                 },
                 {
                     "type": "change",
                     "from": "stone",
-                    "to": "virus",
-                    "probability": 0.2
-                },
-                {
-                    "type": "change",
-                    "from": "wall",
-                    "to": "virus",
-                    "probability": 0.2
-                },
-                {
-                    "type": "change",
-                    "from": "plant",
-                    "to": "virus",
-                    "probability": 0.2
-                },
-                {
-                    "type": "change",
-                    "from": "steam",
-                    "to": "virus",
-                    "probability": 0.2
+                    "to": "lava",
+                    "probability": 0.001
                 }
             ],
             "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
                 {
                     "directions": [[0,1]],
                     "probability": 1.0
                 },
                 {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 1.0
+                },
+                {
                     "directions": [[-1,1], [1,1]],
-                    "probability": 0.4
+                    "probability": 0.5
                 },
                 {
                     "directions": [[-1,0], [1,0]],
-                    "probability": 0.4
+                    "probability": 1.0
                 }
             ],
-            "density": 4
+            "density": 2
+        },
+        {
+            "name": "torch",
+            "color": { "r": 120, "g": 70, "b": 70 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "transforms": [],
+            "grow": [
+                {
+                    "to": "fire",
+                    "probability": 0.1
+                }
+            ],
+            "destroy": [],
+            "decay": 0.001,
+            "interactions": [],
+            "movements": [],
+            "density": 100
         }
     ]
 }

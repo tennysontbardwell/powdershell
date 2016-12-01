@@ -102,6 +102,9 @@ let get_grows elm_rules (x,y) name grid =
     neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
   else []
 
+let get_decays elm_rules loc name grid =
+  [Destroy_exc (loc, name, elm_rules.decay)]
+
 let get_transforms elm_rules loc name =
   List.map (fun (n, p) -> Change_exc (loc, name, n, p)) elm_rules.transforms
 
@@ -114,7 +117,8 @@ let move_options rules grid (x,y) =
     let transforms = get_transforms elm_rules (x,y) particle.name in
     let moves = get_movements elm_rules rules (x,y) particle.name grid in
     let grows = get_grows elm_rules (x,y) particle.name grid in
-    interactions @ transforms @ moves @ grows
+    let decays = get_decays elm_rules (x,y) particle.name grid in
+    interactions @ transforms @ moves @ grows @ decays
   end
   | None -> []
 
