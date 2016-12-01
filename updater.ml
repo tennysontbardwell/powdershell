@@ -63,7 +63,7 @@ let can_apply_move grid rules move = match move with
     | _ -> false
   end
 
-(* this is all the leagal [Move_exc]s for a particular location on any grid *)
+(* this is all the legal [Move_exc]s for a particular location on any grid *)
 let get_movements elm_rules rules loc name grid = elm_rules.movements
   |> List.map (fun (directions, probability) ->
     directions
@@ -77,7 +77,6 @@ let neighbors x y =
 
 (* this is all legal [Change_exc]s for a particular location on any grid *)
 let get_changes elm_rules rules (x,y) name grid =
-  (* TODO this doesn't allow multiple changes or something *)
   let get_interactions elm =
     List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions in
   let get_space_interaction (x,y) =
@@ -87,12 +86,11 @@ let get_changes elm_rules rules (x,y) name grid =
       Some (List.map (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p)) i)
   in
   let interactions = neighbors x y
-    |> List.map return
+    |> List.map return  (* TODO: tennysone, rewrite me *)
     |> List.map (fun x -> bind x get_space_interaction)
     |> deoptionalize
     |> List.fold_left (@) [] in
-  interactions
-  |> List.filter (can_apply_move grid rules)
+  interactions |> List.filter (can_apply_move grid rules)
 
 let get_grows elm_rules (x,y) name grid =
   if List.length elm_rules.grow > 0 then
