@@ -67,7 +67,7 @@
             "transforms": [
                 {
                     "to": "water",
-                    "probability": 0.0001
+                    "probability": 0.00001
                 }
             ],
             "grow": [],
@@ -228,7 +228,12 @@
             "lifespan": -1,
             "shimmer" : 0,
             "transforms": [],
-            "grow": [],
+            "grow": [
+                {
+                    "to": "plant",
+                    "probability": 0.001
+                }
+            ],
             "destroy": [],
             "decay": 0.0,
             "interactions": [
