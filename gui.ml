@@ -197,12 +197,11 @@ class gui_ob exit_ = object(self)
           if num >= 0 && num <= 9 && num < List.length ui.element_list then 
             ui.selected_elem <- List.nth ui.element_list num; true
     end
-    | LTerm_event.Mouse {row = r; col = c} -> 
+    | LTerm_event.Mouse {row = r; col = c; button = b} -> 
       let (colsize, rowsize) = get_grid_size ui.matrix in
       if r < rowsize + 2 && c < colsize + 2 then
       self#add_elem (c - 1) (r - 1)
-      else self#handle_buttons r c;
-      true
+      else if b = Button1 then self#handle_buttons r c; true
     | _ -> false
 
 end

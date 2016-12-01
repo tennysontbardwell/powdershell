@@ -15,17 +15,16 @@ type game_t = {
 } 
 
 let rec execute game _ = 
-  (* game.gui#set_debug (( 1. /. ((Unix.gettimeofday()) -. (get_start game.clock)) |> string_of_float) ^ " fps"); *)
   (Lwt_unix.sleep (get_block game.clock)) >>= fun () ->
-    game.gui#set_debug ((1. /. ((Unix.gettimeofday()) -. (get_start game.clock)) |> string_of_float) ^ " fps");
-      (* game.gui#set_debug ((1. /. (get_speed game.clock) |> string_of_float) ^ " fps"); *)
-      let clk = set_start game.clock in
-      let inp = game.gui |> get_inputs in
-      let grid = receive_input inp game.grid in
-      (if not (is_paused game.gui) then
-        ignore (next_step game.rules grid) 
-      else ());
-       draw_to_screen game.grid game.gui;
+    game.gui#set_debug ((1. /. (Unix.gettimeofday () -. (get_start game.clock))
+      |> ceil |> int_of_float |> string_of_int) ^ " fps");
+    let clk = set_start game.clock in
+    let inp = game.gui |> get_inputs in
+    let grid = receive_input inp game.grid in
+    (if not (is_paused game.gui) then
+      ignore (next_step game.rules grid) 
+    else ());
+     draw_to_screen game.grid game.gui;
     execute {game with clock = (end_calc clk)} ()
 
 let run rules grid = Lwt_main.run (
