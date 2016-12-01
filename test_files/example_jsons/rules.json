@@ -113,9 +113,9 @@
             "density": 8
         },
         {
-            "name": "wall",
+            "name": "glass",
             "color": { "r": 70, "g": 70, "b": 70 },
-            "display": "█",
+            "display": "░",
             "lifespan": -1,
             "shimmer" : 9,
             "transforms": [],
@@ -168,7 +168,7 @@
                 {
                     "type": "change",
                     "from": "sand",
-                    "to": "wall",
+                    "to": "glass",
                     "probability": 0.0055
                 },
                 {
@@ -243,8 +243,7 @@
         {
             "name": "plant",
             "color": { "r": 30, "g": 200, "b": 50 },
-            "display": "☘",
-            // ॵ
+            "display": "ॵ",
             "lifespan": -1,
             "shimmer" : 0,
             "transforms": [],
@@ -365,7 +364,7 @@
                 { "from": "water", "probability": 1.0 },
                 { "from": "ice", "probability": 1.0 },
                 { "from": "stone", "probability": 1.0 },
-                { "from": "wall", "probability": 1.0 },
+                { "from": "glass", "probability": 1.0 },
                 { "from": "lava", "probability": 1.0 },
                 { "from": "steam", "probability": 1.0 },
                 { "from": "plant", "probability": 1.0 },

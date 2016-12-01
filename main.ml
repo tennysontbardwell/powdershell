@@ -23,7 +23,6 @@ let rec execute game _ =
   >>= fun game -> draw_to_screen game.grid game.gui |> return
   >>= fun _ -> Lwt_unix.sleep 0.04 >>= execute game
 
-
 let run rules grid = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
