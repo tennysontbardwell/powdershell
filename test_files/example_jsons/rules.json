@@ -47,15 +47,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[0,1]],
-                    "probability": 1.0
-                },
-                {
-                    "directions": [[-1,1], [1,1]],
-                    "probability": 1.0
-                },
-                {
-                    "directions": [[-1,0], [1,0]],
+                    "directions": [[0,1], [-1,1], [1,1], [-1,0], [1,0]],
                     "probability": 1.0
                 }
             ],
@@ -462,6 +454,202 @@
                 },
                 {
                     "directions": [[-1,0], [1,0]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "elec",
+            "color": { "r": 250, "g": 250, "b": 40 },
+            "display": "⚡",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0001,
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "bomb",
+            "color": { "r": 250, "g": 180, "b": 0 },
+            "display": "X",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.000,
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "expl",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "sand", "probability": 1.0 },
+                { "from": "water", "probability": 1.0 },
+                { "from": "ice", "probability": 1.0 },
+                { "from": "stone", "probability": 1.0 },
+                { "from": "glass", "probability": 1.0 },
+                { "from": "lava", "probability": 1.0 },
+                { "from": "steam", "probability": 1.0 },
+                { "from": "plant", "probability": 1.0 },
+                { "from": "fire", "probability": 1.0 },
+                { "from": "spout", "probability": 1.0 },
+                { "from": "oil", "probability": 1.0 },
+                { "from": "acid", "probability": 1.0 },
+                { "from": "torch", "probability": 1.0 }
+            ],
+            "decay": 0.4,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[-4,-1], [-4,0], [-4,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "expr",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "transforms": [],
+            "grow": [
+                {"to": "expr", "probability": 0.03}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 1.0 },
+                { "from": "water", "probability": 1.0 },
+                { "from": "ice", "probability": 1.0 },
+                { "from": "stone", "probability": 1.0 },
+                { "from": "glass", "probability": 1.0 },
+                { "from": "lava", "probability": 1.0 },
+                { "from": "steam", "probability": 1.0 },
+                { "from": "plant", "probability": 1.0 },
+                { "from": "fire", "probability": 1.0 },
+                { "from": "spout", "probability": 1.0 },
+                { "from": "oil", "probability": 1.0 },
+                { "from": "acid", "probability": 1.0 },
+                { "from": "torch", "probability": 1.0 }
+            ],
+            "decay": 0.5,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[4,-1], [4,0], [4,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "expu",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "sand", "probability": 1.0 },
+                { "from": "water", "probability": 1.0 },
+                { "from": "ice", "probability": 1.0 },
+                { "from": "stone", "probability": 1.0 },
+                { "from": "glass", "probability": 1.0 },
+                { "from": "lava", "probability": 1.0 },
+                { "from": "steam", "probability": 1.0 },
+                { "from": "plant", "probability": 1.0 },
+                { "from": "fire", "probability": 1.0 },
+                { "from": "spout", "probability": 1.0 },
+                { "from": "oil", "probability": 1.0 },
+                { "from": "acid", "probability": 1.0 },
+                { "from": "torch", "probability": 1.0 }
+            ],
+            "decay": 0.4,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[-2,-3], [0,-3], [2,-3]],
                     "probability": 1.0
                 }
             ],
