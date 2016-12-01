@@ -26,6 +26,7 @@ type elem_rules_t =
     grow : grow_t list;
     destroy : destroy_t list;
     decay : probability_t;
+    show : bool;
   }
 
 type rules_t = (name_t, elem_rules_t) Hashtbl.t
