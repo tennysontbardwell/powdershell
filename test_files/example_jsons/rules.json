@@ -139,7 +139,7 @@
             ],
             "destroy": [
                 {
-                    "to": "plant",
+                    "from": "plant",
                     "probability": 0.001
                 }
             ],
@@ -328,6 +328,31 @@
             ],
             "destroy": [],
             "decay": 0.001,
+            "interactions": [],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "black hole",
+            "color": { "r": 0, "g": 0, "b": 0 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "sand", "probability": 1.0 },
+                { "from": "water", "probability": 1.0 },
+                { "from": "ice", "probability": 1.0 },
+                { "from": "stone", "probability": 1.0 },
+                { "from": "wall", "probability": 1.0 },
+                { "from": "lava", "probability": 1.0 },
+                { "from": "steam", "probability": 1.0 },
+                { "from": "plant", "probability": 1.0 },
+                { "from": "fire", "probability": 1.0 },
+                { "from": "tourch", "probability": 1.0 }
+            ],
+            "decay": 0.0,
             "interactions": [],
             "movements": [],
             "density": 100

@@ -37,10 +37,10 @@ let parse_grow j : grow_t =
   let prob = j |> member "probability" |> to_float in
   (to_el, prob)
 
-(* let parse_destroy j : destroy_t = *)
-(*   let to_el = j |> member "from" |> to_string in *)
-(*   let prob = j |> member "probability" |> to_float in *)
-(*   (to_el, prob) *)
+let parse_destroy j : destroy_t =
+  let to_el = j |> member "from" |> to_string in
+  let prob = j |> member "probability" |> to_float in
+  (to_el, prob)
 
 let parse_color j = (
   j |> member "r" |> to_int,
@@ -61,9 +61,8 @@ let parse_elm j : (name_t * elem_rules_t) =
         List.map parse_trans;
       grow = j |> member "grow" |> to_list |>
         List.map parse_grow;
-      (* destroy = j |> member "destroy" |> to_list |> *)
-      (*   List.map parse_destroy; *)
-      destroy = [];
+      destroy = j |> member "destroy" |> to_list |>
+        List.map parse_destroy;
       decay = j |> member "decay" |> to_float;
       movements = j |> member "movements" |> to_list |> List.map parse_move;
       density = j |> member "density" |> to_int;

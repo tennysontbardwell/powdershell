@@ -103,6 +103,19 @@ let get_grows elm_rules (x,y) name grid =
     neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
   else []
 
+let get_destroy elm_rules (x,y) name grid =
+  if List.length elm_rules.destroy > 0 then
+    let get_add_exc loc =
+      ArrayModel.particle_at_index grid loc
+      |> (fun i -> match i with
+        | None -> []
+        | Some {name=a_name} ->
+            List.filter (fun (name, prob) -> name = a_name) elm_rules.destroy
+            |> List.map (fun (elm, prob) -> Destroy_exc (loc, elm, prob)))
+    in
+    neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
+  else []
+
 let get_decays elm_rules loc name grid =
   [Destroy_exc (loc, name, elm_rules.decay)]
 
@@ -119,7 +132,8 @@ let move_options rules grid (x,y) =
     let moves = get_movements elm_rules rules (x,y) particle.name grid in
     let grows = get_grows elm_rules (x,y) particle.name grid in
     let decays = get_decays elm_rules (x,y) particle.name grid in
-    interactions @ transforms @ moves @ grows @ decays
+    let destroy = get_destroy elm_rules (x,y) particle.name grid in
+    interactions @ transforms @ moves @ grows @ decays @ destroy
   end
   | None -> []
 
