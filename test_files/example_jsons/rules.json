@@ -7,6 +7,7 @@
             "display": "⣿",
             "lifespan": -1,
             "shimmer" : 2,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [],
@@ -30,6 +31,7 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [
@@ -59,6 +61,7 @@
             "display": "∎",
             "lifespan": -1,
             "shimmer" : 2,
+            "show" : true,
             "transforms": [
                 {
                     "to": "water",
@@ -85,9 +88,14 @@
             "display": "◆",
             "lifespan": -1,
             "shimmer" : 2,
+            "show" : true,
             "transforms": [],
             "grow": [],
-            "destroy": [],
+            "destroy": [
+                { "from": "expu", "probability": 0.5 },
+                { "from": "expl", "probability": 0.5 },
+                { "from": "expr", "probability": 0.5 }
+            ],
             "decay": 0.0,
             "interactions": [
                 {
@@ -111,6 +119,7 @@
             "display": "░",
             "lifespan": -1,
             "shimmer" : 9,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [],
@@ -125,6 +134,7 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
+            "show" : true,
             "transforms": [],
             "grow": [
                 {
@@ -199,6 +209,7 @@
             "display": "#",
             "lifespan": -1,
             "shimmer" : 26,
+            "show" : true,
             "transforms": [
                 {
                     "to": "water",
@@ -239,6 +250,7 @@
             "display": "ॵ",
             "lifespan": -1,
             "shimmer" : 0,
+            "show" : true,
             "transforms": [],
             "grow": [
                 {
@@ -265,6 +277,7 @@
             "display": "ℵ",
             "lifespan": -1,
             "shimmer" : 100,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [],
@@ -299,6 +312,24 @@
                     "from": "oil",
                     "to": "fire",
                     "probability": 0.95
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 0.2
                 }
             ],
             "movements": [
@@ -331,6 +362,7 @@
             "display": "█",
             "lifespan": -1,
             "shimmer" : 0,
+            "show" : true,
             "transforms": [],
             "grow": [
                 {
@@ -350,6 +382,7 @@
             "display": "█",
             "lifespan": -1,
             "shimmer" : 0,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [
@@ -378,6 +411,7 @@
             "display": "❌",
             "lifespan": -1,
             "shimmer" : 0,
+            "show" : true,
             "transforms": [],
             "grow": [
                 {"to": "water", "probability": 0.05}
@@ -394,6 +428,7 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [
@@ -426,6 +461,7 @@
             "display": "₪",
             "lifespan": -1,
             "shimmer" : 26,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [
@@ -465,6 +501,7 @@
             "display": "⚡",
             "lifespan": -1,
             "shimmer" : 2,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [],
@@ -484,6 +521,7 @@
             "display": "X",
             "lifespan": -1,
             "shimmer" : 2,
+            "show" : true,
             "transforms": [],
             "grow": [],
             "destroy": [],
@@ -495,7 +533,7 @@
                     "probability": 1.0
                 }
             ],
-            "density": 8
+            "density": 10
         },
         {
             "name": "expl",
@@ -503,24 +541,27 @@
             "display": "ℵ",
             "lifespan": -1,
             "shimmer" : 100,
+            "show" : false,
             "transforms": [],
-            "grow": [],
-            "destroy": [
-                { "from": "sand", "probability": 1.0 },
-                { "from": "water", "probability": 1.0 },
-                { "from": "ice", "probability": 1.0 },
-                { "from": "stone", "probability": 1.0 },
-                { "from": "glass", "probability": 1.0 },
-                { "from": "lava", "probability": 1.0 },
-                { "from": "steam", "probability": 1.0 },
-                { "from": "plant", "probability": 1.0 },
-                { "from": "fire", "probability": 1.0 },
-                { "from": "spout", "probability": 1.0 },
-                { "from": "oil", "probability": 1.0 },
-                { "from": "acid", "probability": 1.0 },
-                { "from": "torch", "probability": 1.0 }
+            "grow": [
+                {"to": "expl", "probability": 0.02}
             ],
-            "decay": 0.4,
+            "destroy": [
+                { "from": "sand", "probability": 0.1 },
+                { "from": "water", "probability": 0.1 },
+                { "from": "ice", "probability": 0.1 },
+                { "from": "stone", "probability": 0.1 },
+                { "from": "glass", "probability": 0.1 },
+                { "from": "lava", "probability": 0.1 },
+                { "from": "steam", "probability": 0.1 },
+                { "from": "plant", "probability": 0.1 },
+                { "from": "fire", "probability": 0.1 },
+                { "from": "spout", "probability": 0.1 },
+                { "from": "oil", "probability": 0.1 },
+                { "from": "acid", "probability": 0.1 },
+                { "from": "torch", "probability": 0.1 }
+            ],
+            "decay": 0.9,
             "interactions": [
                 {
                     "type": "change",
@@ -547,7 +588,7 @@
                     "probability": 1.0
                 }
             ],
-            "density": 2
+            "density": 100
         },
         {
             "name": "expr",
@@ -555,26 +596,27 @@
             "display": "ℵ",
             "lifespan": -1,
             "shimmer" : 100,
+            "show" : false,
             "transforms": [],
             "grow": [
-                {"to": "expr", "probability": 0.03}
+                {"to": "expr", "probability": 0.02}
             ],
             "destroy": [
-                { "from": "sand", "probability": 1.0 },
-                { "from": "water", "probability": 1.0 },
-                { "from": "ice", "probability": 1.0 },
-                { "from": "stone", "probability": 1.0 },
-                { "from": "glass", "probability": 1.0 },
-                { "from": "lava", "probability": 1.0 },
-                { "from": "steam", "probability": 1.0 },
-                { "from": "plant", "probability": 1.0 },
-                { "from": "fire", "probability": 1.0 },
-                { "from": "spout", "probability": 1.0 },
-                { "from": "oil", "probability": 1.0 },
-                { "from": "acid", "probability": 1.0 },
-                { "from": "torch", "probability": 1.0 }
+                { "from": "sand", "probability": 0.1 },
+                { "from": "water", "probability": 0.1 },
+                { "from": "ice", "probability": 0.1 },
+                { "from": "stone", "probability": 0.1 },
+                { "from": "glass", "probability": 0.1 },
+                { "from": "lava", "probability": 0.1 },
+                { "from": "steam", "probability": 0.1 },
+                { "from": "plant", "probability": 0.1 },
+                { "from": "fire", "probability": 0.1 },
+                { "from": "spout", "probability": 0.1 },
+                { "from": "oil", "probability": 0.1 },
+                { "from": "acid", "probability": 0.1 },
+                { "from": "torch", "probability": 0.1 }
             ],
-            "decay": 0.5,
+            "decay": 0.9,
             "interactions": [
                 {
                     "type": "change",
@@ -601,7 +643,7 @@
                     "probability": 1.0
                 }
             ],
-            "density": 2
+            "density": 100
         },
         {
             "name": "expu",
@@ -609,24 +651,27 @@
             "display": "ℵ",
             "lifespan": -1,
             "shimmer" : 100,
+            "show" : false,
             "transforms": [],
-            "grow": [],
-            "destroy": [
-                { "from": "sand", "probability": 1.0 },
-                { "from": "water", "probability": 1.0 },
-                { "from": "ice", "probability": 1.0 },
-                { "from": "stone", "probability": 1.0 },
-                { "from": "glass", "probability": 1.0 },
-                { "from": "lava", "probability": 1.0 },
-                { "from": "steam", "probability": 1.0 },
-                { "from": "plant", "probability": 1.0 },
-                { "from": "fire", "probability": 1.0 },
-                { "from": "spout", "probability": 1.0 },
-                { "from": "oil", "probability": 1.0 },
-                { "from": "acid", "probability": 1.0 },
-                { "from": "torch", "probability": 1.0 }
+            "grow": [
+                {"to": "expu", "probability": 0.02}
             ],
-            "decay": 0.4,
+            "destroy": [
+                { "from": "sand", "probability": 0.1 },
+                { "from": "water", "probability": 0.1 },
+                { "from": "ice", "probability": 0.1 },
+                { "from": "stone", "probability": 0.1 },
+                { "from": "glass", "probability": 0.1 },
+                { "from": "lava", "probability": 0.1 },
+                { "from": "steam", "probability": 0.1 },
+                { "from": "plant", "probability": 0.1 },
+                { "from": "fire", "probability": 0.1 },
+                { "from": "spout", "probability": 0.1 },
+                { "from": "oil", "probability": 0.1 },
+                { "from": "acid", "probability": 0.1 },
+                { "from": "torch", "probability": 0.1 }
+            ],
+            "decay": 0.9,
             "interactions": [
                 {
                     "type": "change",
@@ -653,7 +698,7 @@
                     "probability": 1.0
                 }
             ],
-            "density": 2
+            "density": 100
         }
     ]
 }
