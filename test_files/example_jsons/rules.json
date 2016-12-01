@@ -33,7 +33,8 @@
             "transforms": [],
             "grow": [],
             "destroy": [
-                { "from": "fire", "probability": 0.7 }
+                { "from": "fire", "probability": 0.7 },
+                { "from": "acid", "probability": 0.002 }
             ],
             "decay": 0.0,
             "interactions": [
