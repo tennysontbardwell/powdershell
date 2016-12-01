@@ -11,6 +11,8 @@ let assoc_opt a b = try List.assoc a b |> return with | Not_found -> None
 type move_t =
   | Move_exc of name_t * location_t * location_t * probability_t
   | Change_exc of location_t * name_t * name_t * probability_t
+  | Add_exc of location_t * name_t * probability_t
+  | Destroy_exc of location_t * name_t * probability_t
 
 (* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
 (* This converts an a' option list to a' list, removing the nones *)
@@ -43,11 +45,22 @@ let can_apply_move grid rules move = match move with
         (lookup_rule rules a_name).density > (lookup_rule rules b_name).density
     | _ -> false
   else false
-| Change_exc (location, inital, final, _) ->
-  match ArrayModel.particle_at_index grid location with
-  | Some {name=p_name} when p_name=inital ->
-      true
-  | _ -> false
+| Change_exc (location, inital, final, _) -> begin
+    match ArrayModel.particle_at_index grid location with
+    | Some {name=p_name} when p_name=inital ->
+        true
+    | _ -> false
+  end
+| Add_exc (location, _, _) -> begin
+    match ArrayModel.particle_at_index grid location with
+    | Some _ -> false
+    | None -> true
+  end
+| Destroy_exc (location, name, _) -> begin
+    match ArrayModel.particle_at_index grid location with
+    | Some {name=a_name} when a_name=name -> true
+    | _ -> false
+  end
 
 (* this is all the leagal [Move_exc]s for a particular location on any grid *)
 let get_movements elm_rules rules loc name grid = elm_rules.movements
@@ -58,10 +71,11 @@ let get_movements elm_rules rules loc name grid = elm_rules.movements
   |> List.fold_left (@) []
   |> List.filter (can_apply_move grid rules)
 
+let neighbors x y =
+  [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1]
+
 (* this is all legal [Change_exc]s for a particular location on any grid *)
 let get_changes elm_rules rules (x,y) name grid =
-  let neighbors =
-    [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1] in
   (* TODO this doesn't allow multiple changes or something *)
   let get_interaction elm =
     List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
@@ -70,12 +84,23 @@ let get_changes elm_rules rules (x,y) name grid =
     ArrayModel.particle_at_index grid (x,y)
     >>= (fun x -> x.name |> get_interaction)
     >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
-  let interactions = neighbors
+  let interactions = neighbors x y
     |> List.map return
     |> List.map (fun x -> bind x get_space_interaction)
     |> deoptionalize in
   interactions
   |> List.filter (can_apply_move grid rules)
+
+let get_grows elm_rules (x,y) name grid =
+  if List.length elm_rules.grow > 0 then
+    let get_add_exc loc =
+      ArrayModel.particle_at_index grid loc
+      |> (fun i -> match i with
+        | Some _ -> []
+        | None -> List.map
+          (fun (elm, prob) -> Add_exc (loc, elm, prob)) elm_rules.grow ) in
+    neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
+  else []
 
 let get_transforms elm_rules loc name =
   List.map (fun (n, p) -> Change_exc (loc, name, n, p)) elm_rules.transforms
@@ -88,14 +113,16 @@ let move_options rules grid (x,y) =
     let interactions = get_changes elm_rules rules (x,y) particle.name grid in
     let transforms = get_transforms elm_rules (x,y) particle.name in
     let moves = get_movements elm_rules rules (x,y) particle.name grid in
-    interactions @ transforms @ moves
+    let grows = get_grows elm_rules (x,y) particle.name grid in
+    interactions @ transforms @ moves @ grows
   end
   | None -> []
 
 let filter_moves (moves : move_t list) : move_t list =
   let prob_filter item p = if Random.float 1. < p then Some item else None in
   let filter (item : move_t) : move_t option = match item with
-    | Move_exc (_,_,_,p) | Change_exc (_,_,_,p) -> prob_filter item p in
+    | Move_exc (_,_,_,p) | Change_exc (_,_,_,p) | Add_exc (_,_,p)
+    | Destroy_exc (_,_,p) -> prob_filter item p in
   moves |> List.map filter |> deoptionalize
 
 let apply rules grid move =
@@ -114,6 +141,8 @@ let apply rules grid move =
         grid |> ArrayModel.set_pixel location (Some {name=final})
       | _ -> failwith "Internal Error 4093108"
     end
+    | Add_exc (loc, name, _) -> ArrayModel.set_pixel loc (Some {name=name}) grid
+    | Destroy_exc (loc, _, _) -> ArrayModel.set_pixel loc None grid
   else grid
 
 let apply_moves grid rules moves =

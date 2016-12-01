@@ -6,6 +6,8 @@ S updater.ml
 S updater.mli
 S main.ml
 S main.mli
+S rules.ml
+S rules.mli
 
 S test.ml
 S filemanager_tests.ml
