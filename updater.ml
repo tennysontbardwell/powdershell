@@ -51,11 +51,12 @@ let can_apply_move grid rules move = match move with
         true
     | _ -> false
   end
-| Add_exc (location, _, _) -> begin
+| Add_exc (location, _, _) ->
+  if ArrayModel.in_grid grid location then
     match ArrayModel.particle_at_index grid location with
     | Some _ -> false
     | None -> true
-  end
+  else false
 | Destroy_exc (location, name, _) -> begin
     match ArrayModel.particle_at_index grid location with
     | Some {name=a_name} when a_name=name -> true
