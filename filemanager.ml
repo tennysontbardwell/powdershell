@@ -66,6 +66,7 @@ let parse_elm j : (name_t * elem_rules_t) =
       decay = j |> member "decay" |> to_float;
       movements = j |> member "movements" |> to_list |> List.map parse_move;
       density = j |> member "density" |> to_int;
+      show = j |> member "show" |> to_bool;
     }
   )
 
