@@ -78,17 +78,19 @@ let neighbors x y =
 (* this is all legal [Change_exc]s for a particular location on any grid *)
 let get_changes elm_rules rules (x,y) name grid =
   (* TODO this doesn't allow multiple changes or something *)
-  let get_interaction elm =
-    List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions
-    |> (fun x -> match x with | h::t -> Some h | [] -> None) in
+  let get_interactions elm =
+    List.filter (fun (Change (x,_,_)) -> x=elm) elm_rules.interactions in
   let get_space_interaction (x,y) =
     ArrayModel.particle_at_index grid (x,y)
-    >>= (fun x -> x.name |> get_interaction)
-    >>= (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p) |> return) in
+    >>= (fun x -> Some (get_interactions x.name))
+    >>= fun i ->
+      Some (List.map (fun (Change (f,t,p)) -> Change_exc ((x,y), f, t, p)) i)
+  in
   let interactions = neighbors x y
     |> List.map return
     |> List.map (fun x -> bind x get_space_interaction)
-    |> deoptionalize in
+    |> deoptionalize
+    |> List.fold_left (@) [] in
   interactions
   |> List.filter (can_apply_move grid rules)
 
