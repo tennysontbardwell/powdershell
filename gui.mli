@@ -17,7 +17,6 @@ end
 val setup_gui : Rules.rules_t ->  LTerm.t -> gui_ob -> unit
 
 (* [get_inputs] is the current input to the screen *)
-(* val get_inputs : gui_ob -> input_t option *)
 val get_inputs : gui_ob -> input_t list
 
 (* [get_window_size] is the size of the console *)

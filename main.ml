@@ -18,10 +18,10 @@ let rec execute game _ =
   let inp = game.gui |> get_inputs in
   let grid = receive_input inp game.grid in
   (if not (is_paused game.gui) then
-    ignore (next_step game.rules grid) 
-  else ());
-    draw_to_screen game.grid game.gui; 
-  return 0.04 >>= Lwt_unix.sleep >>= execute game
+    return ({game with grid = next_step game.rules grid}) 
+  else return game) 
+  >>= fun game -> draw_to_screen game.grid game.gui |> return
+  >>= fun _ -> Lwt_unix.sleep 0.04 >>= execute game
 
 
 let run rules grid = Lwt_main.run (
