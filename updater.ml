@@ -11,6 +11,8 @@ let assoc_opt a b = try List.assoc a b |> return with | Not_found -> None
 type move_t =
   | Move_exc of name_t * location_t * location_t * probability_t
   | Change_exc of location_t * name_t * name_t * probability_t
+  | Add_exc of location_t * name_t * probability_t
+  | Destroy_exc of location_t * name_t * probability_t
 
 (* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
 (* This converts an a' option list to a' list, removing the nones *)

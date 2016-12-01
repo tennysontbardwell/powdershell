@@ -32,6 +32,16 @@ let parse_trans j : transform_t =
   let prob = j |> member "probability" |> to_float in
   (to_el, prob)
 
+let parse_grow j : grow_t =
+  let to_el = j |> member "to" |> to_string in
+  let prob = j |> member "probability" |> to_float in
+  (to_el, prob)
+
+(* let parse_destroy j : destroy_t = *)
+(*   let to_el = j |> member "from" |> to_string in *)
+(*   let prob = j |> member "probability" |> to_float in *)
+(*   (to_el, prob) *)
+
 let parse_color j = (
   j |> member "r" |> to_int,
   j |> member "g" |> to_int,
@@ -49,6 +59,12 @@ let parse_elm j : (name_t * elem_rules_t) =
         List.map parse_inter;
       transforms = j |> member "transforms" |> to_list |>
         List.map parse_trans;
+      grow = j |> member "grow" |> to_list |>
+        List.map parse_grow;
+      (* destroy = j |> member "destroy" |> to_list |> *)
+      (*   List.map parse_destroy; *)
+      destroy = [];
+      decay = j |> member "decay" |> to_float;
       movements = j |> member "movements" |> to_list |> List.map parse_move;
       density = j |> member "density" |> to_int;
     }

@@ -8,6 +8,10 @@ type interaction_t = Change of name_t * name_t * probability_t
 
 type transform_t = name_t * probability_t
 
+type grow_t = name_t * probability_t
+
+type destroy_t = name_t * probability_t
+
 type elem_rules_t =
   {
     (* red green blue *)
@@ -19,6 +23,9 @@ type elem_rules_t =
     movements : move_option_t list;
     density : int;
     transforms : transform_t list;
+    grow : grow_t list;
+    destroy : destroy_t list;
+    decay : probability_t;
   }
 
 type rules_t = (name_t, elem_rules_t) Hashtbl.t
