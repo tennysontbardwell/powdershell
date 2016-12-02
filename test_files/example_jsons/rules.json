@@ -630,7 +630,7 @@
                 { "from": "acid", "probability": 0.1 },
                 { "from": "torch", "probability": 0.1 }
             ],
-            "decay": 0.9,
+            "decay": 0.8,
             "interactions": [
                 {
                     "type": "change",
@@ -684,7 +684,7 @@
                 { "from": "acid", "probability": 0.1 },
                 { "from": "torch", "probability": 0.1 }
             ],
-            "decay": 0.9,
+            "decay": 0.8,
             "interactions": [
                 {
                     "type": "change",
@@ -738,7 +738,7 @@
                 { "from": "acid", "probability": 0.1 },
                 { "from": "torch", "probability": 0.1 }
             ],
-            "decay": 0.9,
+            "decay": 0.8,
             "interactions": [
                 {
                     "type": "change",

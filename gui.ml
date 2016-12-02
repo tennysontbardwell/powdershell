@@ -14,7 +14,7 @@ type ui_t =
   {
     mutable matrix : ArrayModel.grid_t;
     mutable event_buffer : input_t list;
-    mutable selected_elem : string;
+    mutable selected_elem : string * string;
     mutable draw_radius : int;
     mutable element_list : string list;
     mutable controls_list : (string * (int -> unit)) list;
@@ -45,7 +45,7 @@ class gui_ob exit_ = object(self)
   val ui = {
     matrix = ArrayModel.empty_grid (1, 1);
     event_buffer = [];
-    selected_elem = "sand";
+    selected_elem = ("sand", "erase");
     draw_radius = 3;
     element_list = [];
     controls_list = [];
@@ -73,13 +73,14 @@ class gui_ob exit_ = object(self)
     LTerm_draw.clear ctx;
     let (cols, rows) = ArrayModel.get_grid_size ui.matrix in
     List.fold_left (fun a x -> 
+      let (lc, rc) = ui.selected_elem in
       let color = if x = "erase" then Some lwhite else
         let (r, g, b) = (lookup_rule ui.rules x).color in
       Some (rgb r g b) in
         LTerm_draw.draw_string ctx a (cols + 2) ~style:LTerm_style.({
-          bold = (if x = ui.selected_elem then Some true else None);
-          underline = (if x = ui.selected_elem then Some true else None);
-          blink = None; reverse = None; foreground = color; background = None
+          bold = None; underline = None; blink = None; reverse = None;
+          foreground = color; background = (if x = lc then Some lblue else
+            if x = rc then Some lred else None)
         }) x; 
       a + elems_space) 10 ui.element_list;
 
@@ -142,7 +143,7 @@ class gui_ob exit_ = object(self)
         [(p_to_string ui.is_paused, snd !pp_button)]));
     ui.controls_list <- (actions @ [!pp_button])
 
-  method private handle_buttons r c =
+  method private handle_buttons r c b =
       let (cols, rows) = ArrayModel.get_grid_size ui.matrix in
       if r >= rows + 2 then 
         let steps = ref (3) in
@@ -158,14 +159,17 @@ class gui_ob exit_ = object(self)
         let assoc_list = (List.map (fun n -> 
           (steps := !steps + elems_space; (!steps, n))) ui.element_list) in
         if List.mem_assoc r assoc_list then 
-          (ui.selected_elem <- List.assoc r assoc_list);
+        if b = LTerm_mouse.Button1 then
+          (ui.selected_elem <- (List.assoc r assoc_list, snd ui.selected_elem))
+        else
+          (ui.selected_elem <- (fst ui.selected_elem, List.assoc r assoc_list))
 
   method private exit_term = 
       Lazy.force LTerm.stdout 
       >>= (fun term -> LTerm.disable_mouse term); 
       exit_ (); ()
 
-  method private add_elem x y erase = 
+  method private add_elem x y right = 
       let dist (ax,ay) (bx,by) = sqrt(((float ax) -. (float bx))**2. +.
           ((float ay) -. (float by))**2.) in
       let (colsize, rowsize) = get_grid_size ui.matrix in
@@ -174,8 +178,9 @@ class gui_ob exit_ = object(self)
           for j = y - r to y + r do
               if i >= 0 && j >= 0 && i < colsize && j < rowsize
                   && (dist (i, j) (x, y) +. 0.1) < (float r) then
-              ui.event_buffer <- (ElemAdd {elem = if erase then "erase"
-                else ui.selected_elem; loc = (i,j)})::(ui.event_buffer)
+              let (lc, rc) = ui.selected_elem in
+              ui.event_buffer <- (ElemAdd {elem = if right then rc
+                else lc; loc = (i,j)})::(ui.event_buffer)
               else ()
           done
       done
@@ -195,13 +200,13 @@ class gui_ob exit_ = object(self)
           List.assoc (p_to_string ui.is_paused) ui.controls_list 1; true
       | c -> let num = (int_of_char c) - 48 in 
           if num >= 0 && num <= 9 && num < List.length ui.element_list then 
-            ui.selected_elem <- List.nth ui.element_list num; true
+            ui.selected_elem <- (List.nth ui.element_list num, snd ui.selected_elem); true
     end
     | LTerm_event.Mouse {row = r; col = c; button = b} -> 
       let (colsize, rowsize) = get_grid_size ui.matrix in
       if r < rowsize + 2 && c < colsize + 2 then
       self#add_elem (c - 1) (r - 1) (b = Button3)
-      else if b = Button1 then self#handle_buttons r c; true
+      else if b = Button1 || b = Button3 then self#handle_buttons r c b; true
     | _ -> false
 
 end
