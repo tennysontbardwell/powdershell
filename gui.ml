@@ -58,9 +58,15 @@ class gui_ob exit_ = object(self)
 
   method create_matrix c r = ui.matrix <- ArrayModel.empty_grid (c, r);
 
+  method load_rules r = ui.rules <- r;
+    ui.element_list <- "erase"::(List.fold_right (fun x a -> 
+    if (lookup_rule ui.rules x).show 
+    then x::a else a) (Rules.get_name_lst ui.rules) [])
+
+(* 
   method load_rules r = ui.rules <- r; 
     ui.element_list <- "erase"::(Hashtbl.fold (fun x r a -> if r.show then x::a else a) ui.rules [])
-
+ *)
   method draw_to_screen m = 
     ui.matrix <- m;
     self#queue_draw
