@@ -29,14 +29,17 @@ type elem_rules_t =
     show : bool;
   }
 
-type rules_t = (name_t, elem_rules_t) Hashtbl.t
+type rules_t = ((name_t, elem_rules_t) Hashtbl.t) * name_t list
 
-let gen_rules r_lst = 
+let gen_rules r_lst : rules_t = 
+    let name_lst = List.map (fun (n,_) -> n ) r_lst in 
     let ht = Hashtbl.create 40 in 
     let add_to_ht (a, b) = Hashtbl.add ht a b in
-    List.iter add_to_ht r_lst; ht
+    List.iter add_to_ht r_lst; (ht, name_lst)
 
-let lookup_rule = Hashtbl.find
+let lookup_rule (tbl, _) s = Hashtbl.find tbl s 
+
+let get_name_lst (_,name_lst) = name_lst
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
 let validate _ = failwith "unimplemented"

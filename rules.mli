@@ -29,11 +29,13 @@ type elem_rules_t =
     show : bool;
   }
 
-type rules_t = (name_t, elem_rules_t) Hashtbl.t
+type rules_t
 
 val gen_rules : (name_t * elem_rules_t) list -> rules_t
 
-val lookup_rule : rules_t -> string -> elem_rules_t
+val lookup_rule : rules_t -> name_t -> elem_rules_t
+
+val get_name_lst: rules_t -> name_t list
 
 (* [validate rules] determins whether or not [rules] is a vaild *)
 val validate : rules_t -> bool
