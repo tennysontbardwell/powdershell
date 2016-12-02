@@ -23,7 +23,7 @@ let rec execute game _ =
   >>= fun game -> draw_to_screen game.grid game.gui |> return
   >>= fun _ -> Lwt_unix.sleep 0.04 >>= execute game
 
-let run rules grid = Lwt_main.run (
+let run rules = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
     Lazy.force LTerm.stdout >>= (fun term -> 
@@ -36,4 +36,4 @@ let run rules grid = Lwt_main.run (
     async (execute game);
     do_run gui_ob ))
 
-let () = run (read_rules "test_files/example_jsons/rules.json") (ArrayModel.empty_grid (1000, 1000))
+let () = run (read_rules "test_files/example_jsons/rules.json")
