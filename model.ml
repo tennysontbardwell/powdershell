@@ -38,6 +38,7 @@ module type Model = sig
     val unwrap_grid : grid_t -> (location_t * particle_t) array array
     val in_grid : grid_t -> location_t -> bool
     val deep_copy : grid_t -> grid_t -> unit
+    val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
 end
 
 module ArrayModel: Model = struct
@@ -123,5 +124,14 @@ module ArrayModel: Model = struct
     let in_grid grid (x,y) =
       let (sx,sy) = get_grid_size grid in
       (x < sx) && (y < sy) && (y >= 0) && (x >= 0)
-      
+
+    let fold f acc (gr:grid_t)  = 
+      let (cols, rows) = get_grid_size gr in
+      let a = ref acc in 
+      for x = 0 to cols - 1 do 
+        for y = 0 to rows - 1 do  
+          let (loc, part) = gr.(x).(y) in
+          a := f !a loc part
+        done
+      done; !a 
 end

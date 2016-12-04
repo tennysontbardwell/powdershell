@@ -62,7 +62,8 @@ module type Model = sig
     val create_grid : (location_t*particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t*particle_t) array array
     val in_grid : grid_t -> location_t -> bool
-        val deep_copy : grid_t -> grid_t -> unit
+    val deep_copy : grid_t -> grid_t -> unit
+    val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
 end
 
 module ArrayModel : Model
