@@ -6,13 +6,13 @@ open ArrayModel
 
 (*
  val indices_of_particle : grid_t -> particle_t -> location_t list
-    val particle_at_index : grid_t -> location_t -> particle_t option           
+    val particle_at_index : grid_t -> location_t -> particle_t option          4 
     val empty_grid : int * int -> grid_t                                       2
     val to_list : grid_t -> particle_t list list                               1 
     val get_grid_size : grid_t -> int * int                                    4
-    val set_pixel : location_t -> particle_t option -> grid_t -> grid_t        1
-    val empty_grid : int * int -> grid_t
-    val particle_to_string : particle_t option -> string
+    val set_pixel : location_t -> particle_t option -> grid_t -> grid_t        4
+    val empty_grid : int * int -> grid_t                                       - 
+    val particle_to_string : particle_t option -> string                        
     val to_string : grid_t -> string
     val create_grid : (location_t*particle_t) array array -> grid_t
     val unwrap_grid : grid_t -> (location_t*particle_t) array array
@@ -58,23 +58,71 @@ let model_tests = [
     );
   "7: to_list empty_grid" >::
     (fun _ ->
-      assert_equal [((0,0),{name = ""}); ((0,1),{name = ""}); ((1,0),{name = ""}); ((1,1),{name = ""})] 
+      assert_equal [((0,0),{name = ""}); ((0,1),{name = ""}); 
+                    ((1,0),{name = ""}); ((1,1),{name = ""})] 
         (Model.ArrayModel.to_list (Model.ArrayModel.empty_grid (2,2))) 
     );
   "8: set_pixel" >::
     (fun _ ->
       let gr = Model.ArrayModel.empty_grid (2,2) in
       let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
-      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); ((1,0),{name = ""}); ((1,1),{name = ""})]  
+      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); 
+                    ((1,0),{name = ""}); ((1,1),{name = ""})]  
         (Model.ArrayModel.to_list mod_grid) 
     );  
-  "9: set_pixel 2" >::
+  "9: set_pixel 2 out of bounds" >::
     (fun _ ->
       let gr = Model.ArrayModel.empty_grid (2,2) in
       let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
       let mod_grid_2 = Model.ArrayModel.set_pixel (2,2) (Some {name = "water"}) gr in
-      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); ((1,0),{name = ""}); ((1,1),{name = ""})]  
+      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); 
+                    ((1,0),{name = ""}); ((1,1),{name = ""})]  
         (Model.ArrayModel.to_list mod_grid_2) 
-    )
+    );
+  "10: set_pixel 3 out of bounds" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel ((-1),0) (Some {name = "water"}) mod_grid in
+      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); 
+                    ((1,0),{name = ""}); ((1,1),{name = ""})]  
+        (Model.ArrayModel.to_list mod_grid_2) 
+    );
+  "11: set_pixel 4 out of bounds" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel (0,(-1)) (Some {name = "water"}) mod_grid in
+      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); 
+                    ((1,0),{name = ""}); ((1,1),{name = ""})]  
+        (Model.ArrayModel.to_list mod_grid_2) 
+    );
+  "12: part_at_index" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel (1,1) (Some {name = "water"}) mod_grid in
+      assert_equal (Some {name = "water"}) (Model.ArrayModel.particle_at_index mod_grid_2 (1,1)) 
+    );
+  "13: part_at_index 2" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      assert_equal None (Model.ArrayModel.particle_at_index gr (1,1)) 
+    );
+  "14: part_at_index 3" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel (1,1) (Some {name = "water"}) mod_grid in
+      assert_equal None (Model.ArrayModel.particle_at_index mod_grid_2 (2, 2)) 
+    );
+  "15: part_at_index 4" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel (1,0) (Some {name = "water"}) mod_grid in
+      assert_equal (Some {name = "water"}) (Model.ArrayModel.particle_at_index mod_grid_2 (1, 0)) 
+    );
+
 ]
 

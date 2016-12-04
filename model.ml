@@ -30,7 +30,6 @@ module type Model = sig
     val to_list : grid_t -> (location_t * particle_t) list 
     val get_grid_size : grid_t -> int * int
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
-    val empty_grid : int * int -> grid_t
     val particle_to_string : particle_t option -> string
     val to_string : grid_t -> string
     val create_grid : (location_t * particle_t) array array -> grid_t
@@ -38,6 +37,7 @@ module type Model = sig
     val in_grid : grid_t -> location_t -> bool
     val deep_copy : grid_t -> grid_t -> unit
     val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
+    val iter : (location_t -> particle_t -> 'a) -> grid_t -> unit
 end
 
 module ArrayModel: Model = struct
@@ -74,6 +74,10 @@ module ArrayModel: Model = struct
           | _ -> Some result )
       with e -> None
 
+
+    let get_grid_size (grid:grid_t) : int*int = 
+    (Array.length grid, Array.length (Array.get grid 0)) 
+
     let set_pixel (x,y) particle_opt grid = 
       let (r,c) = get_grid_size grid in
       let particle = match particle_opt with
@@ -83,9 +87,6 @@ module ArrayModel: Model = struct
       if (x < r && x > (-1) && y < c && y > (-1)) then 
       Array.set (Array.get grid x)  (y) ((x,y),particle)
       else (); grid
-
-    let get_grid_size (grid:grid_t) : int*int = 
-    (Array.length grid, Array.length (Array.get grid 0)) 
 
     let deep_copy (from_g:grid_t) (to_g:grid_t) = 
     let (c, r) = get_grid_size to_g in
@@ -127,4 +128,12 @@ module ArrayModel: Model = struct
 
     let to_list grid = 
        fold (fun acc loc part -> acc@[(loc,part)]) [] grid
+
+    let iter f gr =
+      let (cols, rows) = get_grid_size gr in
+      for x = 0 to cols - 1 do 
+        for y = 0 to rows - 1 do  
+          let (loc, part) = gr.(x).(y) in f loc part; ()
+        done
+      done
 end

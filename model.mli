@@ -51,18 +51,18 @@ module type Model = sig
     type grid_t
     val indices_of_particle : grid_t -> particle_t -> location_t list
     val particle_at_index : grid_t -> location_t -> particle_t option
-    val empty_grid : int * int -> grid_t     
+    val empty_grid : int * int -> grid_t   
     val to_list : grid_t -> (location_t * particle_t) list 
     val get_grid_size : grid_t -> int * int
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
-    val empty_grid : int * int -> grid_t
     val particle_to_string : particle_t option -> string
     val to_string : grid_t -> string
-    val create_grid : (location_t*particle_t) array array -> grid_t
-    val unwrap_grid : grid_t -> (location_t*particle_t) array array
+    val create_grid : (location_t * particle_t) array array -> grid_t
+    val unwrap_grid : grid_t -> (location_t * particle_t) array array
     val in_grid : grid_t -> location_t -> bool
     val deep_copy : grid_t -> grid_t -> unit
     val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
+    val iter : (location_t -> particle_t -> 'a) -> grid_t -> unit
 end
 
 module ArrayModel : Model
