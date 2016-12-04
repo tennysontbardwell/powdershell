@@ -74,12 +74,15 @@ module ArrayModel: Model = struct
           | _ -> Some result )
       with e -> None
 
-    let set_pixel (location:location_t) (particle_opt:particle_t option) (grid:grid_t)
-     : grid_t = let particle = match particle_opt with
+    let set_pixel (x,y) particle_opt grid = 
+      let (r,c) = get_grid_size grid in
+      let particle = match particle_opt with
       | None -> {name = ""}
       | Some p -> p
-      in Array.set (Array.get grid (fst location))  (snd location) (location,particle);
-      grid
+      in 
+      if (x < r && x > (-1) && y < c && y > (-1)) then 
+      Array.set (Array.get grid x)  (y) ((x,y),particle)
+      else (); grid
 
     let get_grid_size (grid:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 

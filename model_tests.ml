@@ -67,6 +67,14 @@ let model_tests = [
       let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
       assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); ((1,0),{name = ""}); ((1,1),{name = ""})]  
         (Model.ArrayModel.to_list mod_grid) 
-    )  
+    );  
+  "9: set_pixel 2" >::
+    (fun _ ->
+      let gr = Model.ArrayModel.empty_grid (2,2) in
+      let mod_grid = Model.ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = Model.ArrayModel.set_pixel (2,2) (Some {name = "water"}) gr in
+      assert_equal [((0,0),{name = "sand"}); ((0,1),{name = ""}); ((1,0),{name = ""}); ((1,1),{name = ""})]  
+        (Model.ArrayModel.to_list mod_grid_2) 
+    )
 ]
 
