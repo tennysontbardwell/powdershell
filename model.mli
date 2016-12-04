@@ -52,9 +52,8 @@ module type Model = sig
     val indices_of_particle : grid_t -> particle_t -> location_t list
     val particle_at_index : grid_t -> location_t -> particle_t option
     val empty_grid : int * int -> grid_t     
-    val to_list : grid_t -> particle_t list list 
+    val to_list : grid_t -> (location_t * particle_t) list 
     val get_grid_size : grid_t -> int * int
-    val change_grid_size : int * int -> grid_t -> grid_t 
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
     val particle_to_string : particle_t option -> string

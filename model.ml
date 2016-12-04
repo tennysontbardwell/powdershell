@@ -27,9 +27,8 @@ module type Model = sig
     val indices_of_particle : grid_t -> particle_t -> location_t list
     val particle_at_index : grid_t -> location_t -> particle_t option
     val empty_grid : int * int -> grid_t   
-    val to_list : grid_t -> particle_t list list 
+    val to_list : grid_t -> (location_t * particle_t) list 
     val get_grid_size : grid_t -> int * int
-    val change_grid_size : int * int -> grid_t -> grid_t 
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t 
     val empty_grid : int * int -> grid_t
     val particle_to_string : particle_t option -> string
@@ -75,10 +74,6 @@ module ArrayModel: Model = struct
           | _ -> Some result )
       with e -> None
 
-    let to_list (grid:grid_t) : particle_t list list = 
-       Array.fold_left (fun acc r -> 
-        (Array.fold_left(fun acc_2 c -> (snd c)::acc_2) [] r )::acc ) [] grid
-
     let set_pixel (location:location_t) (particle_opt:particle_t option) (grid:grid_t)
      : grid_t = let particle = match particle_opt with
       | None -> {name = ""}
@@ -100,14 +95,6 @@ module ArrayModel: Model = struct
     let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
 
     let unwrap_grid (grid: grid_t) : (location_t*particle_t) array array = grid
-
-    let change_grid_size (r,c) grid = failwith "unimplemented"
-      (* let (old_row,old_col) = get_grid_size grid in 
-      match (old_row > r, old_col > c) with
-      | (true, true) -> Array.map (fun x -> (Array.map (fun y -> Array.get())(Array.make c)) (Array.make r) 
-      | (false, true) ->
-      | (true, false) ->
-      | (false, false) - >*)
 
     let particle_to_string = function
     | Some _ -> "*"
@@ -134,4 +121,7 @@ module ArrayModel: Model = struct
           a := f !a loc part
         done
       done; !a 
+
+    let to_list grid = 
+       fold (fun acc loc part -> acc@[(loc,part)]) [] grid
 end

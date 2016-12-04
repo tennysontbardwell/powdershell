@@ -85,7 +85,8 @@ let write_state (gr:ArrayModel.grid_t) : file_path_t =
         if (not (particle.name = "")) then
         acc@[(`Assoc
             [("loc", `List [`Int x; `Int y]); 
-             ("name", `String particle.name)])] else acc ) [] gr ))] |> Yojson.Basic.to_file "grid.json"; "grid.json"
+             ("name", `String particle.name)])] else acc ) [] gr ))] 
+    |> Yojson.Basic.to_file "grid.json"; "grid.json"
 
 let parse_name j = 
   j |> member "name" |> to_string

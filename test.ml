@@ -1,10 +1,12 @@
 open OUnit2
 open Filemanager_tests
 open Updater_tests
+open Model_tests
 
 let tests = "test suite" >::: ( []
   @ load_tests
   @ updater_tests
+  @ model_tests
 )
 
 let () = (fun _ -> Filename.concat ex_jsons "rules.json" |> Filemanager.read_rules |> ignore) ()
