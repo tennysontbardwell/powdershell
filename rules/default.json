@@ -18,6 +18,12 @@
                     "from": "stem",
                     "to": "sand",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -58,6 +64,12 @@
                     "from": "stem",
                     "to": "water",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -96,6 +108,18 @@
                     "from": "stem",
                     "to": "ice",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "spout",
+                    "to": "ice",
+                    "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [],
@@ -129,6 +153,12 @@
                     "from": "stem",
                     "to": "stone",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -138,21 +168,6 @@
                 }
             ],
             "density": 8
-        },
-        {
-            "name": "glass",
-            "color": { "r": 70, "g": 70, "b": 70 },
-            "display": "░",
-            "lifespan": -1,
-            "shimmer" : 9,
-            "show" : true,
-            "transforms": [],
-            "grow": [],
-            "destroy": [],
-            "decay": 0.0,
-            "interactions": [],
-            "movements": [],
-            "density": 100
         },
         {
             "name": "lava",
@@ -241,6 +256,12 @@
                     "from": "stem",
                     "to": "lava",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -258,6 +279,26 @@
                 }
             ],
             "density": 8
+        },
+        {
+            "name": "glass",
+            "color": { "r": 70, "g": 70, "b": 70 },
+            "display": "▒",
+            "lifespan": -1,
+            "shimmer" : 9,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                {
+                    "from": "bolt",
+                    "probability": 1.0
+                }
+            ],
+            "decay": 0.0,
+            "interactions": [],
+            "movements": [],
+            "density": 100
         },
         {
             "name": "steam",
@@ -281,6 +322,12 @@
                     "from": "stem",
                     "to": "steam",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -335,6 +382,12 @@
                     "from": "stem",
                     "to": "plant",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [],
@@ -411,6 +464,12 @@
                     "from": "stem",
                     "to": "fire",
                     "probability": 0.3
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -459,6 +518,12 @@
                     "from": "stem",
                     "to": "torch",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [],
@@ -486,6 +551,8 @@
                 { "from": "spout", "probability": 1.0 },
                 { "from": "oil", "probability": 1.0 },
                 { "from": "acid", "probability": 1.0 },
+                { "from": "bomb", "probability": 1.0 },
+                { "from": "bolt", "probability": 1.0 },
                 { "from": "torch", "probability": 1.0 }
             ],
             "decay": 0.0,
@@ -503,7 +570,7 @@
         {
             "name": "spout",
             "color": { "r": 0, "g": 60, "b": 180 },
-            "display": "❌",
+            "display": "0",
             "lifespan": -1,
             "shimmer" : 0,
             "show" : true,
@@ -519,6 +586,12 @@
                     "from": "stem",
                     "to": "spout",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [],
@@ -533,12 +606,7 @@
             "show" : true,
             "transforms": [],
             "grow": [],
-            "destroy": [
-                {
-                    "from": "plant",
-                    "probability": 0.04
-                }
-            ],
+            "destroy": [],
             "decay": 0.0,
             "interactions": [
                 {
@@ -546,6 +614,18 @@
                     "from": "stem",
                     "to": "oil",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "plant",
+                    "to": "oil",
+                    "probability": 0.005
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -584,6 +664,7 @@
                 { "from": "fire", "probability": 0.03 },
                 { "from": "spout", "probability": 0.03 },
                 { "from": "oil", "probability": 0.03 },
+                { "from": "bomb", "probability": 0.03 },
                 { "from": "torch", "probability": 0.03 }
             ],
             "decay": 0.001,
@@ -593,6 +674,18 @@
                     "from": "stem",
                     "to": "acid",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 0.00002
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -628,6 +721,12 @@
                     "from": "stem",
                     "to": "bomb",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bolt",
+                    "to": "expd",
+                    "probability": 1.0
                 }
             ],
             "movements": [
@@ -692,7 +791,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[-4,-1], [-4,0], [-4,1]],
+                    "directions": [[-4,-2], [-4,0], [-4,2]],
                     "probability": 1.0
                 }
             ],
@@ -752,7 +851,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[4,-1], [4,0], [4,1]],
+                    "directions": [[4,-2], [4,0], [4,2]],
                     "probability": 1.0
                 }
             ],
@@ -812,7 +911,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[-2,-3], [0,-3], [2,-3]],
+                    "directions": [[-3,-3], [0,-3], [3,-3]],
                     "probability": 1.0
                 }
             ],
@@ -873,11 +972,38 @@
             ],
             "movements": [
                 {
-                    "directions": [[-1,4], [0,4], [1,4]],
+                    "directions": [[-3,3], [0,3], [3,3]],
                     "probability": 1.0
                 }
             ],
             "density": 100
+        },
+        {
+            "name": "bolt",
+            "color": { "r": 243, "g": 243, "b": 21 },
+            "display": "⚡",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.1,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "bolt",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1],[-1,1],[1,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 10
         },
         {
             "name": "stem",

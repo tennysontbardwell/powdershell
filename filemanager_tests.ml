@@ -125,7 +125,7 @@ let parse_tests = [
       let r = rules_json |> read_rules in
       assert_equal
         (lookup_rule r "sand").interactions
-        [Change ("stem", "sand", 0.05)]
+        [Change ("stem", "sand", 0.05); Change ("bolt", "expd", 1.0)]
       );
   "movements" >::
     (fun _ ->
