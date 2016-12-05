@@ -5,7 +5,7 @@ open Model
 open ArrayModel
 
 (*
-    val indices_of_particle : grid_t -> particle_t -> location_t list
+    val indices_of_particle : grid_t -> particle_t -> location_t list          3
     val particle_at_index : grid_t -> location_t -> particle_t option          4 
     val empty_grid : int * int -> grid_t                                       2
     val to_list : grid_t -> (location_t * particle_t) list                     1 
@@ -175,4 +175,48 @@ let model_tests = [
       let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "balloon"}) mod_grid in
       assert_equal [(3,2);(1,0)] (ArrayModel.indices_of_particle mod_grid_2 {name = "balloon"}) 
     );
+  "25: ind_of_part 2" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "balloon"}) mod_grid in
+      assert_equal [] (ArrayModel.indices_of_particle mod_grid_2 {name = "song"}) 
+    );
+  "25: ind_of_part 3" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "balloon"}) mod_grid in
+      assert_equal [] (ArrayModel.indices_of_particle mod_grid_2 {name = "song"}) 
+    );
+  "26: fold" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "water"}) mod_grid in
+        assert_equal [{name = "balloon"}; {name = "water"}]
+        (ArrayModel.fold (fun acc loc part -> match part with
+        | Some part -> acc@[part] 
+        | None -> acc) [] mod_grid_2) 
+    );  
+  "27: fold 2" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "water"}) mod_grid in
+        assert_equal [|{name = "balloon"}; {name = "water"}|]
+        (ArrayModel.fold (fun acc loc part -> match part with
+        | Some part -> Array.append acc [|part|] 
+        | None -> acc) [||] mod_grid_2) 
+    );  
+  "28: iter" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "water"}) mod_grid in
+        assert_equal ()
+        (ArrayModel.iter (fun loc part -> ArrayModel.set_pixel loc part mod_grid_2; () ) mod_grid_2) 
+    ); 
 ]
+(* val fold : ('a -> location_t -> particle_t option-> 'a) -> 'a -> grid_t -> 'a 
+    val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit *)
