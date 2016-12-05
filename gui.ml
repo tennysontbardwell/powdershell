@@ -111,9 +111,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     LTerm_draw.draw_frame ctx frame_rect LTerm_draw.Light;
 
     let constrain a l h = if a < l then l else if a > h then h else a in
-    for x = 0 to cols do 
-      for y = 0 to rows do
-        match ArrayModel.particle_at_index ui.matrix (x, y) with
+    ArrayModel.iter (fun (x,y) -> function
         | None -> ()
         | Some {name = n} ->
           let details = lookup_rule ui.rules n in
@@ -127,9 +125,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
           LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
           bold = None; underline = None; blink = Some false; 
           reverse = None; foreground = Some (rgb r g b); background = None})
-          details.display
-      done
-    done;
+          details.display) ui.matrix
 
   method get_input = let p = ui.event_buffer in ui.event_buffer <- []; p
 
@@ -157,9 +153,9 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     layer#set box;
     layer in 
   let load_modal = create_textbox "What save file would you like to load?"
-    (fun str -> ui.event_buffer <- Load::(ui.event_buffer)) in
+    (fun str -> ui.event_buffer <- (Load str)::(ui.event_buffer)) in
   let save_modal = create_textbox "What would you like to call this save?"
-    (fun str -> ui.event_buffer <- Save::(ui.event_buffer)) in
+    (fun str -> ui.event_buffer <- (Save str)::(ui.event_buffer)) in
 
   let actions = [
     ("quit", fun _ -> self#exit_term);

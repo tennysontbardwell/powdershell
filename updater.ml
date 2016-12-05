@@ -22,8 +22,8 @@ let deoptionalize l =
 let rec receive_input inp g = match inp with
 | Reset::t -> let empty = ArrayModel.empty_grid (ArrayModel.get_grid_size g) in
     ArrayModel.deep_copy empty g; receive_input t g
-| Save::t -> ignore (Filemanager.write_state g); receive_input t g
-| Load::t -> ArrayModel.deep_copy (Filemanager.read_state "grid.json") g; 
+| (Save file)::t -> ignore (Filemanager.write_state g file); receive_input t g
+| (Load file)::t -> ArrayModel.deep_copy (Filemanager.read_state file) g; 
     receive_input t g
 | ((ElemAdd i)::t) -> (if i.elem = "erase" then 
     ignore (ArrayModel.set_pixel i.loc None g)

@@ -70,53 +70,49 @@ let parse_elm j : (name_t * elem_rules_t) =
     }
   )
 
-(* TODO: finish *)
 let read_rules path =
   let j = Yojson.Basic.from_file path in
   (* let fps = j |> member "fps" |> to_int in *)
   let elements = j |> member "elements" |> to_list in
   elements |> List.map parse_elm |> gen_rules
 
-(*[handle_loc] helper function for reading location from a json file*)
-let handle_loc (j: Yojson.Basic.json list) = match j with
-  | [`Int a; `Int b] -> (a,b)
-  | _ -> failwith "error"
+(*[write_state] writes a grid into a file and places file at path inputted*)
+let write_state (gr:ArrayModel.grid_t) path : file_path_t = 
+  if path = "" then path else
+  let (r,c) = Model.ArrayModel.get_grid_size gr in
+  `Assoc 
+    [("rows", `Int r); ("cols", `Int c); ("grid", `List (Model.ArrayModel.fold (fun acc (x,y) part_opt -> 
+      match part_opt with
+      | Some p -> acc@[(`Assoc [("loc", `List [`Int x; `Int y]); ("name", `String p.name)])]
+      | None -> acc ) 
+    [] gr ))] 
+    |> Yojson.Basic.to_file ("saves/" ^ path); path
 
-(*[handle_str] helper function for reading a string from a json file*)
-let handle_str (j: Yojson.Basic.json list) = match j with 
-  | [`String a] -> a
-  | _ -> failwith "error"
+let parse_name j = 
+  j |> member "name" |> to_string
 
-(*[handle_lst] helper function for reading a list from a json file*)
-let handle_lst (j) =  match j with
-  | [("loc", `List loc_lst); ("name", `List name_lst)] -> 
-    (handle_loc loc_lst, {name = (handle_str name_lst)})
-  | _ -> failwith "bad json list"
+let parse_loc j = 
+  j |> member "loc" |> to_list
 
-(*[rd_col] helper function for read_state to take in a json column and parse it*)
-let rd_col (j:Yojson.Basic.json list) : (location_t*particle_t) list =  
-  let json_list = (j |> filter_assoc) in 
-  List.fold_left (fun acc x -> acc@[handle_lst x]) [] json_list
+let to_tuple lst = begin
+    match lst with
+    | (`Int a)::(`Int b)::[] -> (a,b)
+    | _ -> raise
+      (Format_error "the directions could not be parsed for an element")
+  end
 
-(*[read_state] reads a json file from a path and outputs a grid*)
-let read_state (path:file_path_t) : ArrayModel.grid_t = 
-  let j = Yojson.Basic.from_file path in
-  let json_lst_lst = j |> to_list |> filter_member "row" |> filter_list in
-  let json_lst_arr = Array.of_list (List.fold_left 
-      (fun acc col -> acc @ [rd_col col]) [] json_lst_lst) in
-  Array.fold_left (fun acc_row row -> 
-      Array.append acc_row [|(Array.of_list row)|] ) [||] json_lst_arr |> ArrayModel.create_grid
+let read_state path =
+  try 
+    let j = Yojson.Basic.from_file ("saves/" ^ path) in
+    let grid = j |> member "grid" |> to_list in
+    let name_lst = grid |> List.map parse_name in
+    let loc_lst = grid |> List.map parse_loc |> List.map (to_tuple) in
+    let r = j |> member "rows" |> to_int in
+    let c = j |> member "cols" |> to_int in
+    let g = j |> member "grid" |> to_list in
+    let gr = Model.ArrayModel.empty_grid (r,c) in
+    List.iteri (fun i loc -> let part = List.nth name_lst i in 
+    Model.ArrayModel.set_pixel loc (Some {name = part}) gr; ()) loc_lst; gr
+  with _ -> Model.ArrayModel.empty_grid (10,10)
 
-(*[wr_row] converts a row of the grid into json*)
-let wr_row (arr:((int*int)* particle_t) array) : Yojson.Basic.json = 
-  `Assoc [("row", `List ((Array.fold_left 
-    (fun acc x -> match x with
-      | ((int_1, int_2), particle) -> acc@[(`Assoc
-            [("loc", `List [`Int int_1; `Int int_2]); 
-             ("name", `List [`String particle.name])])]) [] arr) @ [`Null]))] 
 
-(*[write_state] writes a grid into a file and places file at "grid.json"*)
-let write_state (grid:ArrayModel.grid_t) : file_path_t = 
-  let gr = ArrayModel.unwrap_grid grid in  
-  (`List (Array.fold_left (fun acc r -> acc@[(wr_row r)]) [] gr) )
-  |> Yojson.Basic.to_file "grid.json"; "grid.json"
