@@ -25,7 +25,7 @@ type ui_t =
 let setup_gui rules term gui =
     gui#setup;
     gui#load_rules rules;
-    LTerm.enable_mouse term;
+    ignore (LTerm.enable_mouse term);
     let raw_size = LTerm.size term in
     let size = {cols= if raw_size.cols > 218 then 218 else raw_size.cols ;
                 rows= if raw_size.rows > 218 then 218 else raw_size.rows } in
@@ -100,7 +100,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
           foreground = color; background = (if x = lc then Some lblue else
             if x = rc then Some lred else None)
         }) x; 
-      a + elems_space) 10 ui.element_list;
+      a + elems_space) 10 ui.element_list |> ignore;
 
     let control_string = 
       List.fold_left (fun a (x, _) -> a ^ x ^ "   ") "" ui.controls_list in        
@@ -200,7 +200,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
 
   method private exit_term = 
       Lazy.force LTerm.stdout 
-      >>= (fun term -> LTerm.disable_mouse term); 
+      >>= (fun term -> LTerm.disable_mouse term) |> ignore; 
       exit_ (); ()
 
   method private add_elem x y right = 
