@@ -39,7 +39,18 @@ let draw_to_screen c gui = gui#draw_to_screen c
 
 let is_paused gui = gui#is_paused
 
-class gui_ob exit_ = object(self)
+
+let clipboard = Zed_edit.new_clipboard ()
+let macro = Zed_macro.create []
+
+(* This exists to allow LTerm_edit.edit widgets to appear within modals *)
+class text_inp = object(self)
+  inherit LTerm_edit.edit () as super
+
+  method size_request = {rows = 1; cols = 10}
+end
+
+class gui_ob push_layer pop_layer exit_ = object(self)
   inherit LTerm_widget.frame as super
 
   val ui = {
@@ -53,6 +64,7 @@ class gui_ob exit_ = object(self)
     is_paused = false;
   }
 
+  val mutable modal_input = "grid.json"
   val elems_space = 2
   val mutable debug = ""
 
@@ -129,11 +141,31 @@ class gui_ob exit_ = object(self)
   method setup = 
   self#on_event self#handle_input;
   (* set up controls *)
+
+  let create_textbox str callback = 
+    let editor = new text_inp in
+    let frame = new LTerm_widget.frame in
+    let layer = new LTerm_widget.modal_frame in
+    let box = new vbox in
+    let message = new label str in
+    editor#bind
+       [{control = false; meta = false; shift = false; code = Enter}]
+       [LTerm_edit.Custom (fun () -> pop_layer (); callback editor#text)];
+    frame#set editor;
+    box#add message;
+    box#add frame;
+    layer#set box;
+    layer in 
+  let load_modal = create_textbox "What save file would you like to load?"
+    (fun str -> ui.event_buffer <- Load::(ui.event_buffer)) in
+  let save_modal = create_textbox "What would you like to call this save?"
+    (fun str -> ui.event_buffer <- Save::(ui.event_buffer)) in
+
   let actions = [
     ("quit", fun _ -> self#exit_term);
     ("reset", fun _ -> ui.event_buffer <- Reset::(ui.event_buffer));
-    ("save", fun _ -> ui.event_buffer <- Save::(ui.event_buffer)); 
-    ("load", fun _ -> ui.event_buffer <- Load::(ui.event_buffer)); 
+    ("save", fun _ -> push_layer save_modal ()); 
+    ("load", fun _ -> push_layer load_modal ()); 
     ("line", fun _ -> ());
     ("radius: - +", fun x -> 
       if (x = 4 && ui.draw_radius < 9) then
@@ -196,8 +228,8 @@ class gui_ob exit_ = object(self)
       match char_of ch with
       | 'q' | 'c' -> self#exit_term; true
       | 'r' -> ui.event_buffer <- Reset::(ui.event_buffer); true
-      | 's' -> ui.event_buffer <- Save::(ui.event_buffer); true
-      | 'l' -> ui.event_buffer <- Load::(ui.event_buffer); true
+      | 's' -> List.assoc "save" ui.controls_list 1; true
+      | 'l' -> List.assoc "load" ui.controls_list 1; true
       | '+' | '=' -> if ui.draw_radius < 9 then
                      ui.draw_radius <- ui.draw_radius + 1; true
       | '-' -> if ui.draw_radius > 1 then

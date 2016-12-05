@@ -27,7 +27,7 @@ let run rules = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
     Lazy.force LTerm.stdout >>= (fun term -> 
-    let gui_ob = new Gui.gui_ob exit_ in
+    let gui_ob = new Gui.gui_ob push_layer pop_layer exit_ in
     setup_gui rules term gui_ob;
     let (c, r) = get_window_size gui_ob in
     let g = ArrayModel.empty_grid (c, r) in

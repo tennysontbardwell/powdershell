@@ -2,7 +2,9 @@ open Model
 
 type gui_t = LTerm_widget.t
 
-class gui_ob : (unit -> 'a) -> object 
+class text_inp :  object inherit LTerm_edit.edit end
+
+class gui_ob : (LTerm_widget.modal_frame -> unit -> unit) -> (unit -> unit) -> (unit -> 'c) -> object 
   inherit LTerm_widget.frame
   method get_input : input_t list
   method draw_to_screen : ArrayModel.grid_t -> unit
@@ -26,4 +28,3 @@ val get_window_size : gui_ob -> int * int
 val draw_to_screen : ArrayModel.grid_t -> gui_ob -> unit
 
 val is_paused : gui_ob -> bool
-
