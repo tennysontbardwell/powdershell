@@ -999,7 +999,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[0,1],[-1,1],[1,1]],
+                    "directions": [[-1,1],[1,1]],
                     "probability": 1.0
                 }
             ],
