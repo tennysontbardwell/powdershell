@@ -33,11 +33,10 @@ module type Model = sig
     val particle_to_string : particle_t option -> string
     val to_string : grid_t -> string
     val create_grid : (location_t * particle_t) array array -> grid_t
-    val unwrap_grid : grid_t -> (location_t * particle_t) array array
     val in_grid : grid_t -> location_t -> bool
     val deep_copy : grid_t -> grid_t -> unit
-    val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
-    val iter : (location_t -> particle_t -> 'a) -> grid_t -> unit
+    val fold : ('a -> location_t -> particle_t option -> 'a) -> 'a -> grid_t -> 'a
+    val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit
 end
 
 module ArrayModel: Model = struct
@@ -88,17 +87,7 @@ module ArrayModel: Model = struct
       Array.set (Array.get grid x)  (y) ((x,y),particle)
       else (); grid
 
-    let deep_copy (from_g:grid_t) (to_g:grid_t) = 
-    let (c, r) = get_grid_size to_g in
-    for x = 0 to c - 1 do
-      for y = 0 to r - 1 do
-        set_pixel (x,y) (particle_at_index from_g (x, y)) to_g
-      done
-    done; ()
-
     let create_grid (grid: (location_t*particle_t) array array) : grid_t = grid
-
-    let unwrap_grid (grid: grid_t) : (location_t*particle_t) array array = grid
 
     let particle_to_string = function
     | Some _ -> "*"
@@ -122,18 +111,33 @@ module ArrayModel: Model = struct
       for x = 0 to cols - 1 do 
         for y = 0 to rows - 1 do  
           let (loc, part) = gr.(x).(y) in
-          a := f !a loc part
+          let p = match part with
+            | {name = ""} -> None
+            | _ -> Some part 
+          in a := f !a loc p
         done
       done; !a 
 
     let to_list grid = 
-       fold (fun acc loc part -> acc@[(loc,part)]) [] grid
+       fold (fun acc loc part -> 
+        let p = begin match part with
+            | None -> {name = ""}  
+            | Some particle -> particle 
+        end in
+        acc@[(loc,p)]) [] grid
 
     let iter f gr =
       let (cols, rows) = get_grid_size gr in
       for x = 0 to cols - 1 do 
         for y = 0 to rows - 1 do  
-          let (loc, part) = gr.(x).(y) in f loc part; ()
+          let (loc, part) = gr.(x).(y) in 
+          let p = match part with
+            | {name = ""} -> None
+            | _ -> Some part
+          in f loc p; ()
         done
       done
+
+    let deep_copy (from_g:grid_t) (to_g:grid_t) = 
+      iter (fun loc part_opt -> set_pixel loc part_opt to_g) from_g
 end

@@ -81,11 +81,11 @@ let read_rules path =
 let write_state (gr:ArrayModel.grid_t) : file_path_t = 
   let (r,c) = Model.ArrayModel.get_grid_size gr in
   `Assoc 
-    [("rows", `Int r); ("cols", `Int c); ("grid", `List (Model.ArrayModel.fold (fun acc (x,y) particle -> 
-        if (not (particle.name = "")) then
-        acc@[(`Assoc
-            [("loc", `List [`Int x; `Int y]); 
-             ("name", `String particle.name)])] else acc ) [] gr ))] 
+    [("rows", `Int r); ("cols", `Int c); ("grid", `List (Model.ArrayModel.fold (fun acc (x,y) part_opt -> 
+      match part_opt with
+      | Some p -> acc@[(`Assoc [("loc", `List [`Int x; `Int y]); ("name", `String p.name)])]
+      | None -> acc ) 
+    [] gr ))] 
     |> Yojson.Basic.to_file "grid.json"; "grid.json"
 
 let parse_name j = 
@@ -110,7 +110,6 @@ let read_state path =
   let r = j |> member "rows" |> to_int in
   let c = j |> member "cols" |> to_int in
   let g = j |> member "grid" |> to_list in
-  let gr = Model.ArrayModel.empty_grid (r,c) |> Model.ArrayModel.unwrap_grid in
-  List.iteri (fun i a -> let part = List.nth name_lst i in 
-    gr.(fst a).(snd a) <- ((fst a, snd a), {name = part}) ) loc_lst; 
-    Model.ArrayModel.create_grid gr
+  let gr = Model.ArrayModel.empty_grid (r,c) in
+  List.iteri (fun i loc -> let part = List.nth name_lst i in 
+    Model.ArrayModel.set_pixel loc (Some {name = part}) gr; ()) loc_lst; gr

@@ -99,9 +99,7 @@ class gui_ob exit_ = object(self)
     LTerm_draw.draw_frame ctx frame_rect LTerm_draw.Light;
 
     let constrain a l h = if a < l then l else if a > h then h else a in
-    for x = 0 to cols do 
-      for y = 0 to rows do
-        match ArrayModel.particle_at_index ui.matrix (x, y) with
+    ArrayModel.iter (fun (x,y) -> function
         | None -> ()
         | Some {name = n} ->
           let details = lookup_rule ui.rules n in
@@ -115,9 +113,7 @@ class gui_ob exit_ = object(self)
           LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
           bold = None; underline = None; blink = Some false; 
           reverse = None; foreground = Some (rgb r g b); background = None})
-          details.display
-      done
-    done;
+          details.display) ui.matrix
 
   method get_input = let p = ui.event_buffer in ui.event_buffer <- []; p
 
