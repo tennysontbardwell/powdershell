@@ -2,9 +2,13 @@ run: compile
 	./main.byte
 
 test: compile
+	# ________________________________
+	rm -rd test_build || true
 	mkdir test_build
-	./test.byte
-	rm -rf test_build
+	# ________________________________
+	./test.byte || true
+	# ________________________________
+	rm -rd test_build
 
 compile:
 	ocamlbuild -pkgs oUnit,yojson,str,lambda-term \
