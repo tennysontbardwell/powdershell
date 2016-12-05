@@ -18,62 +18,34 @@ let load_tests = [
   "2: load heavy sand" >::
     (fun _ -> concat ex_jsons "heavy_sand_rules.json" |> read_rules |> ignore);
   
-  "3: write_state empty" >::
+  "3: write/read empty" >::
     (fun _ -> 
-     	assert_equal "/tests_build/test1" (Filemanager.write_state empty_gr "/tests_build/test1")
+    	Filemanager.write_state empty_gr "test_build/test1" |> ignore;
+     	assert_equal empty_gr (Filemanager.read_state "test_build/test1")
     );
-  
-  "4: write_state 2" >::
+ 
+  "4: write/read 2" >::
     (fun _ -> 
-    	let gr_mod = ArrayModel.set_pixel (1,0) (Some {name= "water"}) empty_gr in 
-    	assert_equal "/tests_build/test2" (Filemanager.write_state gr_mod "/tests_build/test2" ));
+    	let gr_mod = ArrayModel.set_pixel (1,0) (Some {name= "water"}) empty_gr in
+    	Filemanager.write_state gr_mod "test_build/test2" |> ignore; 
+    	assert_equal gr_mod (Filemanager.read_state "test_build/test2" ));
   
-  "5: write_state 3" >::
+  "5: write/read 3" >::
     (fun _ -> 
     	let gr_mod = ArrayModel.set_pixel (299,30) (Some {name= "water"}) empty_gr_300 in 
-    	let gr_mod = ArrayModel.set_pixel (30,30) (Some {name= "sand"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (24,30) (Some {name= "powder"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (60,43) (Some {name= "stuff"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (70,30) (Some {name= "a"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (29,60) (Some {name= "b"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (199,40) (Some {name= "c"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (9,190) (Some {name= "d"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (29,80) (Some {name= "e"}) gr_mod in 
-    	assert_equal "/tests_build/test3" (Filemanager.write_state gr_mod "/tests_build/test3" ));
+    	let gr_mod2 = ArrayModel.set_pixel (30,30) (Some {name= "sand"}) gr_mod in 
+    	let gr_mod3 = ArrayModel.set_pixel (24,30) (Some {name= "powder"}) gr_mod2 in 
+    	Filemanager.write_state gr_mod3 "test_build/test3" |> ignore;
+    	assert_equal gr_mod3 (Filemanager.read_state "test_build/test3" ));
 
-  (* "6: write_state 4" >::
+  "6: write/read 4" >::
     (fun _ -> 
-    	let gr_mod = ArrayModel.iter 
-    	(fun (x,y) part_op -> empty_gr.(x).(y) <- ArrayModel.set_pixel (x,y) (Some {name = "b"})) empty_gr in
-    	assert_equal "/tests_build/test4" (Filemanager.write_state gr_mod "/tests_build/test4" ));
-   *)"7: read_state" >::
-    (fun _ -> 
-    	assert_equal empty_gr (Filemanager.read_state "/tests_build/test1") )
-  ;
-  "8: read_state 2" >::
-    (fun _ -> 
-    	let gr_mod = ArrayModel.set_pixel (1,0) (Some {name= "water"}) empty_gr in 
-    	assert_equal gr_mod (Filemanager.read_state "/tests_build/test2") );
-
-  "9: read_state 3" >::
-    (fun _ -> 
-    	let gr_mod = ArrayModel.set_pixel (299,30) (Some {name= "water"}) empty_gr_300 in 
-    	let gr_mod = ArrayModel.set_pixel (30,30) (Some {name= "sand"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (24,30) (Some {name= "powder"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (60,43) (Some {name= "stuff"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (70,30) (Some {name= "a"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (29,60) (Some {name= "b"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (199,40) (Some {name= "c"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (9,190) (Some {name= "d"}) gr_mod in 
-    	let gr_mod = ArrayModel.set_pixel (29,80) (Some {name= "e"}) gr_mod in 
-    	assert_equal gr_mod (Filemanager.read_state "/tests_build/test3") );
-
-(*   "10: read_state 4" >::
-    (fun _ -> 
-    	let gr_mod = ArrayModel.iter 
-    	(fun (x,y) part_op -> gr.(x).(y) <- ArrayModel.set_pixel (x,y) (Some {name = "b"})) gr in
-    	assert_equal gr_mod (Filemanager.read_state "/tests_build/test4") );
- *)]
+    	let gr_mod = Model.ArrayModel.empty_grid (3,3) in
+     	ArrayModel.iter (fun (x,y) part_op -> 
+     		ArrayModel.set_pixel (x,y) (Some {name = "b"})) gr_mod;
+    	Filemanager.write_state gr_mod "test_build/test3" |> ignore;
+    	assert_equal gr_mod (Filemanager.read_state "test_build/test3" ));
+]
 
 let parse_tests = [
   "check elements are there" >::

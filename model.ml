@@ -27,23 +27,27 @@ module type Model = sig
     val deep_copy : grid_t -> grid_t -> unit
     val fold : ('a -> location_t -> particle_t option -> 'a) -> 'a -> grid_t -> 'a
     val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit
-end
-
+end 
+ 
 module ArrayModel: Model = struct
     type grid_t = (location_t*particle_t) array array 
     
+    (*[col_counter] increments column counter every time it is called*)
     let col_counter = ref (-1)
     let next_val =
       fun () ->
       col_counter := (!col_counter) + 1;
       !col_counter
 
+    (*[row_counter] increments row counter every time it is called*)
     let row_counter = ref (-1)
     let next_row =
       fun () ->
       row_counter := (!row_counter) + 1;
       !row_counter
 
+    (* [simple_row] creates a row for an empty grid given a row number and the 
+     * number of columns in the row and sets particle to empty string*)  
     let simple_row (rown:int) (coln:int) : ((int * int) * particle_t) array = 
       col_counter := (-1); Array.map (fun x -> 
       ((rown, next_val ()), {name = ""})) (Array.make coln 0)
@@ -62,7 +66,6 @@ module ArrayModel: Model = struct
           | {name = ""} -> None
           | _ -> Some result )
       with e -> None
-
 
     let get_grid_size (grid:grid_t) : int*int = 
     (Array.length grid, Array.length (Array.get grid 0)) 
