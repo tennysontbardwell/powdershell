@@ -36,4 +36,4 @@ let run rules = Lwt_main.run (
     async (execute game);
     do_run gui_ob ))
 
-let () = run (read_rules "test_files/example_jsons/rules.json")
+let () = run (read_rules "rules/default.json")

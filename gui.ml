@@ -39,10 +39,6 @@ let draw_to_screen c gui = gui#draw_to_screen c
 
 let is_paused gui = gui#is_paused
 
-
-let clipboard = Zed_edit.new_clipboard ()
-let macro = Zed_macro.create []
-
 (* This exists to allow LTerm_edit.edit widgets to appear within modals *)
 class text_inp = object(self)
   inherit LTerm_edit.edit () as super
@@ -50,8 +46,6 @@ class text_inp = object(self)
   method size_request = {rows = 1; cols = 10}
 end
 
-(* gui_ob is an extension of the lambda term frame widget class and contains 
- * everything to do with the gui: input, user interface state, displaying grid *)
 class gui_ob push_layer pop_layer exit_ = object(self)
   inherit LTerm_widget.frame as super
 

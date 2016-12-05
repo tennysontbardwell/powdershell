@@ -1,10 +1,9 @@
 open Model
 
-type gui_t = LTerm_widget.t
-
-class text_inp :  object inherit LTerm_edit.edit end
-
-class gui_ob : (LTerm_widget.modal_frame -> unit -> unit) -> (unit -> unit) -> (unit -> 'c) -> object 
+(* gui_ob is an extension of the lambda term frame widget class and contains 
+ * everything to do with the gui: input, user interface state, displaying grid *)
+class gui_ob : (LTerm_widget.modal_frame -> unit -> unit) 
+                -> (unit -> unit) -> (unit -> 'c) -> object 
   inherit LTerm_widget.frame
   method get_input : input_t list
   method draw_to_screen : ArrayModel.grid_t -> unit
