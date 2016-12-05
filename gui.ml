@@ -20,16 +20,17 @@ type ui_t =
     mutable controls_list : (string * (int -> unit)) list;
     mutable rules : Rules.rules_t;
     mutable is_paused : bool;
+    mutable elems_lst_format : int * int;
   }
 
 let setup_gui rules term gui =
-    gui#setup;
     gui#load_rules rules;
     ignore (LTerm.enable_mouse term);
     let raw_size = LTerm.size term in
     let size = {cols= if raw_size.cols > 218 then 218 else raw_size.cols ;
                 rows= if raw_size.rows > 218 then 218 else raw_size.rows } in
-    gui#create_matrix (size.cols - 7) (size.rows - 3)
+    gui#create_matrix (size.cols - 7) (size.rows - 3);
+    gui#setup
 
 let get_window_size gui = gui#get_size
 
@@ -58,9 +59,11 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     controls_list = [];
     rules = gen_rules [];
     is_paused = false;
+    (* offset, space between (1 or 2) *)
+    elems_lst_format = (10, 2);
   }
 
-  val elems_space = 2
+  val elems_lst_format = 2
   val mutable debug = ""
 
   method create_matrix c r = ui.matrix <- ArrayModel.empty_grid (c, r);
@@ -81,6 +84,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
   method draw ctx focused_widget =
     LTerm_draw.clear ctx;
     let (cols, rows) = ArrayModel.get_grid_size ui.matrix in
+    let (f_off, f_space) = ui.elems_lst_format in
     List.fold_left (fun a x -> 
       let (lc, rc) = ui.selected_elem in
       let color = if x = "erase" then Some lwhite else
@@ -91,7 +95,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
           foreground = color; background = (if x = lc then Some lblue else
             if x = rc then Some lred else None)
         }) x; 
-      a + elems_space) 10 ui.element_list |> ignore;
+      a + f_space) f_off ui.element_list |> ignore;
 
     let control_string = 
       List.fold_left (fun a (x, _) -> a ^ x ^ "   ") "" ui.controls_list in        
@@ -127,7 +131,10 @@ class gui_ob push_layer pop_layer exit_ = object(self)
 
   method setup = 
   self#on_event self#handle_input;
-  (* set up controls *)
+  (* set up controls *)    
+  let (f_off, f_space) = ui.elems_lst_format in
+  if List.length ui.element_list * f_space + f_off > (ArrayModel.get_grid_size ui.matrix |> snd) 
+  then ui.elems_lst_format <- (2, 1);
 
   let create_textbox str callback = 
     let editor = new text_inp in
@@ -174,6 +181,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
 
   method private handle_buttons r c b =
       let (cols, rows) = ArrayModel.get_grid_size ui.matrix in
+      let (f_off, f_space) = ui.elems_lst_format in
       if r >= rows + 2 then 
         let steps = ref (3) in
         let rec control_handle = function
@@ -184,9 +192,9 @@ class gui_ob push_layer pop_layer exit_ = object(self)
         | _ -> () in
         control_handle ui.controls_list
       else 
-        let steps = ref (10 - elems_space) in
+        let steps = ref (f_off - f_space) in
         let assoc_list = (List.map (fun n -> 
-          (steps := !steps + elems_space; (!steps, n))) ui.element_list) in
+          (steps := !steps + f_space; (!steps, n))) ui.element_list) in
         if List.mem_assoc r assoc_list then 
         if b = LTerm_mouse.Button1 then
           (ui.selected_elem <- (List.assoc r assoc_list, snd ui.selected_elem))
