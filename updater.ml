@@ -22,9 +22,10 @@ let deoptionalize l =
 let rec receive_input inp g = match inp with
 | Reset::t -> let empty = ArrayModel.empty_grid (ArrayModel.get_grid_size g) in
     ArrayModel.deep_copy empty g; receive_input t g
-| (Save file)::t -> ignore (Filemanager.write_state g file); receive_input t g
-| (Load file)::t -> ArrayModel.deep_copy (Filemanager.read_state file) g; 
-    receive_input t g
+| (Save file)::t -> ignore (Filemanager.write_state g ("saves/" ^ file));
+      receive_input t g
+| (Load file)::t -> let s = Filemanager.read_state ("saves/" ^ file) in
+      ArrayModel.deep_copy s g; receive_input t g
 | ((ElemAdd i)::t) -> (if i.elem = "erase" then 
     ignore (ArrayModel.set_pixel i.loc None g)
     else let npix = Some {name=i.elem} in

@@ -40,7 +40,3 @@ let gen_rules r_lst : rules_t =
 let lookup_rule (tbl, _) s = Hashtbl.find tbl s 
 
 let get_name_lst (_,name_lst) = name_lst
-
-(* [validate rules] determins whether or not [rules] is a vaild *)
-let validate _ = failwith "unimplemented"
-

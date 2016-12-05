@@ -50,6 +50,8 @@ class text_inp = object(self)
   method size_request = {rows = 1; cols = 10}
 end
 
+(* gui_ob is an extension of the lambda term frame widget class and contains 
+ * everything to do with the gui: input, user interface state, displaying grid *)
 class gui_ob push_layer pop_layer exit_ = object(self)
   inherit LTerm_widget.frame as super
 
@@ -64,7 +66,6 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     is_paused = false;
   }
 
-  val mutable modal_input = "grid.json"
   val elems_space = 2
   val mutable debug = ""
 
@@ -72,13 +73,9 @@ class gui_ob push_layer pop_layer exit_ = object(self)
 
   method load_rules r = ui.rules <- r;
     ui.element_list <- "erase"::(List.fold_right (fun x a -> 
-    if (lookup_rule ui.rules x).show 
-    then x::a else a) (Rules.get_name_lst ui.rules) [])
+      if (lookup_rule ui.rules x).show then x::a else a)
+    (Rules.get_name_lst ui.rules) [])
 
-(* 
-  method load_rules r = ui.rules <- r; 
-    ui.element_list <- "erase"::(Hashtbl.fold (fun x r a -> if r.show then x::a else a) ui.rules [])
- *)
   method draw_to_screen m = 
     ui.matrix <- m;
     self#queue_draw
@@ -105,7 +102,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     let control_string = 
       List.fold_left (fun a (x, _) -> a ^ x ^ "   ") "" ui.controls_list in        
     LTerm_draw.draw_string ctx (rows + 2) 3 control_string; 
-    LTerm_draw.draw_string ctx (rows + 2) 48 (string_of_int ui.draw_radius);
+    LTerm_draw.draw_string ctx (rows + 2) 41 (string_of_int ui.draw_radius);
     LTerm_draw.draw_string ctx (rows + 2) 80 (debug);
     let frame_rect = {row1 = 0; col1 = 0; row2 = rows + 2; col2 = cols + 2} in
     LTerm_draw.draw_frame ctx frame_rect LTerm_draw.Light;
@@ -167,7 +164,6 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     ("reset", fun _ -> ui.event_buffer <- Reset::(ui.event_buffer));
     ("save", fun _ -> push_layer save_modal ()); 
     ("load", fun _ -> push_layer load_modal ()); 
-    ("line", fun _ -> ());
     ("radius: - +", fun x -> 
       if (x = 4 && ui.draw_radius < 9) then
         ui.draw_radius <- ui.draw_radius + 1
