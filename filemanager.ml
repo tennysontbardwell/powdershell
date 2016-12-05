@@ -86,12 +86,15 @@ let write_state (gr:ArrayModel.grid_t) path : file_path_t =
     [] gr ))] 
     |> Yojson.Basic.to_file path; path
 
+(*[parse_name] parses a name from json into a particle's name*)
 let parse_name j = 
   j |> member "name" |> to_string
 
+(*[parse_loc] parses a json loc from json into a particle location list*)
 let parse_loc j = 
   j |> member "loc" |> to_list
 
+(*[to_tuple] parses a json list into a location tuple*)
 let to_tuple lst = begin
     match lst with
     | (`Int a)::(`Int b)::[] -> (a,b)
