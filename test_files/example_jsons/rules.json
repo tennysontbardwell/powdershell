@@ -377,6 +377,12 @@
                 },
                 {
                     "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
                     "from": "stem",
                     "to": "fire",
                     "probability": 0.3
@@ -619,16 +625,16 @@
                 {"to": "expl", "probability": 0.02}
             ],
             "destroy": [
-                { "from": "sand", "probability": 0.1 },
-                { "from": "water", "probability": 0.1 },
-                { "from": "ice", "probability": 0.1 },
-                { "from": "stone", "probability": 0.1 },
-                { "from": "lava", "probability": 0.1 },
-                { "from": "steam", "probability": 0.1 },
-                { "from": "fire", "probability": 0.1 },
-                { "from": "spout", "probability": 0.1 },
-                { "from": "acid", "probability": 0.1 },
-                { "from": "torch", "probability": 0.1 }
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
             ],
             "decay": 0.8,
             "interactions": [
@@ -649,9 +655,15 @@
                     "from": "bomb",
                     "to": "expu",
                     "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
                 },                
-                { "type": "change", "to": "fire", "from": "plant", "probability": 0.1 },
-                { "type": "change", "to": "fire", "from": "oil", "probability": 0.1 }
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
             ],
             "movements": [
                 {
@@ -673,16 +685,16 @@
                 {"to": "expr", "probability": 0.02}
             ],
             "destroy": [
-                { "from": "sand", "probability": 0.1 },
-                { "from": "water", "probability": 0.1 },
-                { "from": "ice", "probability": 0.1 },
-                { "from": "stone", "probability": 0.1 },
-                { "from": "lava", "probability": 0.1 },
-                { "from": "steam", "probability": 0.1 },
-                { "from": "fire", "probability": 0.1 },
-                { "from": "spout", "probability": 0.1 },
-                { "from": "acid", "probability": 0.1 },
-                { "from": "torch", "probability": 0.1 }
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
             ],
             "decay": 0.8,
             "interactions": [
@@ -703,9 +715,15 @@
                     "from": "bomb",
                     "to": "expu",
                     "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
                 },                
-                { "type": "change", "to": "fire", "from": "plant", "probability": 0.1 },
-                { "type": "change", "to": "fire", "from": "oil", "probability": 0.1 }
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
             ],
             "movements": [
                 {
@@ -727,16 +745,16 @@
                 {"to": "expu", "probability": 0.02}
             ],
             "destroy": [
-                { "from": "sand", "probability": 0.1 },
-                { "from": "water", "probability": 0.1 },
-                { "from": "ice", "probability": 0.1 },
-                { "from": "stone", "probability": 0.1 },
-                { "from": "lava", "probability": 0.1 },
-                { "from": "steam", "probability": 0.1 },
-                { "from": "fire", "probability": 0.1 },
-                { "from": "spout", "probability": 0.1 },
-                { "from": "acid", "probability": 0.1 },
-                { "from": "torch", "probability": 0.1 }
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
             ],
             "decay": 0.8,
             "interactions": [
@@ -757,13 +775,80 @@
                     "from": "bomb",
                     "to": "expu",
                     "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
                 },                
-                { "type": "change", "to": "fire", "from": "plant", "probability": 0.1 },
-                { "type": "change", "to": "fire", "from": "oil", "probability": 0.1 }
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
             ],
             "movements": [
                 {
                     "directions": [[-2,-3], [0,-3], [2,-3]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 100
+        },
+        {
+            "name": "expd",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : false,
+            "transforms": [],
+            "grow": [
+                {"to": "expd", "probability": 0.02}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
+            ],
+            "decay": 0.8,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },                
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "stem", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
+            ],
+            "movements": [
+                {
+                    "directions": [[-1,4], [0,4], [1,4]],
                     "probability": 1.0
                 }
             ],

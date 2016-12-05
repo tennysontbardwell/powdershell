@@ -76,7 +76,6 @@ let read_rules path =
   let elements = j |> member "elements" |> to_list in
   elements |> List.map parse_elm |> gen_rules
 
-(*[write_state] writes a grid into a file and places file at path inputted*)
 let write_state (gr:ArrayModel.grid_t) path : file_path_t = 
   if path = "" then path else
   let (r,c) = Model.ArrayModel.get_grid_size gr in
@@ -86,7 +85,7 @@ let write_state (gr:ArrayModel.grid_t) path : file_path_t =
       | Some p -> acc@[(`Assoc [("loc", `List [`Int x; `Int y]); ("name", `String p.name)])]
       | None -> acc ) 
     [] gr ))] 
-    |> Yojson.Basic.to_file ("saves/" ^ path); path
+    |> Yojson.Basic.to_file path; path
 
 let parse_name j = 
   j |> member "name" |> to_string
@@ -103,7 +102,7 @@ let to_tuple lst = begin
 
 let read_state path =
   try 
-    let j = Yojson.Basic.from_file ("saves/" ^ path) in
+    let j = Yojson.Basic.from_file path in
     let grid = j |> member "grid" |> to_list in
     let name_lst = grid |> List.map parse_name in
     let loc_lst = grid |> List.map parse_loc |> List.map (to_tuple) in

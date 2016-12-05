@@ -4,22 +4,6 @@ open Filename
 open Model
 open ArrayModel
 
-(*
-    val indices_of_particle : grid_t -> particle_t -> location_t list          3
-    val particle_at_index : grid_t -> location_t -> particle_t option          4 
-    val empty_grid : int * int -> grid_t                                       2
-    val to_list : grid_t -> (location_t * particle_t) list                     1 
-    val get_grid_size : grid_t -> int * int                                    4
-    val set_pixel : location_t -> particle_t option -> grid_t -> grid_t        4
-    val empty_grid : int * int -> grid_t                                       - 
-    val particle_to_string : particle_t option -> string                        
-    val to_string : grid_t -> string
-    val create_grid : (location_t*particle_t) array array -> grid_t            2
-    val in_grid : grid_t -> location_t -> bool                                 4
-    val deep_copy : grid_t -> grid_t -> unit                                   3
-    val fold : ('a -> location_t -> particle_t option-> 'a) -> 'a -> grid_t -> 'a 
-    val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit
-*)
 let r_sm = [|(0,0),{name= ""}; (0,1),{name = ""}|]
 let r_sm2 = [|(1,0),{name= ""}; (1,1),{name = ""}|]
 let r_sm3 = [|(2,0),{name= ""}; (2,1),{name = ""}|]
@@ -218,5 +202,3 @@ let model_tests = [
         (ArrayModel.iter (fun loc part -> ArrayModel.set_pixel loc part mod_grid_2; () ) mod_grid_2) 
     ); 
 ]
-(* val fold : ('a -> location_t -> particle_t option-> 'a) -> 'a -> grid_t -> 'a 
-    val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit *)
