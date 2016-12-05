@@ -76,7 +76,6 @@ let read_rules path =
   let elements = j |> member "elements" |> to_list in
   elements |> List.map parse_elm |> gen_rules
 
-(*[write_state] writes a grid into a file and places file at path inputted*)
 let write_state (gr:ArrayModel.grid_t) path : file_path_t = 
   if path = "" then path else
   let (r,c) = Model.ArrayModel.get_grid_size gr in
