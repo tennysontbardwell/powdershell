@@ -134,25 +134,40 @@ See an example below in figure \ref{fig:water}.
 \end{figure}
 
 \section{Data}
-TODO
+The grid maintain the location of particles and the name of the particle at that location. The rules are held seperately in its own json file and maintains characteristics such as density, iteractions, color, change, destroy, and grow. The grid is represented as a (location_t * particle_t) array array, where location_t is type int*int and particle_t is of type {name = string}. 
 
-The system will need to maintain what particle if any is currently residing at each location on the screen, what are the characteristics of that particle, and what are the rules that the game must follow. We will store the grid representing all the possible locations for characters on the screen in a hash table. We plan to store the type of a particle as a record. 
+Rules is an assoc list with the name of an elem associated with an elem_rules. Elem_rules record consits of 
+a bunch of tuples, records, and lists, that are associated with an element. Something like color of an element, 
+density of an element, and transforming that elemnent to a different element with a certain probability would
+all belong under Elem_rules.
 
 \section{External Dependencies}
 We used Lambda-Term (\url{https://github.com/diml/lambda-term}), an open source library that allows us to interface with the terminal, not just through keyboard input, but also with the mouse. We also used Yojson for parsing JSON data from our rules file and from save files.
 
 \section{Testing}
-TODO
+We have tested our system in three ways. First, we have done black box and glass box testing based on our interface files to test each function in Model interface file and File Manager interface file. Second, we have
+personally spent hours playing the game to test the GUI and have given the game to other people to test. 
 
-We plan on testing our system in three ways. First, we shall have black box testing based on our interface files to test each function. Second, we shall have glass box testing based on implementation of each function in each module. Third, we shall test by playing the game. This method will be important for easily testing the display components. 
-
-To hold our team accountable we shall be checking everyone meets their test plan at our bi-weekly meeting and scan over the test suite. Of course, all the code and test suites for each module will be available on the GitHub. 
+We have been holding our team accountable be checking everyone meets their test plan at our bi-weekly meeting and scan over the test suite. Of course, all the code and test suites for each module will be available on the GitHub.
 
 \section{Division Of Labor}
+Tennyson designed rules, updater, and rules json parsing. 
+
+Quinn implemented the interface for model, writing the grid to a json file, 
+reading a json file to a grid, and wrote test cases for model and filemanager. 
+She spent some time making json parsing to a grid more efficient so that only the 
+locations that are not empty show up in the json file. She did 50 hours of work.
+
+Sitar implemented GUI which involved drawing particles to the terminal and 
+managing the entire user interface. He spent over 70 hours deciphering the quirks 
+of lambda-term and figuring out how to get the best user experience out of the terminal.
+Sitar also implemented the asynchronous logic of main.ml and designed many of 
+the elements in the rules JSON.
+
 
 \begin{description}
   \item[Tennyson T Bardwell (ttb33):]
-    Implemented the majority of the updater's logic which increments from one step to the next and applied user input to the grid. Also defined the initial rules for sand and water, implementing the JSON structure for the rules of these elements, the in memory representation, and the parsing of the JSON. Wrote many updater test cases. Estimated hours of work: 40.
+    Implemented the majority of the updater's logic which increments from one step to the next and applied user input to the grid. Also, defined the initial rules for sand and water, implementing the JSON structure for the rules of these elements, the in memory representation, and the parsing of the JSON. Wrote many updater test cases. Estimated hours of work: 40.
   \item[Quinn Halpin (qmh4):]
   \item[Sitar Harel (sh927):]
 \end{description}
