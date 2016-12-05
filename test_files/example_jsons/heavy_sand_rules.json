@@ -7,7 +7,12 @@
             "display": "s",
             "lifespan": -1,
             "shimmer" : 0,
+            "show": true,
             "interactions": [],
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0,
             "movements": [
                 {
                     "directions": [[0,1]],

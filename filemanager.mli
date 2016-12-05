@@ -14,5 +14,5 @@ val read_rules : file_path_t -> Rules.rules_t
 
 (* [write_state] takes a state and outputs a filepath that has stored that 
  * current state *)
-val write_state : ArrayModel.grid_t -> file_path_t
+val write_state : ArrayModel.grid_t-> file_path_t -> file_path_t
 

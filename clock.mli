@@ -1,22 +1,13 @@
-type clock
+type clock_t
 
 (* [new_clk] is a blank clock with no target set (and so the next frame is *)
 (* immediate) and a default fps of 60 *)
-val new_clk : clock
+val new_clk : clock_t
 
-(* [set_fps fps clk] sets the [fps] of [clk] *)
-val set_fps : float -> clock -> clock
+val end_calc : clock_t -> clock_t
 
-(* [get_fps clk] is the current fps setting of [clk] *)
-val get_fps : clock -> float
+val get_block : clock_t -> float
 
-(* [starting_frame clk] updates [clk] so it's target is now 1/fps seconds in
- * the future *)
-val starting_frame : clock -> clock
+val set_start : clock_t -> clock_t
 
-(*[is_time clk] returns true if [clk] has arrived at 1/fps in the future *)
-val is_time : clock -> bool
-
-(*[block_until clk] returns unit when [is_time clk] would return true *)
-val block_until : clock -> unit
-
+val get_start : clock_t -> float

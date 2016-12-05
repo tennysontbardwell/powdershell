@@ -1,0 +1,909 @@
+{
+    "fps": 60,
+    "elements": [
+        {
+            "name": "sand",
+            "color": { "r": 250, "g": 180, "b": 0 },
+            "display": "⣿",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "sand",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "water",
+            "color": { "r": 20, "g": 90, "b": 225 },
+            "display": "₪",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "fire", "probability": 0.7 },
+                { "from": "acid", "probability": 0.002 }
+            ],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "lava",
+                    "to": "stone",
+                    "probability": 0.01
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "water",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1], [-1,1], [1,1], [-1,0], [1,0]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 3
+        },
+        {
+            "name": "ice",
+            "color": { "r": 180, "g": 190, "b": 210 },
+            "display": "∎",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "show" : true,
+            "transforms": [
+                {
+                    "to": "water",
+                    "probability": 0.00001
+                }
+            ],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "ice",
+                    "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "ice",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [],
+            "density": 20
+        },
+        {
+            "name": "stone",
+            "color": { "r": 100, "g": 100, "b": 100 },
+            "display": "◆",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "expu", "probability": 0.5 },
+                { "from": "expl", "probability": 0.5 },
+                { "from": "expr", "probability": 0.5 },
+                { "from": "expd", "probability": 0.5 }
+            ],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "lava",
+                    "to": "stone",
+                    "probability": 0.005
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "stone",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "glass",
+            "color": { "r": 70, "g": 70, "b": 70 },
+            "display": "░",
+            "lifespan": -1,
+            "shimmer" : 9,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "lava",
+            "color": { "r": 200, "g": 90, "b": 25 },
+            "display": "₪",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {
+                    "to": "fire",
+                    "probability": 0.005
+                }
+            ],
+            "destroy": [
+                {
+                    "from": "plant",
+                    "probability": 0.001
+                }
+            ],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stone",
+                    "to": "lava",
+                    "probability": 0.0055
+                },
+                {
+                    "type": "change",
+                    "from": "ice",
+                    "to": "water",
+                    "probability": 0.1
+                },
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "steam",
+                    "probability": 0.02
+                },
+                {
+                    "type": "change",
+                    "from": "sand",
+                    "to": "glass",
+                    "probability": 0.0055
+                },
+                {
+                    "type": "change",
+                    "from": "oil",
+                    "to": "fire",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "plant",
+                    "to": "fire",
+                    "probability": 0.5
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "lava",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.4
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "steam",
+            "color": { "r": 150, "g": 150, "b": 150 },
+            "display": "#",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [
+                {
+                    "to": "water",
+                    "probability": 0.001
+                }
+            ],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "steam",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[0,1]],
+                    "probability": 0.1
+                },
+                {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 0.4
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.2
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 0.4
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "plant",
+            "color": { "r": 30, "g": 200, "b": 50 },
+            "display": "ॵ",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {
+                    "to": "plant",
+                    "probability": 0.0003
+                }
+            ],
+            "destroy": [],
+            "decay": 0.0001,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "plant",
+                    "probability": 0.02
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "plant",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "fire",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.4,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "plant",
+                    "to": "fire",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "ice",
+                    "to": "water",
+                    "probability": 0.1
+                },
+                {
+                    "type": "change",
+                    "from": "water",
+                    "to": "steam",
+                    "probability": 0.01
+                },
+                {
+                    "type": "change",
+                    "from": "stone",
+                    "to": "lava",
+                    "probability": 0.001
+                },
+                {
+                    "type": "change",
+                    "from": "oil",
+                    "to": "fire",
+                    "probability": 0.95
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "fire",
+                    "probability": 0.3
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,-1], [1,-1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 0.5
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "torch",
+            "color": { "r": 120, "g": 70, "b": 70 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {
+                    "to": "fire",
+                    "probability": 0.1
+                }
+            ],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "torch",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "bhole",
+            "color": { "r": 0, "g": 0, "b": 0 },
+            "display": "█",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "sand", "probability": 1.0 },
+                { "from": "water", "probability": 1.0 },
+                { "from": "ice", "probability": 1.0 },
+                { "from": "stone", "probability": 1.0 },
+                { "from": "glass", "probability": 1.0 },
+                { "from": "lava", "probability": 1.0 },
+                { "from": "steam", "probability": 1.0 },
+                { "from": "plant", "probability": 1.0 },
+                { "from": "fire", "probability": 1.0 },
+                { "from": "spout", "probability": 1.0 },
+                { "from": "oil", "probability": 1.0 },
+                { "from": "acid", "probability": 1.0 },
+                { "from": "torch", "probability": 1.0 }
+            ],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "bhole",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "spout",
+            "color": { "r": 0, "g": 60, "b": 180 },
+            "display": "❌",
+            "lifespan": -1,
+            "shimmer" : 0,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {"to": "water", "probability": 0.05}
+            ],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "spout",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [],
+            "density": 100
+        },
+        {
+            "name": "oil",
+            "color": { "r": 90, "g": 60, "b": 45 },
+            "display": "₪",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                {
+                    "from": "plant",
+                    "probability": 0.04
+                }
+            ],
+            "decay": 0.0,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "oil",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "acid",
+            "color": { "r": 170, "g": 170, "b": 20 },
+            "display": "₪",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [
+                { "from": "sand", "probability": 0.03 },
+                { "from": "water", "probability": 0.03 },
+                { "from": "ice", "probability": 0.03 },
+                { "from": "stone", "probability": 0.03 },
+                { "from": "lava", "probability": 0.03 },
+                { "from": "steam", "probability": 0.03 },
+                { "from": "plant", "probability": 0.03 },
+                { "from": "fire", "probability": 0.03 },
+                { "from": "spout", "probability": 0.03 },
+                { "from": "oil", "probability": 0.03 },
+                { "from": "torch", "probability": 0.03 }
+            ],
+            "decay": 0.001,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "acid",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,0], [1,0]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        },
+        {
+            "name": "bomb",
+            "color": { "r": 206, "g": 10, "b": 10 },
+            "display": "Ш",
+            "lifespan": -1,
+            "shimmer" : 2,
+            "show" : true,
+            "transforms": [],
+            "grow": [],
+            "destroy": [],
+            "decay": 0.000,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "stem",
+                    "to": "bomb",
+                    "probability": 0.05
+                }
+            ],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 8
+        },
+        {
+            "name": "expl",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : false,
+            "transforms": [],
+            "grow": [
+                {"to": "expl", "probability": 0.02}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
+            ],
+            "decay": 0.8,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },                
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
+            ],
+            "movements": [
+                {
+                    "directions": [[-4,-1], [-4,0], [-4,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 100
+        },
+        {
+            "name": "expr",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : false,
+            "transforms": [],
+            "grow": [
+                {"to": "expr", "probability": 0.02}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
+            ],
+            "decay": 0.8,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },                
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
+            ],
+            "movements": [
+                {
+                    "directions": [[4,-1], [4,0], [4,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 100
+        },
+        {
+            "name": "expu",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : false,
+            "transforms": [],
+            "grow": [
+                {"to": "expu", "probability": 0.02}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
+            ],
+            "decay": 0.8,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },                
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
+            ],
+            "movements": [
+                {
+                    "directions": [[-2,-3], [0,-3], [2,-3]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 100
+        },
+        {
+            "name": "expd",
+            "color": { "r": 220, "g": 80, "b": 20 },
+            "display": "ℵ",
+            "lifespan": -1,
+            "shimmer" : 100,
+            "show" : false,
+            "transforms": [],
+            "grow": [
+                {"to": "expd", "probability": 0.02}
+            ],
+            "destroy": [
+                { "from": "sand", "probability": 0.3 },
+                { "from": "water", "probability": 0.3 },
+                { "from": "ice", "probability": 0.3 },
+                { "from": "stone", "probability": 0.3 },
+                { "from": "lava", "probability": 0.3 },
+                { "from": "steam", "probability": 0.3 },
+                { "from": "fire", "probability": 0.3 },
+                { "from": "spout", "probability": 0.3 },
+                { "from": "acid", "probability": 0.3 },
+                { "from": "torch", "probability": 0.3 }
+            ],
+            "decay": 0.8,
+            "interactions": [
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 1.0
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
+                },                
+                { "type": "change", "to": "fire", "from": "plant", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "stem", "probability": 0.3 },
+                { "type": "change", "to": "fire", "from": "oil", "probability": 0.3 }
+            ],
+            "movements": [
+                {
+                    "directions": [[-1,4], [0,4], [1,4]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 100
+        },
+        {
+            "name": "stem",
+            "color": { "r": 170, "g": 170, "b": 170 },
+            "display": "&",
+            "lifespan": -1,
+            "shimmer" : 26,
+            "show" : true,
+            "transforms": [],
+            "grow": [
+                {"to": "stem", "probability": 0.002}
+            ],
+            "destroy": [],
+            "decay": 0.0,
+            "interactions": [],
+            "movements": [
+                {
+                    "directions": [[0,1]],
+                    "probability": 1.0
+                },
+                {
+                    "directions": [[-1,1], [1,1]],
+                    "probability": 1.0
+                }
+            ],
+            "density": 2
+        }
+    ]
+}
