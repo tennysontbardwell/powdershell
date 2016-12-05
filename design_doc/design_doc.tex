@@ -48,12 +48,10 @@ The powder game first appeared on dan-ball.jp at \url{http://dan-ball.jp/en/java
 
 Our implementation is quick enough to be played on low end machines, flexible enough to adapt to different screen sizes, and intuitive enough so that even a new player can play effectively. 
 
-This implementation of the ASCII powder game involves minimal physics and no velocity vectors. We save the state of the pixel location as a mutable 2D array. The engine outputs the next state of the game based off the current state and on a user's selected element and mouse clicks. All the materials have their own Json file with a list of traits. This makes adding a new element simple. For example, sand can be defined by traits such as color = yellow and movement = slightly viscous. Some elements will also be able to respond to other elements for example, ice will turn all water pixels into ice. A game can be saved and stored to a file.
+This implementation of the ASCII powder game involves minimal physics and no velocity vectors. We save the state of the pixel location as a mutable 2D array. The engine outputs the next state of the game based off the current state and on a user's selected element and mouse clicks. All the materials are defined in a JSON file with a list of rules. This makes adding a new element simple. For example, sand can be defined by traits such as color = yellow. Some elements are also able to respond to other elements for example, ice turns all water pixels into ice. A game can be saved and stored to a file.
 
 \section{Architecture}
-TODO
-
-All modules will communicate with the main module only (with the exception of their
+All modules communicate with the main module only (with the exception of their
 peripherals such as Lamda Term or the file system). This allows only one module, the
 main module, to be solely concerned with the coordination of the roles of different
 modules. See figure \ref{fig:com} for the communication and interfaces between modules.
@@ -76,8 +74,6 @@ throughout our program at runtime.
 \end{figure}
 
 \section{System design}
-TODO
-
 Each module is completely separate except for 1) main, which manages the coordination
 of the whole program and 2) the sharing of data objects between modules. This can be
 seen below in figure \ref{fig:dep}.
@@ -90,14 +86,11 @@ seen below in figure \ref{fig:dep}.
 \end{figure}
 
 \subsection{Modules}
-TODO
-
 \begin{description}
   \item[main:] coordinates all other modules, passing them the required state/message updates/rules for them to function and ordering the actions of other modules
   \item[load/save:] loads rules and states from file to memory representations and reverses the process to save states (never saves rules)
   \item[gui:] displays the current state to the user using ASCII text through the terminal, also records user interactions and packages them as model updates
   \item[updater:] manages all changes to the state from updating frame to frame and by processing model updates
-  \item[clock:] prevents the game from running pass a set frame rate
 \end{description}
 
 \subsection{Updater Logic}
@@ -134,12 +127,12 @@ See an example below in figure \ref{fig:water}.
 \end{figure}
 
 \section{Data}
-The grid maintain the location of particles and the name of the particle at that location. The rules are held seperately in its own json file and maintains characteristics such as density, iteractions, color, change, destroy, and grow. The grid is represented as a (location_t * particle_t) array array, where location_t is type int*int and particle_t is of type {name = string}. 
+The grid maintains the location of particles and the name of the particle at that location. The rules are held separately in its own json file and maintains characteristics such as density, interactions, color, change, destroy, and grow. The grid is represented as a (location\_t * particle\_t) array array, where location\_t is type int*int and particle\_t is of type {name = string}. 
 
-Rules is an assoc list with the name of an elem associated with an elem_rules. Elem_rules record consits of 
+Rules is an association list with the name of an elem associated with an elem\_rules. Elem\_rules record consists of 
 a bunch of tuples, records, and lists, that are associated with an element. Something like color of an element, 
-density of an element, and transforming that elemnent to a different element with a certain probability would
-all belong under Elem_rules.
+density of an element, and transforming that element to a different element with a certain probability would
+all belong under Elem\_rules.
 
 \section{External Dependencies}
 We used Lambda-Term (\url{https://github.com/diml/lambda-term}), an open source library that allows us to interface with the terminal, not just through keyboard input, but also with the mouse. We also used Yojson for parsing JSON data from our rules file and from save files.
@@ -151,25 +144,21 @@ personally spent hours playing the game to test the GUI and have given the game 
 We have been holding our team accountable be checking everyone meets their test plan at our bi-weekly meeting and scan over the test suite. Of course, all the code and test suites for each module will be available on the GitHub.
 
 \section{Division Of Labor}
-Tennyson designed rules, updater, and rules json parsing. 
-
-Quinn implemented the interface for model, writing the grid to a json file, 
-reading a json file to a grid, and wrote test cases for model and filemanager. 
-She spent some time making json parsing to a grid more efficient so that only the 
-locations that are not empty show up in the json file. She did 50 hours of work.
-
-Sitar implemented GUI which involved drawing particles to the terminal and 
-managing the entire user interface. He spent over 70 hours deciphering the quirks 
-of lambda-term and figuring out how to get the best user experience out of the terminal.
-Sitar also implemented the asynchronous logic of main.ml and designed many of 
-the elements in the rules JSON.
-
 
 \begin{description}
   \item[Tennyson T Bardwell (ttb33):]
     Implemented the majority of the updater's logic which increments from one step to the next and applied user input to the grid. Also, defined the initial rules for sand and water, implementing the JSON structure for the rules of these elements, the in memory representation, and the parsing of the JSON. Wrote many updater test cases. Estimated hours of work: 40.
   \item[Quinn Halpin (qmh4):]
+    Quinn implemented the interface for model, writing the grid to a json file, 
+    reading a json file to a grid, and wrote test cases for model and filemanager. 
+    She spent some time making json parsing to a grid more efficient so that only the 
+    locations that are not empty show up in the json file. She did 50 hours of work.
   \item[Sitar Harel (sh927):]
+    Sitar implemented GUI which involved drawing particles to the terminal and 
+    managing the entire user interface. He spent over 70 hours deciphering the quirks 
+    of lambda-term and figuring out how to get the best user experience out of the terminal.
+    Sitar also implemented the asynchronous logic of main.ml and designed many of 
+    the elements in the rules JSON.
 \end{description}
 
 \end{document}
