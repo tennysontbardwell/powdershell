@@ -14,11 +14,6 @@ type move_t =
   | Add_exc of location_t * name_t * probability_t
   | Destroy_exc of location_t * name_t * probability_t
 
-(* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
-(* This converts an a' option list to a' list, removing the nones *)
-let deoptionalize l = 
-    List.concat @@ List.map (function | None -> [] | Some x -> [x]) l
-
 let rec receive_input inp g = match inp with
 | Reset::t -> let empty = ArrayModel.empty_grid (ArrayModel.get_grid_size g) in
     ArrayModel.deep_copy empty g; receive_input t g
@@ -36,6 +31,7 @@ let rec receive_input inp g = match inp with
 (* this is [start] after moving 1 in direction [dir] *)
 let translate start dir = (fst start + (fst dir), snd start + (snd dir))
 
+(* returns true if this move can be applied to the grid in its current state *)
 let can_apply_move grid rules move = match move with
 | Move_exc (name, start, final, _) ->
   if ArrayModel.in_grid grid final then
@@ -73,6 +69,8 @@ let get_movements elm_rules rules loc name grid = elm_rules.movements
   |> List.fold_left (@) []
   |> List.filter (can_apply_move grid rules)
 
+(* given a location, returns a list of its 8 neighboring cells, whether they
+ * are valid locations or not *)
 let neighbors x y =
   [x+1,y+1; x+1,y; x+1,y-1; x,y-1; x-1,y-1; x-1, y; x-1,y+1; x,y+1]
 
@@ -93,6 +91,8 @@ let get_changes elm_rules rules (x,y) name grid =
     |> List.fold_left (@) [] in
   interactions |> List.filter (can_apply_move grid rules)
 
+(* this is all legal [Add_exc]s for a particular location on any grid which
+ * originate from grow rules *)
 let get_grows elm_rules (x,y) name grid =
   if List.length elm_rules.grow > 0 then
     let get_add_exc loc =
@@ -104,6 +104,8 @@ let get_grows elm_rules (x,y) name grid =
     neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
   else []
 
+(* this is all legal [Destroy_exc]s for a particular location on any grid which
+ * originate from destroy rules *)
 let get_destroy elm_rules (x,y) name grid =
   if List.length elm_rules.destroy > 0 then
     let get_add_exc loc =
@@ -117,9 +119,14 @@ let get_destroy elm_rules (x,y) name grid =
     neighbors x y |> List.map get_add_exc |> List.fold_left (@) []
   else []
 
+(* this is all legal [Destroy_exc]s for a particular location on any grid which
+ * originate from decay rules *)
 let get_decays elm_rules loc name grid =
   [Destroy_exc (loc, name, elm_rules.decay)]
 
+(* this is all legal [Change_exc]s for a particular location on any grid which
+ * originate from transform rules, which is all [Change_exc]s for this grid
+ * location*)
 let get_transforms elm_rules loc name =
   List.map (fun (n, p) -> Change_exc (loc, name, n, p)) elm_rules.transforms
 
@@ -138,6 +145,11 @@ let move_options rules grid (x,y) =
   end
   | None -> []
 
+(* takes a list of [move_t]s and 'rolls the dice' on each one, removing it if
+  * its is not selected to be applied. For example, a rule [move_t] with
+  * probability 0.0 will never be present in the returned list, while one with
+  * probability 1.0 will always be present in the returned list. An element
+  * with probaility 0.4 will be in the returned list 4 out of 10 times *)
 let filter_moves (moves : move_t list) : move_t list =
   let prob_filter item p = if Random.float 1. < p then Some item else None in
   let filter (item : move_t) : move_t option = match item with
@@ -145,6 +157,8 @@ let filter_moves (moves : move_t list) : move_t list =
     | Destroy_exc (_,_,p) -> prob_filter item p in
   moves |> List.map filter |> deoptionalize
 
+(* applies a single move to the grid and returns that newly updated grid. only
+ * applies the move to the grid if [can_apply] for this move returns true. *)
 let apply rules grid move =
   if can_apply_move grid rules move then
     match move with
@@ -165,6 +179,9 @@ let apply rules grid move =
     | Destroy_exc (loc, _, _) -> ArrayModel.set_pixel loc None grid
   else grid
 
+(* takes a list of moves to apply to the grid and first 'rolls the dice' as to
+ * whether or not to apply each rule, and then applies the rules in a random
+ * order (ignoring rules that cannot be applied when they are reached) *)
 let apply_moves grid rules moves =
   moves |> shuffle |> List.fold_left (apply rules) grid
 

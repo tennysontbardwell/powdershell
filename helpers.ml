@@ -23,21 +23,24 @@ let rec transpose list = match list with
 (* applies f to x a total of i times. i >= 0 *)
 let rec foldi i f x = if i==0 then x else foldi (i-1) f (f x)
 
-(* https://stackoverflow.com/questions/15095541/how-to-shuffle-list-in-on-in-ocaml *)
-(* randomizes a list *)
-(* let shuffle d = *)
-(*     let nd = List.map (fun c -> (Random.bits (), c)) d in *)
-(*     let sond = List.sort compare nd in *)
-(*     List.map snd sond *)
-
 (* https://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html *)
+(* swaps two indexes of an array *)
 let swap a i j =
   let t = a.(i) in
   a.(i) <- a.(j);
   a.(j) <- t
 
 (* https://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html *)
+(* uses [swap], does a quick, linear time, 'shuffle' (mix up of order) *)
 let shuffle_array a =
   Array.iteri (fun i _ -> swap a i (Random.int (i+1))) a; a
 
+(* https://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html *)
+(* uses [shuffle_array] to shuffle a list *)
 let shuffle l = l |> Array.of_list |> shuffle_array |> Array.to_list
+
+(* https://stackoverflow.com/questions/21674947/ocaml-deoptionalize-a-list-is-there-a-simpler-way *)
+(* This converts an a' option list to a' list, removing the nones *)
+let deoptionalize l = 
+    List.concat @@ List.map (function | None -> [] | Some x -> [x]) l
+

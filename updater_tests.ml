@@ -7,6 +7,7 @@ open ArrayModel
 open Helpers
 
 let ex_jsons = concat (concat current_dir_name "test_files") "example_jsons"
+let rules_json = concat (concat current_dir_name "rules") "default.json"
 
 let grid_printer grid = String.concat "" ["\n"; to_string grid; "\n"]
 
@@ -69,7 +70,7 @@ let updater_tests = [
     );
   "layer of water" >::
     (fun _ ->
-      let r = concat "rules" "rules.json" |> read_rules in
+      let r = rules_json |> read_rules in
       let w = (Some {name="water"}) in
       let g = empty_grid (4,4)
         |> set_pixel (0,0) w
@@ -86,7 +87,7 @@ let updater_tests = [
     );
   "layer of water one on right top" >::
     (fun _ ->
-      let r = concat "rules" "rules.json" |> read_rules in
+      let r = rules_json |> read_rules in
       let w = (Some {name="water"}) in
       let g = empty_grid (4,4)
         |> set_pixel (3,2) w
@@ -103,7 +104,7 @@ let updater_tests = [
     );
   "layer of water one on left top" >::
     (fun _ ->
-      let r = concat "rules" "rules.json" |> read_rules in
+      let r = rules_json |> read_rules in
       let w = (Some {name="water"}) in
       let g = empty_grid (4,4)
         |> set_pixel (0,3) w
@@ -120,7 +121,7 @@ let updater_tests = [
     );
   "layer of water from wall on left side" >::
     (fun _ ->
-      let r = concat "rules" "rules.json" |> read_rules in
+      let r = rules_json |> read_rules in
       let w = (Some {name="water"}) in
       let g = empty_grid (4,4)
         |> set_pixel (0,0) (Some {name="water"})
@@ -137,7 +138,7 @@ let updater_tests = [
     );
   "layer of water from wall on right side" >::
     (fun _ ->
-      let r = concat "rules" "rules.json" |> read_rules in
+      let r = rules_json |> read_rules in
       let w = (Some {name="water"}) in
       let g = empty_grid (4,4)
         |> set_pixel (3,0) w
