@@ -113,7 +113,8 @@
             "destroy": [
                 { "from": "expu", "probability": 0.5 },
                 { "from": "expl", "probability": 0.5 },
-                { "from": "expr", "probability": 0.5 }
+                { "from": "expr", "probability": 0.5 },
+                { "from": "expd", "probability": 0.5 }
             ],
             "decay": 0.0,
             "interactions": [
@@ -210,6 +211,30 @@
                     "from": "plant",
                     "to": "fire",
                     "probability": 0.5
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expr",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expl",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expu",
+                    "probability": 0.2
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 1.0
                 },
                 {
                     "type": "change",
