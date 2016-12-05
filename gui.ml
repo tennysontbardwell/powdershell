@@ -145,6 +145,9 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     let box = new vbox in
     let message = new label str in
     editor#bind
+       [{control = false; meta = false; shift = false; code = Escape}]
+       [LTerm_edit.Custom (fun () -> pop_layer ())];
+    editor#bind
        [{control = false; meta = false; shift = false; code = Enter}]
        [LTerm_edit.Custom (fun () -> pop_layer (); callback editor#text)];
     frame#set editor;
@@ -152,9 +155,11 @@ class gui_ob push_layer pop_layer exit_ = object(self)
     box#add frame;
     layer#set box;
     layer in 
-  let load_modal = create_textbox "What save file would you like to load?"
+  let load_modal = create_textbox 
+    "What save file would you like to load?\nPress enter to load or esc to cancel."
     (fun str -> ui.event_buffer <- (Load str)::(ui.event_buffer)) in
-  let save_modal = create_textbox "What would you like to call this save?"
+  let save_modal = create_textbox 
+    "What would you like to name this save?\nPress enter to save or esc to cancel."
     (fun str -> ui.event_buffer <- (Save str)::(ui.event_buffer)) in
 
   let actions = [
