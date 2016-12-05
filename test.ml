@@ -9,6 +9,4 @@ let tests = "test suite" >::: ( []
   @ model_tests
 )
 
-let () = (fun _ -> Filename.concat ex_jsons "rules.json" |> Filemanager.read_rules |> ignore) ()
-
 let _ = run_test_tt_main tests
