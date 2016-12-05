@@ -1,13 +1,4 @@
-(* type name_t = unit *)
-(* type color_t = unit *)
-(* type location_t = unit *)
-(* type particle_t = unit *)
-(* type grid_t = unit *)
-(* type input_t = unit *)
-
 type name_t = string
-
-(*type color_t = string*)
 
 type color_t = int*int*int
 
@@ -17,7 +8,6 @@ type particle_t = {name: name_t}
 
 type grid_dimensions = { mutable row: int; mutable col: int}
 
-(* the type of an input *)
 type input_t =
   ElemAdd of {elem: string; loc: int * int;} | Reset | Quit | Save | Load
 

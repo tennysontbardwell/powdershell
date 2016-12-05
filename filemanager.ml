@@ -70,15 +70,14 @@ let parse_elm j : (name_t * elem_rules_t) =
     }
   )
 
-(* TODO: finish *)
 let read_rules path =
   let j = Yojson.Basic.from_file path in
   (* let fps = j |> member "fps" |> to_int in *)
   let elements = j |> member "elements" |> to_list in
   elements |> List.map parse_elm |> gen_rules
 
-(*[write_state] writes a grid into a file and places file at "grid.json"*)
-let write_state (gr:ArrayModel.grid_t) : file_path_t = 
+(*[write_state] writes a grid into a file and places file at path inputted*)
+let write_state (gr:ArrayModel.grid_t) path : file_path_t = 
   let (r,c) = Model.ArrayModel.get_grid_size gr in
   `Assoc 
     [("rows", `Int r); ("cols", `Int c); ("grid", `List (Model.ArrayModel.fold (fun acc (x,y) part_opt -> 
@@ -86,7 +85,7 @@ let write_state (gr:ArrayModel.grid_t) : file_path_t =
       | Some p -> acc@[(`Assoc [("loc", `List [`Int x; `Int y]); ("name", `String p.name)])]
       | None -> acc ) 
     [] gr ))] 
-    |> Yojson.Basic.to_file "grid.json"; "grid.json"
+    |> Yojson.Basic.to_file path; path
 
 let parse_name j = 
   j |> member "name" |> to_string
@@ -101,15 +100,18 @@ let to_tuple lst = begin
       (Format_error "the directions could not be parsed for an element")
   end
 
-(*[read_state] reads a json file from a path and outputs a grid*)
 let read_state path =
-  let j = Yojson.Basic.from_file path in
-  let grid = j |> member "grid" |> to_list in
-  let name_lst = grid |> List.map parse_name in
-  let loc_lst = grid |> List.map parse_loc |> List.map (to_tuple) in
-  let r = j |> member "rows" |> to_int in
-  let c = j |> member "cols" |> to_int in
-  let g = j |> member "grid" |> to_list in
-  let gr = Model.ArrayModel.empty_grid (r,c) in
-  List.iteri (fun i loc -> let part = List.nth name_lst i in 
+  try 
+    let j = Yojson.Basic.from_file path in
+    let grid = j |> member "grid" |> to_list in
+    let name_lst = grid |> List.map parse_name in
+    let loc_lst = grid |> List.map parse_loc |> List.map (to_tuple) in
+    let r = j |> member "rows" |> to_int in
+    let c = j |> member "cols" |> to_int in
+    let g = j |> member "grid" |> to_list in
+    let gr = Model.ArrayModel.empty_grid (r,c) in
+    List.iteri (fun i loc -> let part = List.nth name_lst i in 
     Model.ArrayModel.set_pixel loc (Some {name = part}) gr; ()) loc_lst; gr
+  with _ -> Model.ArrayModel.empty_grid (10,10)
+
+

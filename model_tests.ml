@@ -5,21 +5,20 @@ open Model
 open ArrayModel
 
 (*
- val indices_of_particle : grid_t -> particle_t -> location_t list
+    val indices_of_particle : grid_t -> particle_t -> location_t list
     val particle_at_index : grid_t -> location_t -> particle_t option          4 
     val empty_grid : int * int -> grid_t                                       2
-    val to_list : grid_t -> particle_t list list                               1 
+    val to_list : grid_t -> (location_t * particle_t) list                     1 
     val get_grid_size : grid_t -> int * int                                    4
     val set_pixel : location_t -> particle_t option -> grid_t -> grid_t        4
     val empty_grid : int * int -> grid_t                                       - 
     val particle_to_string : particle_t option -> string                        
     val to_string : grid_t -> string
-    val create_grid : (location_t*particle_t) array array -> grid_t
-    val unwrap_grid : grid_t -> (location_t*particle_t) array array
-    val in_grid : grid_t -> location_t -> bool
-    val deep_copy : grid_t -> grid_t -> unit
-    val fold : ('a -> location_t -> particle_t -> 'a) -> 'a -> grid_t -> 'a
-
+    val create_grid : (location_t*particle_t) array array -> grid_t            2
+    val in_grid : grid_t -> location_t -> bool                                 4
+    val deep_copy : grid_t -> grid_t -> unit                                   3
+    val fold : ('a -> location_t -> particle_t option-> 'a) -> 'a -> grid_t -> 'a 
+    val iter : (location_t -> particle_t option-> 'a) -> grid_t -> unit
 *)
 let r_sm = [|(0,0),{name= ""}; (0,1),{name = ""}|]
 let r_sm2 = [|(1,0),{name= ""}; (1,1),{name = ""}|]
@@ -123,6 +122,57 @@ let model_tests = [
       let mod_grid_2 = Model.ArrayModel.set_pixel (1,0) (Some {name = "water"}) mod_grid in
       assert_equal (Some {name = "water"}) (Model.ArrayModel.particle_at_index mod_grid_2 (1, 0)) 
     );
-
+  "16: in_grid" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      assert_equal true (ArrayModel.in_grid gr (1, 0)) 
+    );
+  "17: in_grid 2" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      assert_equal false (ArrayModel.in_grid gr (1, 3)) 
+    );
+  "18: in_grid 3" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      assert_equal false (ArrayModel.in_grid gr (3, 1)) 
+    );
+  "19: in_grid 4" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      assert_equal false (ArrayModel.in_grid gr ((-1), 1)) 
+    );
+  "20: in_grid 5" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      assert_equal false (ArrayModel.in_grid gr (1, (-1))) 
+    );
+  "21: deep_copy" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (2,2) in
+      let mod_grid = ArrayModel.set_pixel (0,0) (Some {name = "sand"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (1,0) (Some {name = "water"}) mod_grid in
+      assert_equal mod_grid_2 (ArrayModel.deep_copy mod_grid_2 gr; gr) 
+    );
+  "22: deep_copy 2" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (6,7) (Some {name = "water"}) mod_grid in
+      assert_equal mod_grid_2 (ArrayModel.deep_copy mod_grid_2 gr; gr) 
+    );
+  "23: deep_copy 3" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (6,7) (Some {name = "water"}) mod_grid in
+      assert_equal mod_grid_2 (ArrayModel.deep_copy mod_grid_2 mod_grid; mod_grid) 
+    );
+  "24: ind_of_part" >::
+    (fun _ ->
+      let gr = ArrayModel.empty_grid (5,3) in
+      let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
+      let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "balloon"}) mod_grid in
+      assert_equal [(3,2);(1,0)] (ArrayModel.indices_of_particle mod_grid_2 {name = "balloon"}) 
+    );
 ]
-
