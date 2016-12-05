@@ -132,5 +132,5 @@ module ArrayModel: Model = struct
       done
 
     let deep_copy (from_g:grid_t) (to_g:grid_t) = 
-      iter (fun loc part_opt -> set_pixel loc part_opt to_g) from_g
+      iter (fun loc _ -> set_pixel loc (particle_at_index from_g loc) to_g) to_g
 end
