@@ -1,4 +1,3 @@
-open Clock
 open Gui
 open Lwt
 open Updater
@@ -7,13 +6,14 @@ open LTerm_geom
 open Rules
 open Filemanager
 
+(* type of game that is passed through the game cycle *)
 type game_t = {
   gui : gui_ob;
   grid : ArrayModel.grid_t;
   rules: rules_t;
-  clock: clock_t;
 } 
 
+(* recursive game loop. waits 0.04 seconds after every frame to maintain fps *)
 let rec execute game _ = 
   let inp = game.gui |> get_inputs in
   let grid = receive_input inp game.grid in
@@ -23,6 +23,7 @@ let rec execute game _ =
   >>= fun game -> draw_to_screen game.grid game.gui |> return
   >>= fun _ -> Lwt_unix.sleep 0.04 >>= execute game
 
+(* run this to execute the game *)
 let run rules = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
         LTerm_widget.prepare_simple_run () in
@@ -31,8 +32,7 @@ let run rules = Lwt_main.run (
     setup_gui rules term gui_ob;
     let (c, r) = get_window_size gui_ob in
     let g = ArrayModel.empty_grid (c, r) in
-    let clk = new_clk in
-    let game = {gui = gui_ob; grid = g; rules = rules; clock = clk} in
+    let game = {gui = gui_ob; grid = g; rules = rules} in
     async (execute game);
     do_run gui_ob ))
 
