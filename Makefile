@@ -2,7 +2,9 @@ run: compile
 	./main.byte
 
 test: compile
+	mkdir test_build
 	./test.byte
+	rm -rf test_build
 
 compile:
 	ocamlbuild -pkgs oUnit,yojson,str,lambda-term \
