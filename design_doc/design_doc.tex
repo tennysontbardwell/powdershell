@@ -44,13 +44,15 @@
 \end{enumerate}
 
 \subsection{Description}
-The powder game first appeared on dan-ball.jp at \url{http://dan-ball.jp/en/javagame/dust/} and has since been copied, ported, and expanded many times over. However, to this day, there exists no terminal based, ASCII-only, playable version of this beloved game. We intend to end this atrocity.
+The powder game first appeared on dan-ball.jp at \url{http://dan-ball.jp/en/javagame/dust/} and has since been copied, ported, and expanded many times over. However, to this day, there exists no terminal based, ASCII-only, playable version of this beloved game---until now. We have corrected this atrocity.
 
-Our implementation will be quick enough to be played on low end machines, flexible enough to adapt to different screen sizes, and intuitive enough so that even a new player can play effectively. 
+Our implementation is quick enough to be played on low end machines, flexible enough to adapt to different screen sizes, and intuitive enough so that even a new player can play effectively. 
 
-We intend for the first implementation of the ASCII powder game to involve minimal physics, no velocity vectors. We want to save the state of the pixel location as a mutable 2D array. The engine outputs the next state of the game based off the current state and on a user's selected element and mouse clicks. All the materials have their own Json file with a list of traits. This makes adding a new element simple. For example, sand can be defined by traits such as color = yellow and  movement = slightly viscous. Some elements will also be able to respond to other elements for example, ice will turn all water pixels into ice. A game can be saved and stored to a file.
+This implementation of the ASCII powder game involves minimal physics and no velocity vectors. We save the state of the pixel location as a mutable 2D array. The engine outputs the next state of the game based off the current state and on a user's selected element and mouse clicks. All the materials have their own Json file with a list of traits. This makes adding a new element simple. For example, sand can be defined by traits such as color = yellow and movement = slightly viscous. Some elements will also be able to respond to other elements for example, ice will turn all water pixels into ice. A game can be saved and stored to a file.
 
 \section{Architecture}
+TODO
+
 All modules will communicate with the main module only (with the exception of their
 peripherals such as Lamda Term or the file system). This allows only one module, the
 main module, to be solely concerned with the coordination of the roles of different
@@ -74,6 +76,8 @@ throughout our program at runtime.
 \end{figure}
 
 \section{System design}
+TODO
+
 Each module is completely separate except for 1) main, which manages the coordination
 of the whole program and 2) the sharing of data objects between modules. This can be
 seen below in figure \ref{fig:dep}.
@@ -86,6 +90,8 @@ seen below in figure \ref{fig:dep}.
 \end{figure}
 
 \subsection{Modules}
+TODO
+
 \begin{description}
   \item[main:] coordinates all other modules, passing them the required state/message updates/rules for them to function and ordering the actions of other modules
   \item[load/save:] loads rules and states from file to memory representations and reverses the process to save states (never saves rules)
@@ -128,15 +134,28 @@ See an example below in figure \ref{fig:water}.
 \end{figure}
 
 \section{Data}
+TODO
+
 The system will need to maintain what particle if any is currently residing at each location on the screen, what are the characteristics of that particle, and what are the rules that the game must follow. We will store the grid representing all the possible locations for characters on the screen in a hash table. We plan to store the type of a particle as a record. 
 
 \section{External Dependencies}
-We will be using Lambda-Term (\url{https://github.com/diml/lambda-term}) and open source library that will allow us to interface with the terminal, not just through keyboard input, but also with the mouse. We will also be using Yojson for parsing JSON data from our rules file and from save files.
+We used Lambda-Term (\url{https://github.com/diml/lambda-term}), an open source library that allows us to interface with the terminal, not just through keyboard input, but also with the mouse. We also used Yojson for parsing JSON data from our rules file and from save files.
 
-\section{Testing Plan}
+\section{Testing}
+TODO
+
 We plan on testing our system in three ways. First, we shall have black box testing based on our interface files to test each function. Second, we shall have glass box testing based on implementation of each function in each module. Third, we shall test by playing the game. This method will be important for easily testing the display components. 
 
 To hold our team accountable we shall be checking everyone meets their test plan at our bi-weekly meeting and scan over the test suite. Of course, all the code and test suites for each module will be available on the GitHub. 
+
+\section{Division Of Labor}
+
+\begin{description}
+  \item[Tennyson T Bardwell (ttb33):]
+    Implemented the majority of the updater's logic which increments from one step to the next and applied user input to the grid. Also defined the initial rules for sand and water, implementing the JSON structure for the rules of these elements, the in memory representation, and the parsing of the JSON. Wrote many updater test cases. Estimated hours of work: 40.
+  \item[Quinn Halpin (qmh4):]
+  \item[Sitar Harel (sh927):]
+\end{description}
 
 \end{document}
 
