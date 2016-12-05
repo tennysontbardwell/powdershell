@@ -1,3 +1,21 @@
+commit 226043e7059be58a8c99b7ad67aaaeb6f2ad1d2c
+Author: Tennyson Taylor Bardwell <tennysontaylorbardwell@gmail.com>
+Date:   Mon Dec 5 04:05:51 2016 -0500
+
+    removed a dumb file
+
+ setup.sh | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit feb233e8344336d643afa559bdd541002ab409cb
+Author: Tennyson Taylor Bardwell <tennysontaylorbardwell@gmail.com>
+Date:   Mon Dec 5 04:03:21 2016 -0500
+
+    git log
+
+ gitlog.txt | 1876 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1876 insertions(+)
+
 commit 1fd5e1e0979ff08953abe0adc8231316deb7c802
 Merge: 7166fda 6c1c162
 Author: Tennyson Taylor Bardwell <tennysontaylorbardwell@gmail.com>
