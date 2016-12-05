@@ -552,6 +552,7 @@
                 { "from": "oil", "probability": 1.0 },
                 { "from": "acid", "probability": 1.0 },
                 { "from": "bomb", "probability": 1.0 },
+                { "from": "bolt", "probability": 1.0 },
                 { "from": "torch", "probability": 1.0 }
             ],
             "decay": 0.0,
@@ -605,12 +606,7 @@
             "show" : true,
             "transforms": [],
             "grow": [],
-            "destroy": [
-                {
-                    "from": "plant",
-                    "probability": 0.04
-                }
-            ],
+            "destroy": [],
             "decay": 0.0,
             "interactions": [
                 {
@@ -618,6 +614,12 @@
                     "from": "stem",
                     "to": "oil",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "plant",
+                    "to": "oil",
+                    "probability": 0.005
                 },
                 {
                     "type": "change",
