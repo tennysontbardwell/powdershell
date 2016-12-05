@@ -47,7 +47,7 @@ Right and left click to select elements from the element list on the right side.
 Select elements with right or left click to bind them to the respective button. \n
 Many useful tools can be found in the bottom toolbar and are also bound to keys!\n
 Keys are bound as follows:                                                      \n
-    'h' : open this help screen!                                                \n
+    'h' : open this help screen                                                 \n
     'q' : quit                                                                  \n
     'r' : reset game                                                            \n
     's' : save game to a file                                                   \n

@@ -96,6 +96,12 @@
                     "from": "stem",
                     "to": "ice",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "spout",
+                    "to": "ice",
+                    "probability": 0.05
                 }
             ],
             "movements": [],
@@ -142,7 +148,7 @@
         {
             "name": "glass",
             "color": { "r": 70, "g": 70, "b": 70 },
-            "display": "░",
+            "display": "▒",
             "lifespan": -1,
             "shimmer" : 9,
             "show" : true,
@@ -486,6 +492,7 @@
                 { "from": "spout", "probability": 1.0 },
                 { "from": "oil", "probability": 1.0 },
                 { "from": "acid", "probability": 1.0 },
+                { "from": "bomb", "probability": 1.0 },
                 { "from": "torch", "probability": 1.0 }
             ],
             "decay": 0.0,
@@ -503,7 +510,7 @@
         {
             "name": "spout",
             "color": { "r": 0, "g": 60, "b": 180 },
-            "display": "❌",
+            "display": "0",
             "lifespan": -1,
             "shimmer" : 0,
             "show" : true,
@@ -584,6 +591,7 @@
                 { "from": "fire", "probability": 0.03 },
                 { "from": "spout", "probability": 0.03 },
                 { "from": "oil", "probability": 0.03 },
+                { "from": "bomb", "probability": 0.03 },
                 { "from": "torch", "probability": 0.03 }
             ],
             "decay": 0.001,
@@ -593,6 +601,12 @@
                     "from": "stem",
                     "to": "acid",
                     "probability": 0.05
+                },
+                {
+                    "type": "change",
+                    "from": "bomb",
+                    "to": "expd",
+                    "probability": 0.00002
                 }
             ],
             "movements": [
@@ -692,7 +706,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[-4,-1], [-4,0], [-4,1]],
+                    "directions": [[-4,-2], [-4,0], [-4,2]],
                     "probability": 1.0
                 }
             ],
@@ -752,7 +766,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[4,-1], [4,0], [4,1]],
+                    "directions": [[4,-2], [4,0], [4,2]],
                     "probability": 1.0
                 }
             ],
@@ -812,7 +826,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[-2,-3], [0,-3], [2,-3]],
+                    "directions": [[-3,-3], [0,-3], [3,-3]],
                     "probability": 1.0
                 }
             ],
@@ -873,7 +887,7 @@
             ],
             "movements": [
                 {
-                    "directions": [[-1,4], [0,4], [1,4]],
+                    "directions": [[-3,3], [0,3], [3,3]],
                     "probability": 1.0
                 }
             ],
