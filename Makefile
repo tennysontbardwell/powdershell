@@ -11,7 +11,7 @@ test: compile
 	rm -rd test_build
 
 compile:
-	ocamlbuild -pkgs oUnit,yojson,str,lambda-term \
+	cd src && ocamlbuild -pkgs oUnit,yojson,str,lambda-term \
 		main.byte test.byte \
 
 check:
