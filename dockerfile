@@ -20,4 +20,5 @@ RUN cp /home/opam/src/main.byte /home/opam/main.byte
 
 USER opam
 WORKDIR /home/opam
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 CMD /bin/bash -c "/home/opam/main.byte"

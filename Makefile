@@ -1,5 +1,5 @@
 run: compile
-	./main.byte
+	src/main.byte
 
 test: compile
 	# ________________________________
@@ -11,8 +11,7 @@ test: compile
 	rm -rd test_build
 
 compile:
-	cd src && ocamlbuild -pkgs oUnit,yojson,str,lambda-term \
-		main.byte test.byte \
+	cd src && eval `opam config env` && ocamlbuild -pkgs oUnit,yojson,str,lambda-term main.byte test.byte
 
 check:
 	bash checkenv.sh && bash checktypes.sh
