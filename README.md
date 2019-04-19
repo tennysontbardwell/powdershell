@@ -14,6 +14,15 @@ If you have opam install and set up for OCaml 4.03.0 then run `opam install utop
 
 A fresh install of ubuntu should be able to run our project after `make install-ubuntu` is run. This will install OCaml and opam using apt-get and then install Powder Shell's dependencies.
 
+### Docker
+
+```bash
+docker run --privileged -it --rm -v $(pwd):/code ubuntu
+apt-get update
+apt-get install make
+cd /code
+make install-ubuntu
+```
 
 ## How To Run
 
