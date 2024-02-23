@@ -1,24 +1,20 @@
-FROM ocaml/opam
+FROM ocaml/opam:debian-10-ocaml-4.03
 
-RUN mkdir /home/opam/src
+RUN opam install utop yojson lambda-term.1.13 oUnit
 
+RUN mkdir /home/opam/{rules,saves,src,test_files}
 ADD Makefile /home/opam/
-RUN opam install utop yojson lambda-term oUnit
-
-ADD src /home/opam/src/
-RUN mkdir /home/opam/rules
 ADD rules /home/opam/rules
-RUN mkdir /home/opam/saves
-ADD rules /home/opam/saves
-RUN mkdir /home/opam/test_files
-ADD rules /home/opam/test_files
+ADD saves /home/opam/saves
+ADD test_files /home/opam/test_files
+ADD src /home/opam/src
 RUN sudo chown -R opam:opam /home/opam/src
 
-WORKDIR /home/opam/src
-RUN eval `opam config env` && ocamlbuild -pkgs oUnit,yojson,str,lambda-term main.byte
-RUN cp /home/opam/src/main.byte /home/opam/main.byte
+RUN cd /home/opam/src \
+  && eval `opam config env` \
+  && ocamlbuild -pkgs oUnit,yojson,str,lambda-term -cflags -ccopt,-static main.native main.byte \
+  && cp /home/opam/src/main.byte /home/opam
 
 USER opam
 WORKDIR /home/opam
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 CMD /bin/bash -c "/home/opam/main.byte"

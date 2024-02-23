@@ -1,0 +1,14 @@
+(lang dune 1.10)
+(name powdershell)
+(generate_opam_files true)
+
+(package
+ (name powdershell)
+ (synopsis "A package to install dev dependencies")
+ (depends
+  (ocaml
+   (= 4.03.0))
+  ounit
+  yojson
+  (lambda-term
+   (= 1.13))))
