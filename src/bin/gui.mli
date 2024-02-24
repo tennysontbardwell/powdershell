@@ -6,7 +6,7 @@ open Model
 (* gui_ob is an extension of the lambda term frame widget class and contains 
  * everything to do with the gui: input, user interface state, displaying grid *)
 class gui_ob : (LTerm_widget.modal_frame -> unit -> unit) 
-                -> (unit -> unit) -> (unit -> 'c) -> object 
+                -> (unit -> unit) -> (unit -> unit) -> object 
   inherit LTerm_widget.frame
 
   (* returns the input buffer *)

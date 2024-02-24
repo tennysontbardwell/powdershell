@@ -113,7 +113,7 @@ let read_state path =
     let g = j |> member "grid" |> to_list in
     let gr = Model.ArrayModel.empty_grid (r,c) in
     List.iteri (fun i loc -> let part = List.nth name_lst i in 
-    Model.ArrayModel.set_pixel loc (Some {name = part}) gr; ()) loc_lst; gr
+    Model.ArrayModel.set_pixel loc (Some {name = part}) gr |> ignore; ()) loc_lst; gr
   with _ -> Model.ArrayModel.empty_grid (10,10)
 
 

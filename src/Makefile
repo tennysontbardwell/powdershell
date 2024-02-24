@@ -30,7 +30,11 @@ install-ubuntu:
 	opam init -a --comp 4.03.0
 	opam switch -- 4.03.0
 	eval `opam config env`
-	opam install utop yojson lambda-term oUnit
+	opam install utop yojson lambda-term.1.13 oUnit
 
 install-dep:
-	opam install utop yojson lambda-term oUnit
+	opam install utop yojson lambda-term.1.13 oUnit
+
+.PHONY: dune
+dune:
+	eval `opam config env` && dune build @install

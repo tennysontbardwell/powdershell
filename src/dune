@@ -1,7 +1,8 @@
-(executables
- (names main)
- (libraries yojson oUnit str lambda-term))
+(env
+  (dev
+    (flags (:standard -w -A))))
 
-(install
- (section bin)
- (files (main.exe as powdershell)))
+; (rule
+; (target main.exe)
+; (deps   bin/main.exe)
+; (action (copy %{target} %{deps})))

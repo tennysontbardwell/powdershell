@@ -127,7 +127,7 @@ module ArrayModel: Model = struct
           let p = match part with
             | {name = ""} -> None
             | _ -> Some part
-          in f loc p; ()
+          in f loc p |> ignore; ()
         done
       done
 

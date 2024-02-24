@@ -1,0 +1,10 @@
+(executables
+ (names main)
+ (promote
+  (until-clean)
+  (into ../))
+ (libraries yojson oUnit str lambda-term))
+
+(install
+ (section bin)
+ (files (main.exe as powdershell)))
