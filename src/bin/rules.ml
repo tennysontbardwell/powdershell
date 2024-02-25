@@ -1,5 +1,7 @@
 type name_t = string
 
+exception Rule_not_found of name_t
+
 type probability_t = float
 
 type move_option_t = (int * int) list * probability_t
@@ -37,6 +39,6 @@ let gen_rules r_lst : rules_t =
     let add_to_ht (a, b) = Hashtbl.add ht a b in
     List.iter add_to_ht r_lst; (ht, name_lst)
 
-let lookup_rule (tbl, _) s = Hashtbl.find tbl s 
+let lookup_rule (tbl, _) s = try Hashtbl.find tbl s with Not_found -> raise (Rule_not_found s)
 
 let get_name_lst (_,name_lst) = name_lst

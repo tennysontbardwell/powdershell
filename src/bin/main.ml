@@ -36,4 +36,7 @@ let run rules = Lwt_main.run (
     async (execute game);
     do_run gui_ob ))
 
-let () = run (read_rules "rules/default.json")
+exception Bug
+let x () = try run (read_rules "rules/default.json") with Not_found -> raise Bug
+
+let () = raise Bug

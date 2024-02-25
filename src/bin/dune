@@ -3,6 +3,7 @@
  (promote
   (until-clean)
   (into ../))
+ (flags (:standard -cclib -static -cclib -no-pie))
  (libraries yojson oUnit str lambda-term))
 
 (install
