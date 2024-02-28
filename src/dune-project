@@ -1,13 +1,14 @@
-(lang dune 1.11)
+(lang dune 3.1)
 (name powdershell)
 (generate_opam_files true)
 
 (package
  (name powdershell)
+ (maintainers dev.null@gmail.com)
  (synopsis "A package to install dev dependencies")
  (depends
   (ocaml
-   (= 4.08))
+   (= 4.13.1))
   (ounit
    (= 2.2.7))
   (yojson

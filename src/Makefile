@@ -1,19 +1,19 @@
-.PHONY: run
-run: main.exe
-	src/main.byte
+.PHONY: run test build clean check install-dep
 
-.PHONY: test
-test: main.exe
-	rm -rd test_build || true
-	mkdir test_build
-	./test.byte
-	rm -rd test_build
+run: main.exe
+	main.exe
+
+test:
+	eval `opam config env` && dune runtest
+
+build: main.exe
+
+install-dep:
+	opam install ./powdershell.opam --deps-only
+# opam switch create . 4.08 -y --deps-only
 
 main.exe:
 	eval `opam config env` && dune build @install
 
-check:
-	bash checkenv.sh && bash checktypes.sh
-
 clean:
-	rm main.exe
+	rm -rf main.exe

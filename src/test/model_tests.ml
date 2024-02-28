@@ -1,8 +1,9 @@
 open OUnit2
-open Filemanager
+open Powdershell.Filemanager
+open Powdershell.Model
 open Filename
-open Model
 open ArrayModel
+module Model = Powdershell.Model
 
 let r_sm = [|(0,0),{name= ""}; (0,1),{name = ""}|]
 let r_sm2 = [|(1,0),{name= ""}; (1,1),{name = ""}|]

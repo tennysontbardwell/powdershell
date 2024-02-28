@@ -1,13 +1,13 @@
 open OUnit2
-open Filemanager
+open Powdershell.Filemanager
+open Powdershell.Updater
+open Powdershell.Model
+open Powdershell.Helpers
 open Filename
-open Updater
-open Model
 open ArrayModel
-open Helpers
 
-let ex_jsons = concat (concat current_dir_name "test_files") "example_jsons"
-let rules_json = concat (concat current_dir_name "rules") "default.json"
+let ex_jsons = List.fold_left concat current_dir_name ["resources"; "example_jsons"]
+let rules_json = List.fold_left concat current_dir_name [".."; "rules"; "default.json"]
 
 let grid_printer grid = String.concat "" ["\n"; to_string grid; "\n"]
 
