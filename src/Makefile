@@ -9,7 +9,11 @@ test:
 build: main.exe
 
 install-dep:
-	opam install ./powdershell.opam --deps-only
+	cp powdershell.opam.locked powdershell.opam.locked.bak
+	opam install . --locked --deps-only
+	opam lock .
+	diff -q powdershell.opam.locked powdershell.opam.locked.bak
+	rm powdershell.opam.locked.bak
 
 main.exe:
 	eval `opam config env` && dune build @check

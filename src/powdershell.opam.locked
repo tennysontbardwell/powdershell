@@ -1,0 +1,61 @@
+opam-version: "2.0"
+name: "powdershell"
+version: "~dev"
+synopsis: "A package to install dev dependencies"
+maintainer: "dev.null@gmail.com"
+depends: [
+  "base-bigarray" {= "base"}
+  "base-bytes" {= "base"}
+  "base-domains" {= "base"}
+  "base-nnp" {= "base"}
+  "base-threads" {= "base"}
+  "base-unix" {= "base"}
+  "cppo" {= "1.6.9"}
+  "csexp" {= "1.5.2"}
+  "dune" {= "3.14.0"}
+  "dune-configurator" {= "3.14.0"}
+  "lambda-term" {= "3.3.2"}
+  "logs" {= "0.7.0"}
+  "lwt" {= "5.7.0"}
+  "lwt_react" {= "1.2.0"}
+  "mew" {= "0.1.0"}
+  "mew_vi" {= "0.5.0"}
+  "ocaml" {= "5.1.1"}
+  "ocaml-base-compiler" {= "5.1.1"}
+  "ocaml-config" {= "3"}
+  "ocaml-options-vanilla" {= "1"}
+  "ocamlbuild" {= "0.14.3"}
+  "ocamlfind" {= "1.9.6"}
+  "ocplib-endian" {= "1.2"}
+  "ounit2" {= "2.2.7"}
+  "react" {= "1.2.2"}
+  "result" {= "1.5"}
+  "seq" {= "base"}
+  "stdlib-shims" {= "0.3.0"}
+  "topkg" {= "1.0.7"}
+  "trie" {= "1.0.0"}
+  "uchar" {= "0.0.2"}
+  "uucp" {= "15.1.0"}
+  "uuseg" {= "15.1.0"}
+  "uutf" {= "1.0.3"}
+  "yojson" {= "2.1.2"}
+  "zed" {= "3.2.3"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+pin-depends: [
+  "ocaml-base-compiler.5.1.1"
+  "https://github.com/ocaml/ocaml/archive/5.1.1.tar.gz"
+]

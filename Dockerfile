@@ -5,8 +5,7 @@ RUN apt update \
   && apt install -y ocaml-native-compilers camlp4-extra opam ocaml-findlib bzip2 m4
 
 USER opam
-ADD src/Makefile /home/opam/src/Makefile
-ADD src/powdershell.opam /home/opam/src/powdershell.opam
+ADD src/Makefile src/powdershell.opam* /home/opam/src/
 RUN sudo chown -R opam:opam /home/opam/src
 WORKDIR /home/opam/src
 
