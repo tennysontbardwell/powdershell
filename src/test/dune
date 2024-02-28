@@ -1,4 +1,4 @@
 (test
  (name test)
  (deps (source_tree resources) (source_tree ../rules))
- (libraries oUnit powdershell))
+ (libraries ounit2 powdershell))

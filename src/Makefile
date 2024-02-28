@@ -10,9 +10,9 @@ build: main.exe
 
 install-dep:
 	opam install ./powdershell.opam --deps-only
-# opam switch create . 4.08 -y --deps-only
 
 main.exe:
+	eval `opam config env` && dune build @check
 	eval `opam config env` && dune build @install
 
 clean:

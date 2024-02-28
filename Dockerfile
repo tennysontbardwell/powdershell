@@ -8,12 +8,10 @@ USER opam
 ADD src/Makefile /home/opam/src/Makefile
 ADD src/powdershell.opam /home/opam/src/powdershell.opam
 RUN sudo chown -R opam:opam /home/opam/src
-
 WORKDIR /home/opam/src
-# RUN make install-dep
 
-RUN opam install utop.2.12.1 yojson.2.1.2 lambda-term.3.3.2 oUnit.2.2.7
-# RUN opam install utop yojson lambda-term.3.3.2 oUnit
+RUN make install-dep
+# RUN opam install utop.2.12.1 yojson.2.1.2 lambda-term.3.3.2 oUnit.2.2.7
 
 ADD src /home/opam/src
 RUN sudo chown -R opam:opam /home/opam/src
