@@ -4,7 +4,7 @@
   (until-clean)
   (into ../))
  (flags (:standard -cclib -static -cclib -no-pie))
- (libraries yojson oUnit str lambda-term))
+ (libraries yojson oUnit str lambda-term powdershell))
 
 (install
  (section bin)

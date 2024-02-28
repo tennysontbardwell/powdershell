@@ -1,5 +1,4 @@
-open Model
-open Rules
+open Powdershell.Rules
 
 (*[run] takes in the rules of the game and a grid and executes the game. 
  * Once run is executed, run will be expected to constantly listen for user 

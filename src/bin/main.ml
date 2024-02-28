@@ -1,17 +1,17 @@
-open Gui
+open Powdershell.Gui
 open Lwt
-open Updater
-open Model
+open Powdershell.Updater
+open Powdershell.Model
 open LTerm_geom
-open Rules
-open Filemanager
+open Powdershell.Rules
+open Powdershell.Filemanager
 
 (* type of game that is passed through the game cycle *)
 type game_t = {
   gui : gui_ob;
   grid : ArrayModel.grid_t;
   rules: rules_t;
-} 
+}
 
 (* recursive game loop. waits 0.04 seconds after every frame to maintain fps *)
 let rec execute game _ = 
@@ -28,7 +28,7 @@ let run rules = Lwt_main.run (
   let do_run, push_layer, pop_layer, exit_ =
       LTerm_widget.prepare_simple_run () in
   Lazy.force LTerm.stdout >>= (fun term -> 
-    let gui_ob = new Gui.gui_ob push_layer pop_layer exit_ in
+    let gui_ob = new Powdershell.Gui.gui_ob push_layer pop_layer exit_ in
     setup_gui rules term gui_ob;
     let (c, r) = get_window_size gui_ob in
     let g = ArrayModel.empty_grid (c, r) in

@@ -199,6 +199,6 @@ let model_tests = [
       let mod_grid = ArrayModel.set_pixel (1,0) (Some {name = "balloon"}) gr in
       let mod_grid_2 = ArrayModel.set_pixel (3,2) (Some {name = "water"}) mod_grid in
         assert_equal ()
-        (ArrayModel.iter (fun loc part -> ArrayModel.set_pixel loc part mod_grid_2; () ) mod_grid_2) 
+        (ArrayModel.iter (fun loc part -> ArrayModel.set_pixel loc part mod_grid_2 |> ignore; () ) mod_grid_2) 
     ); 
 ]

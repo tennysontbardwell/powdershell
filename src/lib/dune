@@ -1,0 +1,3 @@
+(library
+ (name powdershell)
+ (libraries yojson oUnit str lambda-term))
