@@ -105,7 +105,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
         LTerm_draw.draw_string ctx a (cols+2) ~style:LTerm_style.({
           bold = None; underline = if x = lc || x = rc then Some true else None;
           blink = None; reverse = None; foreground = color; background = None
-        }) (Zed_string.of_utf8 (if x = lc then String.uppercase x else x));
+        }) (Zed_string.of_utf8 (if x = lc then String.capitalize_ascii x else x));
       a + f_space) f_off ui.element_list |> ignore;
 
     let control_string = 

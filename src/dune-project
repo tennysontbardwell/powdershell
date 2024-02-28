@@ -8,7 +8,7 @@
  (synopsis "A package to install dev dependencies")
  (depends
   (ocaml
-   (= 4.13.1))
+   (= 5.1.1))
   (ounit
    (= 2.2.7))
   (yojson

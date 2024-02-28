@@ -1,4 +1,4 @@
-FROM ocaml/opam:debian-11-ocaml-4.13
+FROM ocaml/opam:debian-12-ocaml-5.1
 
 USER root
 RUN apt update \
