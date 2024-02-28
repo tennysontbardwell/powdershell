@@ -1,4 +1,4 @@
-FROM ocaml/opam:debian-12-ocaml-5.1
+FROM ocaml/opam:debian-12-ocaml-5.1 as build
 
 USER root
 RUN apt update \
@@ -10,11 +10,15 @@ RUN sudo chown -R opam:opam /home/opam/src
 WORKDIR /home/opam/src
 
 RUN make install-dep
-# RUN opam install utop.2.12.1 yojson.2.1.2 lambda-term.3.3.2 oUnit.2.2.7
 
 ADD src /home/opam/src
 RUN sudo chown -R opam:opam /home/opam/src
-
+ 
 RUN cd /home/opam/src && make clean test main.exe
 
+FROM debian:12
+COPY --from=build /home/opam/src/main.exe /home/opam/src/*opam* /home/opam/src/rules /home/opam/src/saves /root/
+COPY --from=build /home/opam/src/rules /root/rules
+COPY --from=build /home/opam/src/saves /root/saves
+WORKDIR /root
 CMD /bin/bash -c "./main.exe"
