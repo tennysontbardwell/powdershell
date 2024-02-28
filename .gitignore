@@ -14,8 +14,9 @@ test_build/
 # ocamlbuild working directory
 _build/
 
-# ocamlbuild targets
+# ocaml compiled files
 *.byte
+*.exe
 *.native
 
 # oasis generated files

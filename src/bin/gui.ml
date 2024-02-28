@@ -1,4 +1,3 @@
-open CamomileLibrary.UChar
 open LTerm_key
 open LTerm_geom
 open LTerm_widget
@@ -106,13 +105,13 @@ class gui_ob push_layer pop_layer exit_ = object(self)
         LTerm_draw.draw_string ctx a (cols+2) ~style:LTerm_style.({
           bold = None; underline = if x = lc || x = rc then Some true else None;
           blink = None; reverse = None; foreground = color; background = None
-        }) (if x = lc then String.uppercase x else x); 
+        }) (Zed_string.of_utf8 (if x = lc then String.uppercase x else x));
       a + f_space) f_off ui.element_list |> ignore;
 
     let control_string = 
-      List.fold_left (fun a (x, _) -> a ^ x ^ "   ") "" ui.controls_list in        
-    LTerm_draw.draw_string ctx (rows + 2) 3 control_string; 
-    LTerm_draw.draw_string ctx (rows + 2) 48 (string_of_int ui.draw_radius);
+      List.fold_left (fun a (x, _) -> a ^ x ^ "   ") "" ui.controls_list in
+    LTerm_draw.draw_string ctx (rows + 2) 3 (Zed_string.of_utf8 control_string);
+    LTerm_draw.draw_string ctx (rows + 2) 48 (string_of_int ui.draw_radius |> Zed_string.of_utf8);
     let frame_rect = {row1 = 0; col1 = 0; row2 = rows + 2; col2 = cols + 2} in
     LTerm_draw.draw_frame ctx frame_rect LTerm_draw.Light;
 
@@ -131,7 +130,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
           LTerm_draw.draw_string ctx (y + 1) (x + 1) ~style:LTerm_style.({
           bold = None; underline = None; blink = Some false; 
           reverse = None; foreground = Some (rgb r g b); background = None})
-          details.display) ui.matrix
+          (Zed_string.of_utf8 details.display)) ui.matrix
 
   method get_input = let p = ui.event_buffer in ui.event_buffer <- []; p
 
@@ -177,10 +176,10 @@ class gui_ob push_layer pop_layer exit_ = object(self)
       layer in 
     let load_modal = create_textbox 
       "What save file would you like to load?\nPress enter to load or esc to cancel."
-      (fun str -> ui.event_buffer <- (Load str)::(ui.event_buffer)) in
+      (fun str -> ui.event_buffer <- (Load (Zed_string.to_utf8 str))::(ui.event_buffer)) in
     let save_modal = create_textbox 
       "What would you like to name this save?\nPress enter to save or esc to cancel."
-      (fun str -> ui.event_buffer <- (Save str)::(ui.event_buffer)) in
+      (fun str -> ui.event_buffer <- (Save (Zed_string.to_utf8 str))::(ui.event_buffer)) in
 
     let actions = [
       ("quit", fun _ -> self#exit_term);
@@ -253,7 +252,7 @@ class gui_ob push_layer pop_layer exit_ = object(self)
   (* handles all inputs of type LTerm_event.t *)
   method private handle_input e = match e with
     | LTerm_event.Key {code = LTerm_key.Char ch} -> begin
-      match char_of ch with
+      match Uchar.to_char ch with
       | 'q' | 'c' -> self#exit_term; true
       | 'r' -> ui.event_buffer <- Reset::(ui.event_buffer); true
       | 's' -> List.assoc "save" ui.controls_list 1; true

@@ -7,8 +7,10 @@
  (synopsis "A package to install dev dependencies")
  (depends
   (ocaml
-   (= 4.03.0))
-  ounit
-  yojson
+   (= 4.08))
+  (ounit
+   (= 2.2.7))
+  (yojson
+   (= 2.1.2))
   (lambda-term
-   (= 1.13))))
+   (= 3.3.2))))
