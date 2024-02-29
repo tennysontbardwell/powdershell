@@ -13,7 +13,7 @@ RUN make install-dep
 
 ADD src /home/opam/src
 RUN sudo chown -R opam:opam /home/opam/src
- 
+
 RUN cd /home/opam/src && make clean test main.exe
 
 FROM debian:12
