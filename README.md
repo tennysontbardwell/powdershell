@@ -20,6 +20,56 @@ Launch the game and press `h` for help.
 
 The save file 'beach' is pre-included; load it by pressing load and entering 'beach'.
 
+### Sand
+
+Sand will move to occupy any empty spaces below it, including the two diagonal spaces below it.
+
+![Sand Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/sand.gif)
+
+### Bomb
+
+When ignited, bombs explode, causing a cascading shock wave and destroying matter nearby.
+
+![Bomb Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/bomb.gif)
+
+### Acid
+
+Acid flows like a fluid, finding the lowest ground, and then corroding further down.
+
+![Acid Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/acid.gif)
+
+### Plant-Ice-Fire
+
+Ice behaves like [Ice-nine](https://en.wikipedia.org/wiki/Ice-nine), as a seed crystal to transform liquid water into a solid. Plants have similar properties, albeit slower, and they have a more spectacular interaction with fire.
+
+![Plant-Ice-Fire Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/plant-ice-fire.gif)
+
+### Blackhole
+
+Matter consumer.
+
+![Blackhole Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/blackhole.gif)
+
+### Stem
+
+Matter replicator.
+
+![Stem Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/stem.gif)
+
+### Oil
+
+A highly flammable fluid; necessary for energy independence in the 21st century.
+
+![Oil Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/oil.gif)
+
+### Gallery
+
+![Volcano Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/volcano.gif)
+
+![Jungle Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/jungle.gif)
+
+![House Demo](https://raw.githubusercontent.com/tennysontbardwell/media/5fd75e5a610be7e183daf14898aea1c262359281/powdershell/house.gif)
+
 ## Testing, Compiling, Cleaning
 
 Inside of the `src/` directory:
